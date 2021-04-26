@@ -1,2 +1,2 @@
 # PasswordManager
-![Build Badge](https://github.com/pete-dv/PracticeRepo/actions/workflows/build.yml/badge.svg)
+![Build Badge](https://github.com/OrigamiDev-Pete/PasswordManager/actions/workflows/build.yml/badge.svg)
