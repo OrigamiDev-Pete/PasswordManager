@@ -1,6 +1,8 @@
-/*##############################################################
-Define:
+#include "Compression.h"
 
+/*##############################################################
+Define: Function takes information from a file compresses it and 
+overwrites file information
 Inputs:
 - information from a text file
 Outputs:
@@ -13,8 +15,8 @@ void compress()
 }
 
 /*##############################################################
-Define:
-
+Define: Function takes information from a file compresses it and
+overwrites file information
 Inputs:
 -  new compressed text file
 Outputs:
