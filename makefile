@@ -15,11 +15,11 @@ build: $(OBJ) | $(BIN_DIR)
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BIN_DIR) $(OBJ_DIR):
-	mkdir -p $@
-
 clean:
 	rm $(OBJ_DIR)/*.o
 
 win: $(OBJ) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/Pass.exe
+
+$(BIN_DIR) $(OBJ_DIR):
+	mkdir -p $@
