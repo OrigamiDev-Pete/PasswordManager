@@ -21,5 +21,5 @@ $(BIN_DIR) $(OBJ_DIR):
 clean:
 	rm $(OBJ_DIR)/*.o
 
-win: $(OBJ)
+win: $(OBJ) | $(BIN_DIR)
 	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/Pass.exe
