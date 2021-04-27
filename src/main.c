@@ -26,6 +26,8 @@ int main(void)
     printString(stdRead);
 
     free(string);
+    free(string2);
+    free(stdRead);
 
     return 0;
 }
