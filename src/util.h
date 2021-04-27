@@ -98,13 +98,6 @@ void printString(String *string);
 *******************************************************************************/
 void freeString(String *string);
 
-/*******************************************************************************
-* Author: Peter de Vroom
-* Function: Frees the data in a string
-* Input: string - A String
-*******************************************************************************/
-void freeStackString(String *string);
-
 
 typedef struct IntArray IntArray;
 #define MIN_ARRAY_SIZE 8

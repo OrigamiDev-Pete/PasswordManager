@@ -1,4 +1,4 @@
-#define DEBUG
+#include <stdio.h>
 
 #include "Compression.h"
 #include "util.h"

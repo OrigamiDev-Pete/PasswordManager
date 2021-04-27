@@ -135,6 +135,10 @@ internal void checkAndResizeString(String *string, int newLength)
 {
     if (newLength >= string->capacity-1)
     {
+        #ifdef DEBUG
+        puts("checkAndResizeString: Resizing");
+        #endif /* DEBUG */
+
         int cap = string->capacity;
         while (cap < newLength)
         {
@@ -163,6 +167,7 @@ internal int stringLength(const char *str)
     {
         i++;
     }
+    
     #ifdef DEBUG
     if (i == STRING_MAX_SIZE)
         puts("stringLength: String trunctated because input was \
