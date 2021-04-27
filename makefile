@@ -18,7 +18,8 @@ $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 clean:
 	rm $(OBJ_DIR)/*.o
 
-win: $(OBJ) | $(BIN_DIR)
+win: $(OBJ)
+	.\WindowsSetup.bat
 	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/Pass.exe
 
 $(BIN_DIR) $(OBJ_DIR):
