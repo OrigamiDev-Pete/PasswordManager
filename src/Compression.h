@@ -6,9 +6,9 @@
 *
 *******************************************************************************/
 
-#ifndef COMPRESSION_H;
+#ifndef COMPRESSION_H
 
-#define COMPRESSION_H;
+#define COMPRESSION_H
 
 /*******************************************************************************
 * Define: Function takes information from a database .txt file 

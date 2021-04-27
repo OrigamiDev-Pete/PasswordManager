@@ -1,14 +1,14 @@
 #include "Compression.h"
 
-void compress_file(char filename[])
+int compress_file(char filename[])
 {
 
-
+    return 0;
 }
 
 
-void decompress_file(char filename[])
+int decompress_file(char filename[])
 {
 	
-
+    return 0;
 }
