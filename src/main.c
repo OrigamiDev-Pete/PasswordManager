@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "Compression.h"
+#include "compression.h"
 #include "util.h"
 
 int main(void)
