@@ -5,31 +5,32 @@
 * The header file for the compression functionality of the program.
 *
 *******************************************************************************/
+#include "util.h"
 
 #ifndef COMPRESSION_H
 
 #define COMPRESSION_H
 
 /*******************************************************************************
-* Define: Function takes information from a database .txt file 
-* compresses it creates a new compressed database file
-* Inputs:
-* - name of database file
-* Outputs:
-* - a boolean value indicating success of failure
+* Define: Function takes a string object input, compresses it and outputs the
+* compressed version of the input
+* Input:
+* - Uncompressed String
+* Output:
+* - A compressed string
 *******************************************************************************/
-int compress_file(char filename[]);
+String compress(String);
 
 
 /*******************************************************************************
-* Define: Function takes information from a file compressed database .txt file
-* and uncompresses it into a new database file
-* Inputs:
-* - name of database file
-* Outputs:
-* - a boolean value indicating success of failure
+* Define: Function takes a compressed string object input, decompresses it and 
+* outputs the decompressed version of the input
+* Input:
+* - Compressed String
+* Output:
+* - A decompressed string
 *******************************************************************************/
-int decompress_file(char filename[]);
+String decompress(String);
 
 
-#endif      /*COMPRESSION_H*/
+#endif /*COMPRESSION_H*/
