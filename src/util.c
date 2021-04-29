@@ -7,6 +7,10 @@
 
 #define internal static
 
+/**********************************************************
+* * *                      STRING                     * * *
+***********************************************************/
+
 internal void checkAndResizeString(String *string, int newLength);
 internal int stringLength(const char *str);
 internal void nullTerminate(String *string);
@@ -88,8 +92,13 @@ char stringGetChar(String *string, int index)
     return '\0';
 }
 
-String* readString(void)
+String* readString(char *prompt)
 {
+    if (prompt)
+    {
+        printf(prompt);
+    }
+
     String *string = newString(NULL);
     char c;
     while ((c = getchar()) != '\n' && c != '\0' && c != EOF)
@@ -101,7 +110,7 @@ String* readString(void)
     return string;
 }
 
-void printString(String *string)
+void printString(const String *string)
 {
     #ifndef DEBUG
     puts(string->text);
@@ -120,15 +129,10 @@ void printString(String *string)
     #endif /* DEBUG */
 }
 
-void freeString(String *string)
+void freeString(void *string)
 {
-    free(string->text);
+    free(((String *)string)->text);
     free(string);
-}
-
-void freeStackString(String *string)
-{
-    free(string->text);
 }
 
 internal void checkAndResizeString(String *string, int newLength)
@@ -185,6 +189,101 @@ internal void nullTerminate(String *string)
     }
 }
 
+/**********************************************************
+* * *                   LINKED LIST                   * * *
+***********************************************************/
+
+LinkedList* newLinkedList(void *data)
+{
+    LinkedList *list = malloc(sizeof(LinkedList));
+
+    Node *head = malloc(sizeof(Node));
+    head->data = data;
+    head->next = NULL;
+    list->head = head;
+
+    if (data)
+        list->length = 1;
+    else
+        list->length = 0;
+    return list;
+}
+
+void linkedListAppend(LinkedList *list, void *data)
+{
+    Node *node = list->head;
+    while (node->next != NULL)
+    {
+        node = node->next;
+    }
+
+    Node *newNode = malloc(sizeof(Node));
+    newNode->next = NULL;
+    newNode->data = data;
+    node->next = newNode;
+
+    list->length++;
+}
+
+void printLinkedList(LinkedList *list, void (*func)(void *))
+{
+    Node *node = list->head;
+    putchar('[');
+    while (node != NULL)
+    {
+        (*func)(node->data);
+        node = node->next;
+        if (node) {
+            putchar(',');
+            putchar(' ');
+        }
+    }
+    putchar(']');
+    putchar('\n');
+}
+
+void printInt(void *num)
+{
+    printf("%d", *(int *)num);
+}
+
+void printDouble(void *dbl)
+{
+    printf("%lf", *(double *)dbl);
+}
+
+void freeLinkedList(LinkedList *list, void (*func)(void *))
+{
+    if (func)
+    {
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            Node *prevNode = node;
+            node = node->next;
+            (*func)(prevNode->data);
+            free(prevNode);
+            prevNode = NULL;
+        }
+    }
+    else
+    {
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            /* printf("%p\n", node); */
+            Node *prevNode = node;
+            node = node->next;
+            free(prevNode);
+            prevNode = NULL;
+        }
+    }
+    free(list);
+}
+
+/**********************************************************
+* * *                   INTARRAY                      * * *
+***********************************************************/
 
 struct IntArray {
     size_t length;

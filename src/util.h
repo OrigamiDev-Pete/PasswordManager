@@ -10,9 +10,17 @@
 
 #include <stdlib.h>
 
+/**********************************************************
+* * *                      BOOLEAN                    * * *
+***********************************************************/
+
 typedef unsigned int boolean;
 #define true 1
 #define false 0
+
+/**********************************************************
+* * *                      STRING                     * * *
+***********************************************************/
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -42,7 +50,8 @@ typedef struct String {
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Allocate and initialise a new String object.
+* Function: Allocate and initialise a new String object. Any call to newString
+*           must be paired with freeString to avoid memory leaks.
 * Input: val - A C-style string can be provided which sets the new String's initial
 *              value to val and sized appropriately. If NULL the new String is 
 *              initalised empty.
@@ -70,7 +79,7 @@ String* stringAppendChar(String *string, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Returns char at a given position.
+* Function: Returns char at a given position. Bounds-checked.
 * Input: string - A String.
 *           val - index of character.
 * Output: Returns a char at the given position. Returns '\0' if out of bounds.
@@ -79,25 +88,102 @@ char stringGetChar(String *string, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
+* Function: Changes a char at a given position. Bounds-checked
+* Input: string - A String.
+*           val - index of character.
+* Output: Returns a char at the given position. Returns '\0' if out of bounds.
+*******************************************************************************/
+void stringSetChar(String *string, int index, char val);
+
+/*******************************************************************************
+* Author: Peter de Vroom
 * Function: Reads the stdin and creates a new String object.
+* Input: prompt - takes a c-string that is printed before input is taken.
 * Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
-String* readString(void);
+String* readString(char *prompt);
 
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Prints a String
 * Input: string - A String
 *******************************************************************************/
-void printString(String *string);
+void printString(const String *string);
 
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Frees a String and the data it contains
-* Input: string - A String
+* Input: string - A String (void pointer allows for compatability with other data structures)
 *******************************************************************************/
-void freeString(String *string);
+void freeString(void *string);
 
+
+/**********************************************************
+* * *                   LINKED LIST                   * * *
+***********************************************************/
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Struct: LinkedList, Node
+* Provides a linked list data structure which can contain any data. All
+* data must be the same type for all functions to work properly. Using different
+* types in one LinkedList will result in undefined behaviour.
+*******************************************************************************/
+typedef struct Node {
+    void *data;
+    struct Node *next;
+} Node;
+
+typedef struct LinkedList {
+    Node *head;
+    size_t length;
+} LinkedList;
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Allocates and initialises a new LinkedList. Any call to newLinkedList
+*           needs to be paired with freeLinkedList to avoid memory leaks.
+* Input: data - A void pointer to some data.
+* Output: Returns a pointer to a heap-allocated LinkedList
+*******************************************************************************/
+LinkedList* newLinkedList(void *data);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Appends data to list. data needs to be the same type as other data
+*           in the list
+* Input: list - A LinkedList
+*        data - A void pointer to some data.
+*******************************************************************************/
+void linkedListAppend(LinkedList *list, void *data);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Prints all the data contained in a LinkedList.
+* Input: list - A LinkedList
+*        func - A pointer to a print function. This should match the type that
+*               needs to be printed. func must take a void pointer for flexibility.
+*******************************************************************************/
+void printLinkedList(LinkedList *list, void (*func)(void *));
+
+/** Sample print functions **/
+void printInt(void *num);
+
+void printDouble(void *flt);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Frees a linked list and all contained data.
+* Input: list - A LinkedList
+*        func - A pointer to a free function. Can be NULL if data is not
+*               heap-allocated. func must take a void pointer for flexibility.
+*******************************************************************************/
+void freeLinkedList(LinkedList *list, void (*func)(void *));
+
+
+/**********************************************************
+* * *                      INTARRAY                   * * *
+***********************************************************/
 
 typedef struct IntArray IntArray;
 #define MIN_ARRAY_SIZE 8
