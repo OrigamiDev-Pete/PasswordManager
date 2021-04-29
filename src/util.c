@@ -96,7 +96,7 @@ String* readString(char *prompt)
 {
     if (prompt)
     {
-        printf(prompt);
+        printf("%s", prompt);
     }
 
     String *string = newString(NULL);
