@@ -5,6 +5,16 @@
 
 int e, d;
 
+boolean isPrime(int input) {
+    int i;
+    for(i = 2; i < input/2; i++) {
+        if(input%i!=0) {
+            return true;
+        }
+    }
+    return false;
+}
+
 String encryptAccounts(String* input) {
     /* 'e' and 'd' are the public and private keys respectively */
     int* e_p = &e;
@@ -23,13 +33,14 @@ String encryptAccounts(String* input) {
 
     /*TODO: Use the keys generated to encrypt the input string.*/
     String encrypted;
-
+    encrypted.text = "hello";
     return encrypted;
 }
 
 String decryptAccounts(String* input) {
     /*TODO: decrypt the input string*/
     String decrypted;
+    decrypted.text = "hello";
     return decrypted;
 }
 
@@ -49,14 +60,4 @@ void randomPrimes(int* x, int* y) {
     }
     *x = i;
     *y = j;
-}
-
-boolean isPrime(int input) {
-    int i;
-    for(i = 2; i < input/2; i++) {
-        if(input%i!=0) {
-            return true;
-        }
-    }
-    return false;
 }
