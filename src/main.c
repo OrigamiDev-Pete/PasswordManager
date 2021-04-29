@@ -4,16 +4,13 @@
 #include "compression.h"
 #include "util.h"
 
-/* void LLprintAccount(void *acc)
-{
-    Account *tmp = (Account *)acc;
-    printf("{name: %s, url: %s, password: %s}", tmp->name->text, tmp->url->text, tmp->password->text);
-}
- */
+
 int main(void)
 {
+    /* LinkedList Demo */
+
     int i = 150;
-    LinkedList *list = newLinkedList(&i, sizeof(int));
+    LinkedList *list = newLinkedList(&i);
     int j = 200;
     linkedListAppend(list, &j);
     int k = 250;
@@ -22,35 +19,22 @@ int main(void)
     linkedListAppend(list, &l);
 
     printLinkedList(list, printInt);
-    freeLinkedList(list);
+    freeLinkedList(list, NULL);
 
-    Account *acc = CreateAccount(readString(), readString(), readString());
-    printAccount(acc);
+    /* Account Demo + LinkedList */
 
-    Account *acc2 = CreateAccount(newString("Amazon"), newString("www.google.com"), newString("password"));
-    printAccount(acc2);
+    Account *acc = newAccount(readString("Enter a name> "), readString("Enter a URL> "), readString("Enter a password> "));
 
-    freeAccount(acc);
-    freeAccount(acc2);
+    Account *acc2 = newAccount(newString("Amazon"), newString("www.amazon.com"), newString("pass123"));
 
-/*     Account acc;
-    acc.name = newString("Google");
-    acc.url = newString("www.google.com");
-    acc.password = newString("Password");
-    LinkedList *list2 = newLinkedList(&acc, sizeof(Account)); */
+    LinkedList *list2 = newLinkedList(acc);
+    linkedListAppend(list2, acc2);
 
-/*     Account acc2;
-    acc2.name = newString("Amazon");
-    acc2.url = newString("www.amazon.com");
-    acc2.password = newString("Password1234");
-    linkedListAppend(list2, &acc2); */
+    printLinkedList(list2, printAccount);
+    freeLinkedList(list2, freeAccount);
 
-    /* printLinkedList(list2, LLprintAccount); */
-    /* freeLinkedList(list2); */
-   /*  Account acc3 = newAccount("test", "test.com", "test123");
-    freeAccount(&acc3);
-    printf("%s", acc3.name->text); */
 
+    /* String Demo */
 
     String *string = newString(NULL); /* empty String */
     stringAppend(string, "Appending to the string");
@@ -59,13 +43,12 @@ int main(void)
     String *string2 = newString("Setting the string at initialisation");
     printString(string2);
 
-    printf("Enter a string> ");
-    String *stdRead = readString(); /* A string can be created directly from stdin */
+    String *stdRead = readString("Enter a string> "); /* A string can be created directly from stdin */
     printString(stdRead);
 
     freeString(string);
-    free(string2);
-    free(stdRead);
+    freeString(string2);
+    freeString(stdRead);
 
     return 0;
 }

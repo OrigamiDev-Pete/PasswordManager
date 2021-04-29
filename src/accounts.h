@@ -17,14 +17,12 @@
 *******************************************************************************/
 typedef struct Account Account;
 
-Account newAccount(char *name, char *url, char *password);
-
-Account* CreateAccount(String *name, String *url, String *password);
+Account* newAccount(String *name, String *url, String *password);
 
 String* getAccountName(Account *acc);
 
-void printAccount();
+void printAccount(void *account);
 
-void freeAccount(Account *account);
+void freeAccount(void *account);
 
 #endif /* ACCOUNTS_H */

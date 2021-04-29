@@ -92,8 +92,13 @@ char stringGetChar(String *string, int index)
     return '\0';
 }
 
-String* readString(void)
+String* readString(char *prompt)
 {
+    if (prompt)
+    {
+        printf(prompt);
+    }
+
     String *string = newString(NULL);
     char c;
     while ((c = getchar()) != '\n' && c != '\0' && c != EOF)
@@ -124,9 +129,9 @@ void printString(const String *string)
     #endif /* DEBUG */
 }
 
-void freeString(String *string)
+void freeString(void *string)
 {
-    free(string->text);
+    free(((String *)string)->text);
     free(string);
 }
 
@@ -188,7 +193,7 @@ internal void nullTerminate(String *string)
 * * *                   LINKED LIST                   * * *
 ***********************************************************/
 
-LinkedList* newLinkedList(void *data, size_t dataSize)
+LinkedList* newLinkedList(void *data)
 {
     LinkedList *list = malloc(sizeof(LinkedList));
 
@@ -196,7 +201,6 @@ LinkedList* newLinkedList(void *data, size_t dataSize)
     head->data = data;
     head->next = NULL;
     list->head = head;
-    list->dataSize = dataSize;
 
     if (data)
         list->length = 1;
@@ -217,6 +221,8 @@ void linkedListAppend(LinkedList *list, void *data)
     newNode->next = NULL;
     newNode->data = data;
     node->next = newNode;
+
+    list->length++;
 }
 
 void printLinkedList(LinkedList *list, void (*func)(void *))
@@ -246,16 +252,31 @@ void printDouble(void *dbl)
     printf("%lf", *(double *)dbl);
 }
 
-void freeLinkedList(LinkedList *list)
+void freeLinkedList(LinkedList *list, void (*func)(void *))
 {
-    Node *node = list->head;
-    while (node != NULL)
+    if (func)
     {
-        /* printf("%p\n", node); */
-        Node *prevNode = node;
-        node = node->next;
-        free(prevNode);
-        prevNode = NULL;
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            Node *prevNode = node;
+            node = node->next;
+            (*func)(prevNode->data);
+            free(prevNode);
+            prevNode = NULL;
+        }
+    }
+    else
+    {
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            /* printf("%p\n", node); */
+            Node *prevNode = node;
+            node = node->next;
+            free(prevNode);
+            prevNode = NULL;
+        }
     }
     free(list);
 }

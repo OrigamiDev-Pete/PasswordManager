@@ -1,8 +1,7 @@
 /* Library Inclusion */
 #include "encryption.h"
-/* #define DEBUG */
 
-boolean isPrime(int input);
+/* #define DEBUG */
 
 int e, d;
 
@@ -23,15 +22,15 @@ String encryptAccounts(String* input) {
     createKey(e_p, d_p, n, t);
 
     /*TODO: Use the keys generated to encrypt the input string.*/
-    String *encrypted = newString(NULL);
+    String encrypted;
 
-    return *encrypted;
+    return encrypted;
 }
 
 String decryptAccounts(String* input) {
     /*TODO: decrypt the input string*/
-    String *decrypted = newString(NULL);
-    return *decrypted;
+    String decrypted;
+    return decrypted;
 }
 
 void createKey(int* e, int* d, int n, int t) {

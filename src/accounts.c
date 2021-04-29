@@ -11,7 +11,7 @@ typedef struct Account {
 } Account;
 
 
-Account *CreateAccount(String *name, String *url, String *password)
+Account *newAccount(String *name, String *url, String *password)
 {
     Account *acc = malloc(sizeof(Account));
     acc->name = name;
@@ -20,29 +20,22 @@ Account *CreateAccount(String *name, String *url, String *password)
     return acc;
 }
 
-Account newAccount(char *name, char *url, char *password)
-{
-    Account acc;
-    acc.name = newString(name);
-    acc.url = newString(url);
-    acc.password = newString(password);
-    return acc;
-}
-
 String* getAccountName(Account *acc)
 {
     return acc->name;
 }
 
-void printAccount(Account *acc)
+void printAccount(void *acc)
 {
-    printf("{name: %s, url: %s, password: %s}\n", acc->name->text, acc->url->text, acc->password->text);
+    printf("{name: %s, url: %s, password: %s}", ((Account *)acc)->name->text, 
+                                                  ((Account *)acc)->url->text,
+                                                  ((Account *)acc)->password->text);
 }
 
-void freeAccount(Account *account)
+void freeAccount(void *account)
 {
-    freeString(account->name);
-    freeString(account->url);   
-    freeString(account->password);
+    freeString(((Account *)account)->name);
+    freeString(((Account *)account)->url);   
+    freeString(((Account *)account)->password);
     free(account);
 }
