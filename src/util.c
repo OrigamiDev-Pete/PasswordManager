@@ -7,6 +7,10 @@
 
 #define internal static
 
+/**********************************************************
+* * *                      STRING                     * * *
+***********************************************************/
+
 internal void checkAndResizeString(String *string, int newLength);
 internal int stringLength(const char *str);
 internal void nullTerminate(String *string);
@@ -101,7 +105,7 @@ String* readString(void)
     return string;
 }
 
-void printString(String *string)
+void printString(const String *string)
 {
     #ifndef DEBUG
     puts(string->text);
@@ -124,11 +128,6 @@ void freeString(String *string)
 {
     free(string->text);
     free(string);
-}
-
-void freeStackString(String *string)
-{
-    free(string->text);
 }
 
 internal void checkAndResizeString(String *string, int newLength)
@@ -185,6 +184,85 @@ internal void nullTerminate(String *string)
     }
 }
 
+/**********************************************************
+* * *                   LINKED LIST                   * * *
+***********************************************************/
+
+LinkedList* newLinkedList(void *data, size_t dataSize)
+{
+    LinkedList *list = malloc(sizeof(LinkedList));
+
+    Node *head = malloc(sizeof(Node));
+    head->data = data;
+    head->next = NULL;
+    list->head = head;
+    list->dataSize = dataSize;
+
+    if (data)
+        list->length = 1;
+    else
+        list->length = 0;
+    return list;
+}
+
+void linkedListAppend(LinkedList *list, void *data)
+{
+    Node *node = list->head;
+    while (node->next != NULL)
+    {
+        node = node->next;
+    }
+
+    Node *newNode = malloc(sizeof(Node));
+    newNode->next = NULL;
+    newNode->data = data;
+    node->next = newNode;
+}
+
+void printLinkedList(LinkedList *list, void (*func)(void *))
+{
+    Node *node = list->head;
+    putchar('[');
+    while (node != NULL)
+    {
+        (*func)(node->data);
+        node = node->next;
+        if (node) {
+            putchar(',');
+            putchar(' ');
+        }
+    }
+    putchar(']');
+    putchar('\n');
+}
+
+void printInt(void *num)
+{
+    printf("%d", *(int *)num);
+}
+
+void printDouble(void *dbl)
+{
+    printf("%lf", *(double *)dbl);
+}
+
+void freeLinkedList(LinkedList *list)
+{
+    Node *node = list->head;
+    while (node != NULL)
+    {
+        /* printf("%p\n", node); */
+        Node *prevNode = node;
+        node = node->next;
+        free(prevNode);
+        prevNode = NULL;
+    }
+    free(list);
+}
+
+/**********************************************************
+* * *                   INTARRAY                      * * *
+***********************************************************/
 
 struct IntArray {
     size_t length;

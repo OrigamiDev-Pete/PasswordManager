@@ -70,12 +70,21 @@ String* stringAppendChar(String *string, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Returns char at a given position.
+* Function: Returns char at a given position. Bounds-checked.
 * Input: string - A String.
 *           val - index of character.
 * Output: Returns a char at the given position. Returns '\0' if out of bounds.
 *******************************************************************************/
 char stringGetChar(String *string, int index);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Changes a char at a given position. Bounds-checked
+* Input: string - A String.
+*           val - index of character.
+* Output: Returns a char at the given position. Returns '\0' if out of bounds.
+*******************************************************************************/
+void stringSetChar(String *string, int index, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -89,7 +98,7 @@ String* readString(void);
 * Function: Prints a String
 * Input: string - A String
 *******************************************************************************/
-void printString(String *string);
+void printString(const String *string);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -98,6 +107,29 @@ void printString(String *string);
 *******************************************************************************/
 void freeString(String *string);
 
+
+typedef struct Node {
+    void *data;
+    struct Node *next;
+} Node;
+
+typedef struct LinkedList {
+    Node *head;
+    size_t length;
+    size_t dataSize;
+} LinkedList;
+
+LinkedList* newLinkedList(void *data, size_t dataSize);
+
+void linkedListAppend(LinkedList *list, void *data);
+
+void printLinkedList(LinkedList *list, void (*func)(void *));
+
+void printInt(void *num);
+
+void printDouble(void *flt);
+
+void freeLinkedList(LinkedList *list);
 
 typedef struct IntArray IntArray;
 #define MIN_ARRAY_SIZE 8

@@ -15,14 +15,16 @@
 * Struct: Account
 * Container struct for Account values.
 *******************************************************************************/
-typedef struct Account {
-    String *name;
-    String *url;
-    String *password;
-} Account;
+typedef struct Account Account;
 
-Account* CreateAccount();
+Account newAccount(char *name, char *url, char *password);
+
+Account* CreateAccount(String *name, String *url, String *password);
+
+String* getAccountName(Account *acc);
 
 void printAccount();
+
+void freeAccount(Account *account);
 
 #endif /* ACCOUNTS_H */
