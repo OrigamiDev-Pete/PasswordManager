@@ -47,12 +47,12 @@ String* compress(String input)
 
                 String* occ_str = newString(temp_array);
 
-                stringAppend(compressed_string, occ_str);
+                stringAppend(compressed_string, occ_str->text);
 
                 /* Signifies that a char in a member has a double digit occurence */
                 if(occ > 9)
                 {
-                    stringAppend(compressed_string, ';');
+                    stringAppendChar(compressed_string, ';');
                 }
 
                 /* free contents of occ_str for next loop */
@@ -101,7 +101,7 @@ String* decompress(String input)
     {
         for(p = i; p < input.length && input.text[p] != ' '; ++p)
         {
-            stringAppendChar(member_str, input.text[p])
+            stringAppendChar(member_str, input.text[p]);
         }
 
         /* Determines if the member has a ';', 1 for true, 0 for false*/
@@ -122,11 +122,13 @@ String* decompress(String input)
         /* Pass member to double_digit_occ */
         if(semicolon_flag == 1)
         {
+            /*
             stringAppend(decompressed_string, double_digit_occ(*member_str)->text);
             if(p < input.length)
             {
                stringAppendChar(decompressed_string, ' ');
             }
+            */
         }
         /* Pass member to single_digit_occ */
         if(semicolon_flag == 0)
@@ -149,11 +151,12 @@ String* decompress(String input)
 
 }
 
-
+/*
 String* double_digit_occ(String input)
 {
     return(input)
 }
+*/
 
 String* single_digit_occ(String input)
 {
@@ -165,7 +168,8 @@ String* single_digit_occ(String input)
     while(i < input.length - 1)
     {
         char current_char = input.text[i];
-        count = atoi(input.text[i + 1]);
+
+        count = atoi(&input.text[i + 1]);
 
         for(p = 0; p < count; p++)
         {
