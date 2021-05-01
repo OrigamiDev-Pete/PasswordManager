@@ -27,7 +27,7 @@ typedef unsigned int boolean;
 * Struct: String
 * Abstracts some of the complexity of working with C-style strings into a 
 * higher-level wrapper struct with helper functions. Strings are automatically
-* null-terminated.
+* resized as needed and are automatically null-terminated.
 *******************************************************************************/
 typedef struct String {
     char *text;
@@ -39,21 +39,10 @@ typedef struct String {
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Initialises a preallocated String object
-* Input: A unitiliased String.
-*        val - A C-style string can be provided which sets the new String's initial
-*              value to val and sized appropriately. If NULL the new String is 
-*              initalised empty.
-*******************************************************************************/
-/* void initString(String *string, const char *val); */ /* NOTE(pete): This allows for stack allocation
-*                                                                      however the implemenatation doesn't support this fully */
-
-/*******************************************************************************
-* Author: Peter de Vroom
 * Function: Allocate and initialise a new String object. Any call to newString
 *           must be paired with freeString to avoid memory leaks.
 * Input: val - A C-style string can be provided which sets the new String's initial
-*              value to val and sized appropriately. If NULL the new String is 
+*              value to val and sized appropriately. If NULL, the new String is 
 *              initalised empty.
 * Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
@@ -63,10 +52,11 @@ String* newString(const char *val);
 * Author: Peter de Vroom
 * Function: Append a C-string to the String object. Resized if needed.
 * Input: string - A String.
-*           val - A C-style string which is appended to the String.
+*           val - A C-style string which is appended to the String. val should
+*                 be null-terminated.
 * Output: Returns a pointer to the String.
 *******************************************************************************/
-String* stringAppend(String *string, const char *val);
+void stringAppend(String *string, const char *val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -75,23 +65,23 @@ String* stringAppend(String *string, const char *val);
 *           val - A char which is appended to the String.
 * Output: Returns a pointer to the String.
 *******************************************************************************/
-String* stringAppendChar(String *string, char val);
+void stringAppendChar(String *string, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Returns char at a given position. Bounds-checked.
 * Input: string - A String.
-*           val - index of character.
+*           val - index of a character.
 * Output: Returns a char at the given position. Returns '\0' if out of bounds.
 *******************************************************************************/
-char stringGetChar(String *string, int index);
+char stringGetChar(const String *string, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Changes a char at a given position. Bounds-checked
+* Function: Changes a char at a given position. Bounds-checked.
 * Input: string - A String.
-*           val - index of character.
-* Output: Returns a char at the given position. Returns '\0' if out of bounds.
+*         index - Index of a character in String.
+*           val - Character to set.
 *******************************************************************************/
 void stringSetChar(String *string, int index, char val);
 

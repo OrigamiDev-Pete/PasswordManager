@@ -5,7 +5,7 @@
 
 /* #define DEBUG */
 
-#define internal static
+#define internal static /* static is a vague keyword, internal is more clear */
 
 /**********************************************************
 * * *                      STRING                     * * *
@@ -15,23 +15,48 @@ internal void checkAndResizeString(String *string, int newLength);
 internal int stringLength(const char *str);
 internal void nullTerminate(String *string);
 
-void initString(String *string, const char *val)
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Changes a char at a given position. Bounds-checked.
+* Input: string - An unitialised String.
+*           val - A C-style string can be provided which sets the new String's initial
+*                 value to val and sized appropriately. If NULL, the new String is 
+*                 initalised empty.
+*******************************************************************************/
+internal void initString(String *string, const char *val)
 {
+    /* Initialise an empty String if val is NULL */
     if (val == NULL)
     {
         string->length = 0;
         string->capacity = STRING_START_SIZE;
         string->text = malloc(string->capacity);
+        if (!string->text)
+        {
+            #ifdef DEBUG
+            puts("initString: malloc error.");
+            #endif /* DEBUG */
+            return;
+        }
     }
     else
     {
         string->length = stringLength(val);
+        /* Find the nearest power of 2 capacity that can hold the new length */
         int cap = STRING_START_SIZE;
         while (cap < string->length)
             cap *= 2;
         string->capacity = cap;
         string->text = malloc(string->capacity);
+        if (!string->text)
+        {
+            #ifdef DEBUG
+            puts("initString: malloc error.");
+            #endif /* DEBUG */
+            return;
+        }
 
+        /* Copy each character in val to String.text */
         int i;
         for (i = 0; i < string->length; i++)
         {
@@ -44,16 +69,25 @@ void initString(String *string, const char *val)
 String* newString(const char *val)
 {
     String *string = malloc(sizeof(String));
+    if (!string)
+    {
+        #ifdef DEBUG
+        puts("newString: malloc error.");
+        #endif /* DEBUG */
+        return NULL;
+    }
     initString(string, val);
     return string;
 }
 
-String* stringAppend(String *string, const char *val)
+void stringAppend(String *string, const char *val)
 {
     if (val == NULL)
     {
-        return string;
+        return;
     }
+    /* Calculate the expected size of string once appended and
+    *  check if it needs resizing */
     checkAndResizeString(string, string->length + stringLength(val));
     int i = 0;
     while (val[i] != '\0' && val[i] != EOF && i < STRING_MAX_SIZE)
@@ -67,19 +101,18 @@ String* stringAppend(String *string, const char *val)
         puts("stringAppend: Maximum Capacity");
     }
     #endif /* DEBUG */
-    
-    return string;
 }
 
-String* stringAppendChar(String *string, char val)
+void stringAppendChar(String *string, char val)
 {
-
+    checkAndResizeString(string, string->length+1);
+    string->text[string->length++] = val;
     nullTerminate(string);
-    return string;
 }
 
-char stringGetChar(String *string, int index)
+char stringGetChar(const String *string, int index)
 {
+    /* Bounds-check */
     if (index < string->length)
     {
         return string->text[index];
@@ -92,6 +125,21 @@ char stringGetChar(String *string, int index)
     return '\0';
 }
 
+void stringSetChar(String *string, int index, char val)
+{
+    /* Bounds-check */    
+    if (index < string->length)
+    {
+        string->text[index] = val;
+    }
+    else
+    {
+        #ifdef DEBUG
+        puts("stringSetChar: Out of Bounds");
+        #endif /* DEBUG */
+    }
+}
+
 String* readString(char *prompt)
 {
     if (prompt)
@@ -101,6 +149,7 @@ String* readString(char *prompt)
 
     String *string = newString(NULL);
     char c;
+    /* Safely read stdin */
     while ((c = getchar()) != '\n' && c != '\0' && c != EOF)
     {
         checkAndResizeString(string, string->length+1);
@@ -117,6 +166,7 @@ void printString(const String *string)
     #endif /* DEBUG */
 
     #ifdef DEBUG
+    /* Manually print each character and preview null-terminators */
     int i;
     for (i = 0; i < string->length; i++)
     {
@@ -135,6 +185,14 @@ void freeString(void *string)
     free(string);
 }
 
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Checks if a String has reached capacity and needs resizing. Resizes
+*           if it's required. Capacity expands by a factor of 2 to minimise 
+*           many realloc calls.
+* Input: string - A String.
+*     newLength - index of character in String.
+*******************************************************************************/
 internal void checkAndResizeString(String *string, int newLength)
 {
     if (newLength >= string->capacity-1)
@@ -142,7 +200,7 @@ internal void checkAndResizeString(String *string, int newLength)
         #ifdef DEBUG
         puts("checkAndResizeString: Resizing");
         #endif /* DEBUG */
-
+        /* Find the nearest power of 2 capacity that can hold the new length */
         int cap = string->capacity;
         while (cap < newLength)
         {
@@ -159,34 +217,44 @@ internal void checkAndResizeString(String *string, int newLength)
         }
         else
         {
+            #ifdef DEBUG
             puts("checkAndResizeString: Error reallocating memory.");
+            #endif /* DEBUG */
         }
     }
 }
 
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Returns the length of a c-string. Implementation is similar to strlen()
+*           in string.h. A custom implementation allows for implementation specific
+*           features (such as debug info) and avoids including the entire string.h file.
+* Input: string - A C-string.
+*******************************************************************************/
 internal int stringLength(const char *str)
 {
     int i = 0;
     while (str[i] != '\0' && str[i] != EOF && i < STRING_MAX_SIZE)
-    {
         i++;
-    }
     
     #ifdef DEBUG
     if (i == STRING_MAX_SIZE)
-        puts("stringLength: String trunctated because input was \
+        puts("stringLength: String truncated because input was \
               greater than STRING_MAX_SIZE");
     #endif /* DEBUG */
 
     return i;
 }
 
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Checks if string is null-terminated and adds one if not.
+* Input: string - A String.
+*******************************************************************************/
 internal void nullTerminate(String *string)
 {
     if (string->text[string->length] != '\0')
-    {
         string->text[string->length++] = '\0'; 
-    }
 }
 
 /**********************************************************
