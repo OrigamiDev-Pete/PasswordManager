@@ -52,3 +52,54 @@ int main(void)
 
     return 0;
 }
+
+/* Rough Main Menu idea */
+
+/*
+
+
+Login Menu:
+
+*************************************
+*         Password Mananger         *
+*************************************
+  1. Login (Exisiting User)
+  2. Create New Master Account
+  3. Exit Program
+
+
+Main Menu (Succesfull Login):
+
+*************************************
+*            Main Menu              *
+*************************************
+   1. Search and Sort menu
+   2. Add New account
+   3. Display stored websites
+   4. Import database (DC&DE)
+   5. Export database (E&C)
+   6. Settings
+   7. Log out
+
+
+Search Menu:
+
+*************************************
+*       Search and Sort Menu        *
+*************************************
+  1. Search database
+  2. Sort database alphabetically
+  3. Edit account entry
+  4. Delete account
+
+
+Settings Menu: !(Need to type in master password to delete master account)!
+
+*************************************
+*           Settings Menu           *
+*************************************
+   1. DELETE MASTER ACCOUNT
+   2. OPTION 2
+   2. OPTION 3
+
+*/
