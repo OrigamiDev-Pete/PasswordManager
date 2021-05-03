@@ -14,5 +14,5 @@
 
 ## Illegal Characters for Passwords:
 ```
-| \ ; : ' " , . / ~ `
-``
+| \ ; : ' " , . / ~ 
+```
