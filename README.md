@@ -11,3 +11,8 @@
 * Peter de Vroom - 13294196
 * Giovanni Tjandra - 13752454
 * Joshua Gonzalez - 13915158
+
+## Illegal Characters for Passwords:
+```
+| \ ; : ' " , . / ~ `
+``
