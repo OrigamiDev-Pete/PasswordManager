@@ -9,7 +9,7 @@
 #ifndef ENCRYPT_H
 #define ENCRYPT_H
 
-#include "util.h"
+#include "util.h"   /*String, boolean*/
 #include <stdlib.h> /*rand*/
 
 /*******************************************************************************
@@ -48,5 +48,23 @@ void createKey(int* e, int* d, int n, int t);
 * Input: pointer to two integers to fill with the prime numbers.
 *******************************************************************************/
 void randomPrimes(int* x, int* y);
+
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: determines if an integer is prime
+* Input: the integer
+* Output: a boolean true if prime, false if not prime
+          - note: boolean is defined in util.h
+*******************************************************************************/
+boolean isPrime(int input);
+
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: determines if two integers are coprime
+* Input: the integers for comparison
+* Output: a boolean true if coprime or false if not
+          - note: boolean is defined in util.h
+*******************************************************************************/
+boolean isCoPrime(int i1, int i2);
 
 #endif /* ENCRYPT_H */
