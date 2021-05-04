@@ -7,6 +7,15 @@
 
 int main(void)
 {
+    /* Run Length Encoding Test */
+
+    String* input = newString("hw kjd kdld ldkd ldld k ldd lkddafsdfdsfsdfa dsaf asdf sadfasdf asdfasdf sadf asdfsdf asdf "); /* empty String */
+    printString(input);
+    String stringcmp = compress(*input);
+    printString(&stringcmp);
+    String stringdcmp = decompress(stringcmp);
+    printString(&stringdcmp);
+
     /* LinkedList Demo */
 
     int i = 150;

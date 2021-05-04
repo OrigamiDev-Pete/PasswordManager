@@ -19,7 +19,7 @@
 * Output:
 * - A compressed string
 *******************************************************************************/
-String* compress(String);
+String compress(String);
 
 
 /*******************************************************************************
@@ -30,7 +30,7 @@ String* compress(String);
 * Output:
 * - A decompressed string
 *******************************************************************************/
-String* decompress(String);
+String decompress(String);
 
 
 #endif /*COMPRESSION_H*/

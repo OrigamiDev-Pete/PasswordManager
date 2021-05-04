@@ -11,19 +11,18 @@
 /*******************************************************************************
 * Local Function Prototypes
 *******************************************************************************/
-String* double_digit_occ(String input);
-
-String* single_digit_occ (String input);
+String member_decompress(String input);
 
 /*******************************************************************************
 * Functions
 *******************************************************************************/
-String* compress(String input)
+String compress(String input)
 {
     int i = 0, p, occ;
     char temp_array[256]; 
 
     String* compressed_string = newString(NULL);
+    
 
     while(i < input.length)
     {
@@ -68,7 +67,7 @@ String* compress(String input)
         }
     }
 
-    return(compressed_string); /*Output Examples a3b6c1e1 or a12;91c2*/
+    return(*compressed_string); /*Output Examples a3b6c1e1 or a12;91c2*/
 }
 
 /*******************************************************************************
@@ -86,82 +85,47 @@ String* compress(String input)
 * more than single digit occurences
 *******************************************************************************/
 
-String* decompress(String input)
+String decompress(String input)
 {
 	
     String* decompressed_string = newString(NULL);
 
     int i = 0, p;
 
-    String* member_str = newString(NULL);
-
 
     /* Grab the first member of the string */
     while(i < input.length)
     {
+        String* member_str = newString(NULL);
+
         for(p = i; p < input.length && input.text[p] != ' '; ++p)
         {
             stringAppendChar(member_str, input.text[p]);
         }
-
-        /* Determines if the member has a ';', 1 for true, 0 for false*/
-        int c, semicolon_flag;
-        for(c = 0; c < member_str->length; c++)
+       
+        stringAppend(decompressed_string, member_decompress(*member_str).text);
+        if(p < input.length)
         {
-            if(member_str->text[c] == ';')
-            {
-                semicolon_flag = 1;
-                break;
-            }
-            else
-            {
-                semicolon_flag = 0;
-            }
-        }
-
-        /* Pass member to double_digit_occ */
-        if(semicolon_flag == 1)
-        {
-            /*
-            stringAppend(decompressed_string, double_digit_occ(*member_str)->text);
-            if(p < input.length)
-            {
-               stringAppendChar(decompressed_string, ' ');
-            }
-            */
-        }
-        /* Pass member to single_digit_occ */
-        if(semicolon_flag == 0)
-        {
-            stringAppend(decompressed_string, single_digit_occ(*member_str)->text);
-            if(p < input.length)
-            {
-               stringAppendChar(decompressed_string, ' ');
-            }
+            stringAppendChar(decompressed_string, ' ');
         }
 
         /* Free member string for next loop*/
         freeString(member_str);
 
-        /* Update i to begin at the next member */
+        /* Update i to begin at the next member (Skip space) */
         i = p + 1;
     }
 
-    return(decompressed_string);
+    return(*decompressed_string);
 
 }
 
-/*
-String* double_digit_occ(String input)
-{
-    return(input)
-}
-*/
 
-String* single_digit_occ(String input)
+String member_decompress(String input)
 {
     int i = 0, p;
     int count;
+    char temp_array[256];
 
     String* decompressed_member = newString(NULL);
 
@@ -169,7 +133,17 @@ String* single_digit_occ(String input)
     {
         char current_char = input.text[i];
 
-        count = atoi(&input.text[i + 1]);
+        if(input.text[i + 3] == ';')
+        {
+            count = atoi(&input.text[i + 1]);
+            i = (i + 2);
+        }
+        else
+        {
+            char current_count = input.text[i + 1];
+            sprintf(temp_array, "%c", current_count); /* Automatically null appends */
+            count = atoi(temp_array);
+        }
 
         for(p = 0; p < count; p++)
         {
@@ -177,8 +151,8 @@ String* single_digit_occ(String input)
         }
 
         /* Skip to next pair of character and occurence */
-        i += 2;
+        i = (i + 2);
     }
 
-    return(decompressed_member);
+    return(*decompressed_member);
 }
