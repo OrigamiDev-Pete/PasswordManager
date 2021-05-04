@@ -34,6 +34,10 @@ String compress(String input)
                 p++;
             }
 
+            #ifdef DEBUG
+            printf("%c has p = %d occurences\n", input.text[p], p);
+            #endif /* DEBUG */
+
             stringAppendChar(compressed_string, input.text[i]);
 
             if(p - i >= 1)
@@ -48,6 +52,10 @@ String compress(String input)
 
                 stringAppend(compressed_string, occ_str->text);
 
+                #ifdef DEBUG
+                printString(occ_str);
+                #endif /* DEBUG */
+
                 /* Signifies that a char in a member has a double digit occurence */
                 if(occ > 9)
                 {
@@ -59,6 +67,10 @@ String compress(String input)
             }
 
             i = p;
+
+            #ifdef DEBUG
+            printf("The next loop uses i = %d\n", i);
+            #endif /* DEBUG */
         }
         else
         {
@@ -66,6 +78,11 @@ String compress(String input)
            i++;
         }
     }
+
+    #ifdef DEBUG
+    printString(input)
+    printString(compressed_string);
+    #endif /* DEBUG */
 
     return(*compressed_string); /*Output Examples a3b6c1e1 or a12;91c2*/
 }
@@ -92,7 +109,6 @@ String decompress(String input)
 
     int i = 0, p;
 
-
     /* Grab the first member of the string */
     while(i < input.length)
     {
@@ -102,6 +118,10 @@ String decompress(String input)
         {
             stringAppendChar(member_str, input.text[p]);
         }
+
+        #ifdef DEBUG
+        printString(member_str);
+        #endif /* DEBUG */
        
         stringAppend(decompressed_string, member_decompress(*member_str).text);
         if(p < input.length)
@@ -114,7 +134,16 @@ String decompress(String input)
 
         /* Update i to begin at the next member (Skip space) */
         i = p + 1;
+
+        #ifdef DEBUG
+        printf("The next loop uses i = %d\n", i);
+        #endif /* DEBUG */
     }
+
+    #ifdef DEBUG
+    printString(input);
+    printString(decompressed_string);
+    #endif /* DEBUG */
 
     return(*decompressed_string);
 
@@ -137,12 +166,20 @@ String member_decompress(String input)
         {
             count = atoi(&input.text[i + 1]);
             i = (i + 2);
+
+            #ifdef DEBUG
+            printf("count = %d", count);
+            #endif /* DEBUG */
         }
         else
         {
             char current_count = input.text[i + 1];
             sprintf(temp_array, "%c", current_count); /* Automatically null appends */
             count = atoi(temp_array);
+
+            #ifdef DEBUG
+            printf("count = %d", count);
+            #endif /* DEBUG */
         }
 
         for(p = 0; p < count; p++)
@@ -152,7 +189,16 @@ String member_decompress(String input)
 
         /* Skip to next pair of character and occurence */
         i = (i + 2);
+
+        #ifdef DEBUG
+        printf("The next loop uses i = %d\n", i);
+        #endif /* DEBUG */
     }
+
+    #ifdef DEBUG
+    printString(input);
+    printString(decompressed_string);
+    #endif /* DEBUG */
 
     return(*decompressed_member);
 }
