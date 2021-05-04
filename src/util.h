@@ -8,7 +8,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <stdlib.h>
+#include <stdlib.h> /* size_t, malloc, realloc */
 
 /**********************************************************
 * * *                      BOOLEAN                    * * *

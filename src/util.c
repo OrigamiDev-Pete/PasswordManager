@@ -1,7 +1,6 @@
 #include "util.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h> /* printf, puts, putchar, getchar */
 
 /* #define DEBUG */
 
@@ -89,6 +88,11 @@ void stringAppend(String *string, const char *val)
     /* Calculate the expected size of string once appended and
     *  check if it needs resizing */
     checkAndResizeString(string, string->length + stringLength(val));
+    /* Remove null-terminator */
+    if (string->length != 0)
+    {
+        string->length--;
+    }
     int i = 0;
     while (val[i] != '\0' && val[i] != EOF && i < STRING_MAX_SIZE)
     {
@@ -106,6 +110,11 @@ void stringAppend(String *string, const char *val)
 void stringAppendChar(String *string, char val)
 {
     checkAndResizeString(string, string->length+1);
+    /* Remove null-terminator */
+    if (string->length != 0)
+    {
+        string->length--;
+    }
     string->text[string->length++] = val;
     nullTerminate(string);
 }
@@ -253,8 +262,7 @@ internal int stringLength(const char *str)
 *******************************************************************************/
 internal void nullTerminate(String *string)
 {
-    if (string->text[string->length] != '\0')
-        string->text[string->length++] = '\0'; 
+    string->text[string->length++] = '\0'; 
 }
 
 /**********************************************************
