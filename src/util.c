@@ -43,7 +43,7 @@ internal void initString(String *string, const char *val)
         string->length = stringLength(val);
         /* Find the nearest power of 2 capacity that can hold the new length */
         int cap = STRING_START_SIZE;
-        while (cap < string->length)
+        while (cap <= string->length)
             cap *= 2;
         string->capacity = cap;
         string->text = malloc(string->capacity);
@@ -204,25 +204,24 @@ void freeString(void *string)
 *******************************************************************************/
 internal void checkAndResizeString(String *string, int newLength)
 {
-    if (newLength >= string->capacity-1)
+    if (newLength >= string->capacity)
     {
         #ifdef DEBUG
         puts("checkAndResizeString: Resizing");
         #endif /* DEBUG */
         /* Find the nearest power of 2 capacity that can hold the new length */
         int cap = string->capacity;
-        while (cap < newLength)
+        while (cap <= newLength)
         {
             cap *= 2;
         }
-        String *tmp = string;
-        tmp->capacity = cap;
-        tmp = realloc(tmp, tmp->capacity);
+        char *tmp;
+        size_t tmp_capacity = cap;
+        tmp = realloc(string->text, tmp_capacity);
         if (tmp)
         {
-            string->text = tmp->text;
-            string->capacity = tmp->capacity;
-            string->length = tmp->length;
+            string->text = tmp;
+            string->capacity = tmp_capacity;
         }
         else
         {

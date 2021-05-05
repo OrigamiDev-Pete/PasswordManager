@@ -2,7 +2,7 @@
 #include "encryption.h"
 
 /* #define DEBUG */
-#define K 2; /* K is a constant of any value used in key generation */
+#define K 2 /* K is a constant of any value used in key generation */ /* NOTE(pete): removed semi-colon from #define */
 int e, d;
 
 String encryptAccounts(String* input) {
@@ -58,12 +58,12 @@ void createKey(int* e, int* d, int n, int t) {
             break;
         }
         else {
-            *e++;
+            (*e)++; /* NOTE(pete): added parentheses for order of operations */
         }
     }
 
     /* GENERATE PRIVATE KEY (d) - standard RSA encryption formula */
-    *d = (1 + (K * t))/e;
+    *d = (1 + (K * t))/ *e; /* NOTE(pete): added dereference to e */
 }
 
 void randomPrimes(int* x, int* y) {
