@@ -2,7 +2,7 @@
 * Author: Peter de Vroom
 * 
 * The header file supports the functionality of various systems in the program.
-* Types: boolean, String, IntArray
+* Types: boolean, String, LinkedList
 *******************************************************************************/
 
 #ifndef UTIL_H
@@ -14,7 +14,7 @@
 * * *                      BOOLEAN                    * * *
 ***********************************************************/
 
-typedef unsigned int boolean;
+typedef unsigned char boolean;
 #define true 1
 #define false 0
 

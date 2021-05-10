@@ -2,6 +2,7 @@
 
 #include "accounts.h"
 #include "compression.h"
+#include "io.h"
 #include "util.h"
 
 
