@@ -2,6 +2,7 @@
 
 #include "accounts.h"
 #include "compression.h"
+#include "huffman.h"
 #include "io.h"
 #include "util.h"
 
@@ -10,12 +11,20 @@ int main(void)
 {
     /* Run Length Encoding Test */
 
-    String* input = newString("hw kjd kdld ldkd ldld k ldd lkddafsdfdsfsdfa dsaf asdf sadfasdf asdfasdf sadf asdfsdf asdf "); /* empty String */
+    String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj"); /* empty String */
     printString(input);
     String stringcmp = compress(*input);
     printString(&stringcmp);
     String stringdcmp = decompress(stringcmp);
     printString(&stringdcmp);
+
+
+    /* Huffman code printing test */
+    String* test = newString("this is a test test ");
+    printf("Huffman codes:\n");
+    HuffmanCompression(*test);
+    printf("\n");
+
 
     /* LinkedList Demo */
 

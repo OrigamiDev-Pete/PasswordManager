@@ -1,3 +1,7 @@
+/*******************************************************************************
+* Header files 
+*******************************************************************************/
+#include "huffman.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,14 +26,14 @@ typedef struct{
 
 
 /*******************************************************************************
-* Function Prototypes
+* Local Function Prototypes
 *******************************************************************************/
 node_t* newLeafNode(char character, unsigned int frequency);
 node_t* newInternalNode(node_t* node1, node_t* node2);
 int BuildHuffmanTree(character_t character_array[], int size, 
                      node_t* priorityqueue[]);
-/*void printHuffmanCodes(node_t* root_node, int code_array[], int top); */
-void HuffmanCompression(char string[]);
+void printHuffmanCodes(node_t* root_node, int code_array[], int top);
+String HuffmanCompression(String input);
 
 
 /*******************************************************************************
@@ -84,7 +88,7 @@ int BuildHuffmanTree(character_t character_array[], int size,
     {   
         priorityqueue[priorityQ_size] = newLeafNode(character_array[i].ch, character_array[i].freq);
         ++priorityQ_size;
-        ++ free_size;
+        ++free_size;
     }
 
     /* repeatebly take two lowest nodes, add them, and reorder the queue
@@ -96,7 +100,7 @@ int BuildHuffmanTree(character_t character_array[], int size,
         priorityqueue[priorityQ_size - 2]);
         
         ++priorityQ_size;
-        ++ free_size;
+        ++free_size;
 
         /* Bubble sort priority queue from largest to smallest frequency */
         int k;
@@ -119,6 +123,8 @@ int BuildHuffmanTree(character_t character_array[], int size,
         priorityQ_size -= 2;
     }
 
+
+    /* return full size of priority queue to free all malloced nodes*/
     return(free_size);
 }
 
@@ -160,7 +166,7 @@ void printHuffmanCodes(node_t* root_node, int code_array[], int top)
 * Takes a string and returns an array of unique characters and an array of the 
 * corresponding character frequencies
 *******************************************************************************/
-void HuffmanCompression(char string[])
+String HuffmanCompression(String input)
 {
     /*Convert string to an array of character_t structures with each element
     * representing a unique character and itscorresponding frequency*/
@@ -170,10 +176,11 @@ void HuffmanCompression(char string[])
     char ch;
     int i, size = 0;
 
-    for(i = 0; i < strlen(string); i++)
+    /* checks for null character as string datatype automatically appends to end*/
+    for(i = 0; i < input.length && input.text[i] != '\0'; i++)
     {
         occ = 0;
-        ch = string[i];
+        ch = input.text[i];
         int unique_ch_flag = 0;
 
         int k;
@@ -189,9 +196,9 @@ void HuffmanCompression(char string[])
         if(unique_ch_flag == 0)
         {
             int j;
-            for(j = 0; j < strlen(string); j++)
+            for(j = 0; j < input.length; j++)
             {
-                if(ch == string[j])
+                if(ch == input.text[j])
                 {
                     ++occ;
                 }
@@ -239,15 +246,16 @@ void HuffmanCompression(char string[])
         free(priorityqueue[i]);
     }
 
-}
+
+    /* Create dictionary from printed codes */
+
+    /*https://www.youtube.com/watch?v=Y2mP61demhA/*/
+    
+    /* Generate compressed string from dictionary */
 
 
-/* Driver main function*/
-int main(void)
-{
-    char user_input[] = "abb";
 
-    HuffmanCompression(user_input);
-
-    return(0);
+    /* Output compressed string */ 
+    String* test = newString("this is a test");
+    return(*test);
 }
