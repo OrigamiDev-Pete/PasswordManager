@@ -8,7 +8,7 @@
 struct node
 {
     char character;
-    unsigned frequency;
+    unsigned int frequency;
     struct node *left, *right;
     bool isleaf;
 };
@@ -17,33 +17,33 @@ typedef struct node node_t;
 /* Stores unique character and corresponding frequency  */
 typedef struct{
     char ch;
-    unsigned freq;
+    unsigned int freq;
 }character_t;
 
 
 /*******************************************************************************
 * Function Prototypes
 *******************************************************************************/
-node_t newLeafNode(char character, unsigned frequency);
-node_t newInternalNode(node_t* node1, node_t* node2);
-void BuildHuffmanTree(character_t character_array[], int size, 
- node_t priorityqueue[]);
-void printHuffmanCodes(node_t* root_node, int code_array[], int top);
+node_t* newLeafNode(char character, unsigned int frequency);
+node_t* newInternalNode(node_t* node1, node_t* node2);
+int BuildHuffmanTree(character_t character_array[], int size, 
+                     node_t* priorityqueue[]);
+/*void printHuffmanCodes(node_t* root_node, int code_array[], int top); */
 void HuffmanCompression(char string[]);
 
 
 /*******************************************************************************
 * Function creates a new huffman leaf node for a character and its frequency
 *******************************************************************************/
-node_t newLeafNode(char character, unsigned frequency)
+node_t* newLeafNode(char character, unsigned int frequency)
 {
-    node_t new_leaf_node;
+    node_t* new_leaf_node = (node_t*) malloc(sizeof(node_t));
 
-    new_leaf_node.character = character;
-    new_leaf_node.frequency = frequency;
-    new_leaf_node.left = NULL;
-    new_leaf_node.right = NULL;
-    new_leaf_node.isleaf = true;
+    new_leaf_node->character = character;
+    new_leaf_node->frequency = frequency;
+    new_leaf_node->left = NULL;
+    new_leaf_node->right = NULL;
+    new_leaf_node->isleaf = true;
 
     return(new_leaf_node);
 }
@@ -52,22 +52,17 @@ node_t newLeafNode(char character, unsigned frequency)
 /*******************************************************************************
 * Function creates a new huffman internal node, combining two leaf nodes
 *******************************************************************************/
-node_t newInternalNode(node_t* node1, node_t* node2)
+node_t* newInternalNode(node_t* node1, node_t* node2)
 {
-    node_t new_internal_node;
+    node_t* new_internal_node = (node_t*) malloc(sizeof(node_t));
 
-    new_internal_node.frequency = (node1->frequency + node2->frequency);
-
-    printf("node1.freq = %d\n", node1->frequency);
-    printf("node2.freq = %d\n", node2->frequency);
-
-    printf("new_internal_node.frequency = %d\n\n", new_internal_node.frequency);
+    new_internal_node->frequency = (node1->frequency + node2->frequency);
 
     /* right (bigger frequency node) */
-    new_internal_node.left = node1;
+    new_internal_node->left = node1;
     /* left (smaller frequency node) */
-    new_internal_node.right = node2;
-    new_internal_node.isleaf = false;
+    new_internal_node->right = node2;
+    new_internal_node->isleaf = false;
 
     return(new_internal_node);
 }
@@ -76,32 +71,32 @@ node_t newInternalNode(node_t* node1, node_t* node2)
 /*******************************************************************************
 * Takes array of unique characters and frequncies and builds huffman tree
 *******************************************************************************/
-void BuildHuffmanTree(character_t character_array[], int size, 
- node_t priorityqueue[])
+int BuildHuffmanTree(character_t character_array[], int size, 
+                      node_t* priorityqueue[])
 {
     
     int priorityQ_size = 0;
-    
+    int free_size = 0;
+
     /*Create all leaf nodes and add them to priority queue in descending order*/
     int i;
     for(i = 0; i < size; ++i)
     {   
-        priorityqueue[priorityQ_size] = newLeafNode(character_array[i].ch,
-        character_array[i].freq);
+        priorityqueue[priorityQ_size] = newLeafNode(character_array[i].ch, character_array[i].freq);
         ++priorityQ_size;
+        ++ free_size;
     }
-
-    printf("priorityQ_size = %d\n", priorityQ_size);
 
     /* repeatebly take two lowest nodes, add them, and reorder the queue
      * until there is only one node left */
 
     while(priorityQ_size != 1)
     {
-        priorityqueue[priorityQ_size] = newInternalNode(&priorityqueue[priorityQ_size - 1],
-        &priorityqueue[priorityQ_size - 2]);
+        priorityqueue[priorityQ_size] = newInternalNode(priorityqueue[priorityQ_size - 1],
+        priorityqueue[priorityQ_size - 2]);
         
         ++priorityQ_size;
+        ++ free_size;
 
         /* Bubble sort priority queue from largest to smallest frequency */
         int k;
@@ -110,10 +105,10 @@ void BuildHuffmanTree(character_t character_array[], int size,
             int j;
             for(j = 0; j < priorityQ_size - k - 1; ++j)
             {
-                if(priorityqueue[j].frequency < priorityqueue[j + 1].frequency)
+                if(priorityqueue[j]->frequency < priorityqueue[j + 1]->frequency)
                 {
                     /* Swap elements in the array */
-                    node_t temp = priorityqueue[j];
+                    node_t* temp = priorityqueue[j];
                     priorityqueue[j] = priorityqueue[j + 1];
                     priorityqueue[j + 1] = temp;
                 }
@@ -124,8 +119,7 @@ void BuildHuffmanTree(character_t character_array[], int size,
         priorityQ_size -= 2;
     }
 
-    printf("%d\n\n", priorityqueue[0].frequency);
-
+    return(free_size);
 }
 
 
@@ -134,8 +128,31 @@ void BuildHuffmanTree(character_t character_array[], int size,
 *******************************************************************************/
 void printHuffmanCodes(node_t* root_node, int code_array[], int top)
 {
-    /* How in the world do i travers the huffman tree */
-
+    
+    if(root_node->left) 
+    {
+        code_array[top] = 0;
+        printHuffmanCodes(root_node->left, code_array, top + 1);
+    }
+ 
+    
+    if (root_node->right) 
+    {
+        code_array[top] = 1;
+        printHuffmanCodes(root_node->right, code_array, top + 1);
+    }
+ 
+    if (root_node->isleaf == true) 
+    {
+        printf("%c: ", root_node->character);
+       
+        int i;
+        for(i = 0; i < top; i++)
+        {
+            printf("%d", code_array[i]);
+        }
+        printf("\n");
+    }
 }
 
 
@@ -149,7 +166,7 @@ void HuffmanCompression(char string[])
     * representing a unique character and itscorresponding frequency*/
     character_t character_array[256];
 
-    unsigned occ;
+    int occ;
     char ch;
     int i, size = 0;
 
@@ -203,26 +220,32 @@ void HuffmanCompression(char string[])
         }
     }
 
-    printf("size = %d\n", size);
-
     /* Create Priority Queue */
-    node_t priorityqueue[256];
+    node_t* priorityqueue[256];
 
     /* Build Huffman Tree */
-    BuildHuffmanTree(character_array, size, priorityqueue);
+    int num;
 
+    num = BuildHuffmanTree(character_array, size, priorityqueue);
+    
     int top = 0;
     int code_array[256];
 
-    /* Print Huffman code*/
-    printHuffmanCodes(priorityqueue, code_array, top);
+    printHuffmanCodes(priorityqueue[0], code_array, top);
+
+    /* free the priority queue array */
+    for(i = 0; i < num; ++i)
+    {
+        free(priorityqueue[i]);
+    }
+
 }
 
 
 /* Driver main function*/
 int main(void)
 {
-    char user_input[] = "aaaabbc";
+    char user_input[] = "abb";
 
     HuffmanCompression(user_input);
 
