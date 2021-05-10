@@ -11,9 +11,9 @@
 
 enum compression { huffman, runLength };
 
-bool saveData(boolean encrypt, boolean compress, enum compression cmp_type);
+boolean saveData(boolean encrypt, boolean compress, enum compression cmp_type);
 
-bool loadData(boolean decrypt, boolean decompress, enum compresion cmp_type);
+boolean loadData(boolean decrypt, boolean decompress, enum compression cmp_type);
 
 
 #endif /* IO_H */
