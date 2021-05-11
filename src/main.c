@@ -1,65 +1,46 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "accounts.h"
 #include "compression.h"
+#include "huffman.h"
+#include "io.h"
 #include "util.h"
+
 
 
 int main(void)
 {
-    /* Run Length Encoding Test */
+	/* setBit Demo */
+	char A = 0;
+	setBit(A, 7);
+	setBit(A, 3);
+	setBit(A, 5);
+	printf("%d\n", A);
+	printf("%c\n", A);
 
-    String* input = newString("hw kjd kdld ldkd ldld k ldd lkddafsdfdsfsdfa dsaf asdf sadfasdf asdfasdf sadf asdfsdf asdf "); /* empty String */
+	/* stringCompare Demo */
+	String *str1 = newString("oak ridge");
+	String *str2 = newString("oakley park");
+	printf("%d\n", stringCompare(str1, str2));
+	
+
+    /* Run Length Encoding Test */
+    String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj");
     printString(input);
     String stringcmp = compress(*input);
     printString(&stringcmp);
     String stringdcmp = decompress(stringcmp);
     printString(&stringdcmp);
 
-    /* LinkedList Demo */
 
-    int i = 150;
-    LinkedList *list = newLinkedList(&i);
-    int j = 200;
-    linkedListAppend(list, &j);
-    int k = 250;
-    linkedListAppend(list, &k);
-    int l = 300;
-    linkedListAppend(list, &l);
+    /* Huffman code printing test */
+    String* test = newString("this is a test test ");
+    printf("Huffman codes:\n");
+    HuffmanCompression(*test);
+    printf("\n");
 
-    printLinkedList(list, printInt);
-    freeLinkedList(list, NULL);
-
-    /* Account Demo + LinkedList */
-
-    Account *acc = newAccount(readString("Enter a name> "), readString("Enter a URL> "), readString("Enter a password> "));
-
-    Account *acc2 = newAccount(newString("Amazon"), newString("www.amazon.com"), newString("pass123"));
-
-    LinkedList *list2 = newLinkedList(acc);
-    linkedListAppend(list2, acc2);
-
-    printLinkedList(list2, printAccount);
-    freeLinkedList(list2, freeAccount);
-
-
-    /* String Demo */
-
-    String *string = newString(NULL); /* empty String */
-    stringAppend(string, "Appending to the string");
-    printString(string);
-
-    String *string2 = newString("Setting the string at initialisation");
-    printString(string2);
-
-    String *stdRead = readString("Enter a string> "); /* A string can be created directly from stdin */
-    printString(stdRead);
-
-    freeString(string);
-    freeString(string2);
-    freeString(stdRead);
-
-    return 0;
+	return 0;
 }
 
 /* Rough Main Menu idea */

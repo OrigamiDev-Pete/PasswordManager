@@ -149,6 +149,29 @@ void stringSetChar(String *string, int index, char val)
     }
 }
 
+int stringCompare(String *string1, String *string2)
+{
+    int i;
+    for (i = 0; i < string1->length-1 && i < string2->length-1; i++)
+    {
+        /* If string1 is less than string2 */
+        if (string1->text[i] < string2->text[i])
+            return -1;
+        /* If string1 is greater than string2 */
+        else if (string1->text[i] > string2->text[i])
+            return 1;
+    }
+
+    /* Shorter, but otherwise equal, strings take lexicographic precedence. */
+    if (string1->length < string2->length)
+        return -1;
+    else if (string1->length > string2->length)
+        return 1;
+
+    /* Strings must be equal to reach this point */
+    return 0;
+}
+
 String* readString(char *prompt)
 {
     if (prompt)
@@ -346,7 +369,6 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
         Node *node = list->head;
         while (node != NULL)
         {
-            /* printf("%p\n", node); */
             Node *prevNode = node;
             node = node->next;
             free(prevNode);
@@ -354,49 +376,4 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
         }
     }
     free(list);
-}
-
-/**********************************************************
-* * *                   INTARRAY                      * * *
-***********************************************************/
-
-struct IntArray {
-    size_t length;
-    size_t capacity;
-    int *data;
-};
-
-void initIntArray(IntArray *arr)
-{
-    arr->length = 0;
-    arr->capacity = MIN_ARRAY_SIZE;
-    arr->data = malloc(sizeof(int) * arr->capacity);
-}
-
-IntArray* newIntArray()
-{
-    IntArray *arr = malloc(sizeof(IntArray));
-    initIntArray(arr);
-    return arr;
-}
-
-void intArrayAppend(IntArray *arr, int val)
-{
-    /* TODO(pete): implement resize */
-
-    arr->data[arr->length++] = val;
-}
-
-void printIntArray(IntArray *arr)
-{
-    putchar('[');
-
-    int i;
-    for (i = 0; i < arr->length; i++)
-    {
-        if (i == arr->length - 1)
-            printf("%d]\n", arr->data[i]);
-        else
-            printf("%d, ", arr->data[i]);
-    }
 }

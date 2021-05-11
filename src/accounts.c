@@ -20,16 +20,11 @@ Account *newAccount(String *name, String *url, String *password)
     return acc;
 }
 
-String* getAccountName(Account *acc)
-{
-    return acc->name;
-}
-
 void printAccount(void *acc)
 {
     printf("{name: %s, url: %s, password: %s}", ((Account *)acc)->name->text, 
-                                                  ((Account *)acc)->url->text,
-                                                  ((Account *)acc)->password->text);
+                                                 ((Account *)acc)->url->text,
+                                                 ((Account *)acc)->password->text);
 }
 
 void freeAccount(void *account)
