@@ -85,6 +85,18 @@ void stringSetChar(String *string, int index, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
+* Function: Compares string1 to string2 based on ASCII values. This works
+*           similarly to strcmp from <string.h>
+* Input: string1 - A String.
+*        string2 - A String.
+* Output: Returns 0 if both Strings are identical. 
+*         Returns 1 if string1 is greater than string2.
+*         Returns -1 if string1 is less than string2.
+*******************************************************************************/
+int stringCompare(String *string1, String *string2);
+
+/*******************************************************************************
+* Author: Peter de Vroom
 * Function: Reads the stdin and creates a new String object.
 * Input: prompt - takes a c-string that is printed before input is taken.
 * Output: Returns a pointer to heap-allocated String struct.

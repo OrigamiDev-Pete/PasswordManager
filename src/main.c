@@ -18,10 +18,13 @@ int main(void)
 	printf("%d\n", A);
 	printf("%c\n", A);
 
+	String *str1 = newString("abcabc");
+	String *str2 = newString("abc");
+	printf("%d\n", stringCompare(str1, str2));
 
     /* Run Length Encoding Test */
 
-    String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj"); /* empty String */
+    String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj");
     printString(input);
     String stringcmp = compress(*input);
     printString(&stringcmp);

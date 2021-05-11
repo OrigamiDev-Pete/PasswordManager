@@ -9,11 +9,38 @@
 
 #include "util.h"
 
-enum compression { huffman, runLength };
 
-boolean saveData(boolean encrypt, boolean compress, enum compression cmp_type);
+/* Enumerator for compression types */
+typedef enum compression { HUFFMAN, RUN_LENGTH } compression;
 
-boolean loadData(boolean decrypt, boolean decompress, enum compression cmp_type);
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Saves accounts data to the filesystem.
+* Input: accounts - A list of the accounts to be saved.
+*         encrypt - encrypt or not.
+*        compress - compress or not.
+*         cmpType - Type of compression to employ. Options are stored as enumated
+*                   values, HUFFMAN and RUN_LENGTH. HUFFMAN is more space effecient.
+*                   RUN_LENGTH is faster.
+* Output: Returns true if successful, false if an error occurs
+*******************************************************************************/
+boolean saveData(const LinkedList *accounts, boolean encrypt, boolean compress, compression cmpType);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Saves accounts data to the filesystem.
+* Input: accounts - A list to load the  saved accounts into.
+* Output: Returns true if successful, false if an error occurs
+*******************************************************************************/
+boolean loadData(LinkedList *accounts);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Safely read an integer from the stdin. Ignores bad input and flushes
+*           the buffer.
+* Output: Returns the integer found.
+*******************************************************************************/
+int readInt(void);
 
 
 #endif /* IO_H */
