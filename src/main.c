@@ -35,6 +35,7 @@ int main(void)
     HuffmanCompression(*test);
     printf("\n");
 
+	return 0;
 }
 
 /* Rough Main Menu idea */
