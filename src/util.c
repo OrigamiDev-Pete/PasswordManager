@@ -162,7 +162,7 @@ int stringCompare(String *string1, String *string2)
             return 1;
     }
 
-    /* Shorter, but otherwise equal, strings are considered smaller. */
+    /* Shorter, but otherwise equal, strings take lexicographic precedence. */
     if (string1->length < string2->length)
         return -1;
     else if (string1->length > string2->length)

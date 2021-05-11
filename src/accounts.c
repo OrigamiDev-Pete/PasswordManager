@@ -23,8 +23,8 @@ Account *newAccount(String *name, String *url, String *password)
 void printAccount(void *acc)
 {
     printf("{name: %s, url: %s, password: %s}", ((Account *)acc)->name->text, 
-                                                  ((Account *)acc)->url->text,
-                                                  ((Account *)acc)->password->text);
+                                                 ((Account *)acc)->url->text,
+                                                 ((Account *)acc)->password->text);
 }
 
 void freeAccount(void *account)

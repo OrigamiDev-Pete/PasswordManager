@@ -85,8 +85,10 @@ void stringSetChar(String *string, int index, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Compares string1 to string2 based on ASCII values. This works
-*           similarly to strcmp from <string.h>
+* Function: Compares string1 to string2 based on ASCII values. Shorter strings
+*           take lexicographic precedence. Capital letters are considered
+*           lesser than lower case letters.
+*           This function works similarly to strcmp from <string.h>
 * Input: string1 - A String.
 *        string2 - A String.
 * Output: Returns 0 if both Strings are identical. 

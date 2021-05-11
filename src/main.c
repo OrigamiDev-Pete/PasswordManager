@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "accounts.h"
 #include "compression.h"
@@ -18,12 +19,13 @@ int main(void)
 	printf("%d\n", A);
 	printf("%c\n", A);
 
-	String *str1 = newString("abcabc");
-	String *str2 = newString("abc");
+	/* stringCompare Demo */
+	String *str1 = newString("oak ridge");
+	String *str2 = newString("oakley park");
 	printf("%d\n", stringCompare(str1, str2));
+	
 
     /* Run Length Encoding Test */
-
     String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj");
     printString(input);
     String stringcmp = compress(*input);
