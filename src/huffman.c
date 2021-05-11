@@ -2,8 +2,9 @@
 * Header files 
 *******************************************************************************/
 #include "huffman.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdio.h> /* malloc, free */
+
+
 
 /* Huffman tree node */
 struct node
@@ -34,12 +35,25 @@ String HuffmanCompression(String input);
 
 
 /*******************************************************************************
-* Function creates a new huffman leaf node for a character and its frequency
+* Functions
+*******************************************************************************/
+
+
+/*******************************************************************************
+* Author: Joshua Gonzalez
+* Function: Allocates memory for a new huffman leaf node for a character and its 
+*           frequency
+* Input: 
+* - character
+* - frequnecy of character
+* Output:
+* - new leaf node pointer
 *******************************************************************************/
 node_t* newLeafNode(char character, unsigned int frequency)
 {
     node_t* new_leaf_node = (node_t*) malloc(sizeof(node_t));
 
+    /* Set leaf node characteristics */
     new_leaf_node->character = character;
     new_leaf_node->frequency = frequency;
     new_leaf_node->left = NULL;
@@ -51,14 +65,21 @@ node_t* newLeafNode(char character, unsigned int frequency)
 
 
 /*******************************************************************************
-* Function creates a new huffman internal node, combining two leaf nodes
+* Author: Joshua Gonzalez
+* Function: Allocates memory for a new huffman internal node, that points to 
+*           two other nodes
+* Input: 
+* - node 1 pointer
+* - node 2 pointer
+* Output: 
+* - new internal node pointer
 *******************************************************************************/
 node_t* newInternalNode(node_t* node1, node_t* node2)
 {
     node_t* new_internal_node = (node_t*) malloc(sizeof(node_t));
 
+    /* Set internal node characteristics */
     new_internal_node->frequency = (node1->frequency + node2->frequency);
-
     /* right (bigger frequency node) */
     new_internal_node->left = node1;
     /* left (smaller frequency node) */
@@ -70,45 +91,54 @@ node_t* newInternalNode(node_t* node1, node_t* node2)
 
 
 /*******************************************************************************
-* Takes array of unique characters and frequncies and builds huffman tree
+* Author: Joshua Gonzalez
+* Function: Takes array of unique characters and frequncies and builds 
+*           a binary huffman tree using a priority queue array of pointers
+* Input: 
+* - character structure array
+* - size of character array
+* - priority queue array
+* Output: 
+* - tracked length of the priority queue (to free malloced nodes)
 *******************************************************************************/
-
-/* NOTE(pete): Change variable names for clarity. Perhaps free_size should be priorityQueueSize and
-*              priorityQ_size should be something like priorityIndex (you can probably think of something better) */
-
 int BuildHuffmanTree(character_t character_array[], int size, 
                       node_t* priorityqueue[])
 {
     
-    int priorityQ_size = 0;
-    int free_size = 0;
+    /* Total length of the priorirty queue, for easy reference to free all 
+       nodes */
+    int priorityQ_len = 0;
 
-    /*Create all leaf nodes and add them to priority queue in descending order*/
+    /* Updated length of the priority queue after nodes are added and deleted */
+    int priorityQ_index = 0;
+
+    /* Create all leaf nodes and add them to priority queue in descending 
+       order */
     int i;
     for(i = 0; i < size; ++i)
     {   
-        priorityqueue[priorityQ_size] = newLeafNode(character_array[i].ch, character_array[i].freq);
-        ++priorityQ_size;
-        ++free_size;
+        priorityqueue[priorityQ_index] = newLeafNode(character_array[i].ch,
+                                                     character_array[i].freq);
+        ++priorityQ_index;
+        ++priorityQ_len;
     }
 
     /* repeatebly take two lowest nodes, add them, and reorder the queue
-     * until there is only one node left */
-
-    while(priorityQ_size != 1)
+       until there is only one node left */
+    while(priorityQ_index != 1)
     {
-        priorityqueue[free_size] = newInternalNode(priorityqueue[priorityQ_size - 1],
-        priorityqueue[priorityQ_size - 2]);
+        priorityqueue[priorityQ_len] = newInternalNode(priorityqueue[priorityQ_index - 1],
+                                                       priorityqueue[priorityQ_index - 2]);
         
-        ++priorityQ_size;
-        ++free_size;
+        ++priorityQ_index;
+        ++priorityQ_len;
 
         /* Bubble sort priority queue from largest to smallest frequency */
         int k;
-        for(k = 0; k < free_size - 1; k++)
+        for(k = 0; k < priorityQ_len - 1; k++)
         {
             int j;
-            for(j = 0; j < free_size - k - 1; ++j)
+            for(j = 0; j < priorityQ_len - k - 1; ++j)
             {
                 if(priorityqueue[j]->frequency < priorityqueue[j + 1]->frequency)
                 {
@@ -120,18 +150,26 @@ int BuildHuffmanTree(character_t character_array[], int size,
             }
         }
 
-        /* get rid of the 2 nodes that were added to create the new internal node*/
-        priorityQ_size -= 2;
+        /* get rid of the 2 nodes that were added to create the new internal 
+           node*/
+        priorityQ_index -= 2;
     }
 
 
     /* return full size of priority queue to free all malloced nodes*/
-    return(free_size);
+    return(priorityQ_len);
 }
 
 
 /*******************************************************************************
-* Traverses huffman tree and assigns codes to each element in character_array
+* Author: Joshua Gonzalez
+* Function: Recurssively traverse the huffman tree and assign codes to each 
+*           element in character_array
+* Inputs: 
+* - code array, 
+* - pointer to top node of huffman tree
+* - int to track current level of binary tree
+* Outputs: 
 *******************************************************************************/
 void printHuffmanCodes(node_t* root_node, int code_array[], int top)
 {
@@ -163,27 +201,25 @@ void printHuffmanCodes(node_t* root_node, int code_array[], int top)
 }
 
 
-/*******************************************************************************
-* Takes a string and returns an array of unique characters and an array of the 
-* corresponding character frequencies
-*******************************************************************************/
 String HuffmanCompression(String input)
 {
     /*Convert string to an array of character_t structures with each element
-    * representing a unique character and itscorresponding frequency*/
+    * representing a unique character and its corresponding frequency*/
     character_t character_array[256];
 
     int occ;
     char ch;
     int i, size = 0;
 
-    /* checks for null character as string datatype automatically appends to end*/
+    /* checks for null character as string datatype automatically appends to 
+       end */
     for(i = 0; i < input.length && input.text[i] != '\0'; i++)
     {
         occ = 0;
         ch = input.text[i];
         int unique_ch_flag = 0;
 
+        /* Sets flag to check if new character is unique*/
         int k;
         for(k = 0; k < size; k++)
         {
@@ -193,7 +229,8 @@ String HuffmanCompression(String input)
                 break;
             }
         }
-
+        
+        /* If the character is unique add it to the array */
         if(unique_ch_flag == 0)
         {
             int j;
@@ -232,17 +269,18 @@ String HuffmanCompression(String input)
     node_t* priorityqueue[256];
 
     /* Build Huffman Tree */
-    int num;
+    int priorityQ_length;
 
-    num = BuildHuffmanTree(character_array, size, priorityqueue);
+    priorityQ_length = BuildHuffmanTree(character_array, size, 
+                                        priorityqueue);
     
     int top = 0;
     int code_array[256];
 
     printHuffmanCodes(priorityqueue[0], code_array, top);
 
-    /* free the priority queue array */
-    for(i = 0; i < num; ++i)
+    /* free pointer nodes in the priority queue array */
+    for(i = 0; i < priorityQ_length; ++i)
     {
         free(priorityqueue[i]);
     }

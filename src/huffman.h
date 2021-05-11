@@ -2,14 +2,15 @@
 * Author: Joshua Gonzalez
 * Date Updated: 10/05/2021
 * 
-* The header file for the compression functionality of the program.
-*
+* The header file for the huffman compression algorithm
 *******************************************************************************/
+
 #include "util.h"
 
 #ifndef HUFFMAN_H
 
 #define HUFFMAN_H
+
 
 /*******************************************************************************
 * Define: Function takes a string object input, compresses it and outputs the

@@ -2,9 +2,9 @@
 * Author: Joshua Gonzalez
 * Date Updated: 26/04/2021
 * 
-* The header file for the compression functionality of the program.
-*
+* The header file for the run-length encoding compression alogorithm
 *******************************************************************************/
+
 #include "util.h"
 
 #ifndef COMPRESSION_H

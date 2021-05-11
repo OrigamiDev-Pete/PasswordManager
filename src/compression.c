@@ -13,9 +13,12 @@
 *******************************************************************************/
 String member_decompress(String input);
 
+
 /*******************************************************************************
 * Functions
 *******************************************************************************/
+
+
 String compress(String input)
 {
     int i = 0, p, occ;
@@ -56,7 +59,8 @@ String compress(String input)
                 printString(occ_str);
                 #endif /* DEBUG */
 
-                /* Signifies that a char in a member has a double digit occurence */
+                /* Signifies that a char in a member has a double digit 
+                   occurence */
                 if(occ > 9)
                 {
                     stringAppendChar(compressed_string, ';');
@@ -84,23 +88,9 @@ String compress(String input)
     printString(compressed_string);
     #endif /* DEBUG */
 
-    return(*compressed_string); /*Output Examples a3b6c1e1 or a12;91c2*/
+    return(*compressed_string);
 }
 
-/*******************************************************************************
-* Problems to think about:
-* If passwords can have spaces how can i differentiate between a space between 
-* string members and spaces within a string hmmmmmm, MAYBE PASSWORDS CANNOT 
-* CONTAIN SPACES
-* If a password has say more than 9 occurences of a number how to differentiate 
-* between the number of occureneces and a number in the original string 
-* e.g. Input: aaaaaaaaaaaa8, potential output; a12;81 rather than a1281
-*******************************************************************************/
-
-/* Seperate decompress into 2 subfunctions one to handle members in a string 
-* that contain a ; symbol and one to handle a member with no char having
-* more than single digit occurences
-*******************************************************************************/
 
 String decompress(String input)
 {
@@ -149,7 +139,15 @@ String decompress(String input)
 
 }
 
-
+/*******************************************************************************
+* Author: Joshua Gonzalez
+* Function: decompresses single word strings and passes the decompressed word
+            back to the decompress function
+* Inputs: 
+* - string word 
+* Outputs: 
+* - decompressed word
+*******************************************************************************/
 String member_decompress(String input)
 {
     int i = 0, p;
@@ -174,7 +172,9 @@ String member_decompress(String input)
         else
         {
             char current_count = input.text[i + 1];
-            sprintf(temp_array, "%c", current_count); /* Automatically null appends */
+            
+            /* Automatically null appends */
+            sprintf(temp_array, "%c", current_count); 
             count = atoi(temp_array);
 
             #ifdef DEBUG
