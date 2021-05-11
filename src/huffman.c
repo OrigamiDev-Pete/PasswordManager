@@ -4,9 +4,6 @@
 #include "huffman.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
 
 /* Huffman tree node */
 struct node
@@ -14,7 +11,7 @@ struct node
     char character;
     unsigned int frequency;
     struct node *left, *right;
-    bool isleaf;
+    boolean isleaf;
 };
 typedef struct node node_t;
 
@@ -75,6 +72,10 @@ node_t* newInternalNode(node_t* node1, node_t* node2)
 /*******************************************************************************
 * Takes array of unique characters and frequncies and builds huffman tree
 *******************************************************************************/
+
+/* NOTE(pete): Change variable names for clarity. Perhaps free_size should be priorityQueueSize and
+*              priorityQ_size should be something like priorityIndex (you can probably think of something better) */
+
 int BuildHuffmanTree(character_t character_array[], int size, 
                       node_t* priorityqueue[])
 {
@@ -96,7 +97,7 @@ int BuildHuffmanTree(character_t character_array[], int size,
 
     while(priorityQ_size != 1)
     {
-        priorityqueue[priorityQ_size] = newInternalNode(priorityqueue[priorityQ_size - 1],
+        priorityqueue[free_size] = newInternalNode(priorityqueue[priorityQ_size - 1],
         priorityqueue[priorityQ_size - 2]);
         
         ++priorityQ_size;
@@ -104,10 +105,10 @@ int BuildHuffmanTree(character_t character_array[], int size,
 
         /* Bubble sort priority queue from largest to smallest frequency */
         int k;
-        for(k = 0; k < priorityQ_size - 1; k++)
+        for(k = 0; k < free_size - 1; k++)
         {
             int j;
-            for(j = 0; j < priorityQ_size - k - 1; ++j)
+            for(j = 0; j < free_size - k - 1; ++j)
             {
                 if(priorityqueue[j]->frequency < priorityqueue[j + 1]->frequency)
                 {
