@@ -19,8 +19,6 @@ typedef struct Account Account;
 
 Account* newAccount(String *name, String *url, String *password);
 
-String* getAccountName(Account *acc);
-
 void printAccount(void *account);
 
 void freeAccount(void *account);

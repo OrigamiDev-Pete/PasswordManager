@@ -54,7 +54,6 @@ String* newString(const char *val);
 * Input: string - A String.
 *           val - A C-style string which is appended to the String. val should
 *                 be null-terminated.
-* Output: Returns a pointer to the String.
 *******************************************************************************/
 void stringAppend(String *string, const char *val);
 
@@ -63,7 +62,6 @@ void stringAppend(String *string, const char *val);
 * Function: Append a char to the String object. Resized if needed.
 * Input: string - A String.
 *           val - A char which is appended to the String.
-* Output: Returns a pointer to the String.
 *******************************************************************************/
 void stringAppendChar(String *string, char val);
 
@@ -172,31 +170,26 @@ void freeLinkedList(LinkedList *list, void (*func)(void *));
 
 
 /**********************************************************
-* * *                      INTARRAY                   * * *
+* * *                 BIT MANIPULATION                * * *
 ***********************************************************/
+typedef char byte;
 
-typedef struct IntArray IntArray;
-#define MIN_ARRAY_SIZE 8
+/*******************************************************************************
+* Author: Peter de Vroom
+* Macro: Sets bit to 1 in a byte. 
+* Input: byte - byte to have bit changed
+*        bitToSet - bit to set in byte
+*******************************************************************************/
+#define setBit(byte, bitToSet) byte |= 1 << (bitToSet-1)
+/*void setBit(byte *byte, int bitToSet); */
 
-void initIntArray(IntArray *arr);
-
-IntArray* newIntArray();
-
-void intArrayAppend(IntArray *arr, int val);
-
-void intArrayInsert(IntArray *arr, int index, int val);
-
-void intArrayGet(IntArray *arr, int index);
-
-void intArraySet(IntArray *arr, int index, int val);
-
-void intArrayRemove(IntArray *arr, int index);
-
-void intArrayEmpty(IntArray *arr);
-
-void printIntArray(IntArray *arr);
-
-void freeIntArray(IntArray *arr);
-
+/*******************************************************************************
+* Author: Peter de Vroom
+* Macro: Sets bit to 0 in a byte.
+* Input: byte - byte to have bit changed
+*        bitToSet - bit to set in byte
+*******************************************************************************/
+#define clearBit(byte, bitToSet) byte &= ~(1 << (bitToSet-1))
+/*void clearBit(byte *byte, int bitToSet); */
 
 #endif /* UTIL_H */

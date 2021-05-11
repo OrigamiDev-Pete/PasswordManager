@@ -7,8 +7,18 @@
 #include "util.h"
 
 
+
 int main(void)
 {
+	/* setBit Demo */
+	char A = 0;
+	setBit(A, 7);
+	setBit(A, 3);
+	setBit(A, 5);
+	printf("%d\n", A);
+	printf("%c\n", A);
+
+
     /* Run Length Encoding Test */
 
     String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj"); /* empty String */
