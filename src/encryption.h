@@ -11,6 +11,7 @@
 
 #include "util.h"   /*String, boolean*/
 #include <stdlib.h> /*rand*/
+#include <stdio.h>  /* fwrite, fread, fopen, fclose */
 
 /*******************************************************************************
 * Author: Luke Phillips
@@ -66,5 +67,21 @@ boolean isPrime(int input);
           - note: boolean is defined in util.h
 *******************************************************************************/
 boolean isCoPrime(int i1, int i2);
+
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: read the two encoded keys from the file to be used.
+* Input: two integer pointers of the location to load the keys into.
+*******************************************************************************/
+void readKeys(int* e, int* d);
+
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: encode the two keys and store securely in a file for future use.
+    - future uses are further encryption, or decryption, for which the keys
+      are needed.
+* Input: two integer pointers of the keys to be stored.
+*******************************************************************************/
+void writeKeys(int* e, int* d);
 
 #endif /* ENCRYPT_H */
