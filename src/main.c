@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 #include "accounts.h"
 #include "compression.h"
@@ -23,7 +22,7 @@ int main(void)
 	String *str1 = newString("oak ridge");
 	String *str2 = newString("oakley park");
 	printf("%d\n", stringCompare(str1, str2));
-	
+
 
     /* Run Length Encoding Test */
     String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj");

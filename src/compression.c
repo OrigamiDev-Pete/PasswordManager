@@ -84,7 +84,7 @@ String compress(String input)
     }
 
     #ifdef DEBUG
-    printString(input)
+    printString(&input);
     printString(compressed_string);
     #endif /* DEBUG */
 
@@ -131,7 +131,7 @@ String decompress(String input)
     }
 
     #ifdef DEBUG
-    printString(input);
+    printString(&input);
     printString(decompressed_string);
     #endif /* DEBUG */
 
@@ -196,8 +196,8 @@ String member_decompress(String input)
     }
 
     #ifdef DEBUG
-    printString(input);
-    printString(decompressed_string);
+    printString(&input);
+    printString(decompressed_member);
     #endif /* DEBUG */
 
     return(*decompressed_member);
