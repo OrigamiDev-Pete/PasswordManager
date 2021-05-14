@@ -2,55 +2,40 @@
 #include "encryption.h"
 
 /* #define DEBUG */
-#define K 2 /* K is a constant of any value used in key generation */
 #define KEYFILE "keys.bin" /* A file in which the keys will be stored */
 
 String encryptAccounts(String* input) {
-    /* 'e' and 'd' are the public and private keys respectively */
-    int e, d;
-    int* e_p = &e;
-    int* d_p = &d;
+    int key;
+    int* key_p = &key;
     /* Open the file of stored keys if it exists */
     FILE* keys_file = fopen(KEYFILE, "rb");
-    if(keys_file == NULL) {
-        /* If the file does not exist, proceed with new key generation */
-        /* Generate two random prime numbers */
-        int x, y;
-        int* x_p = &x;
-        int* y_p = &y;
-        randomPrimes(x_p, y_p);
+    /* If the file does not exist, proceed with new key generation */
+    if(keys_file == NULL) { 
+        createKey(key_p);
 
-        /* Create the modulus and totient values for key generation */
-        int n = x * y;
-        int t = (x-1)*(y-1);
-
-        #ifdef DEBUG
-        printf("x = %d; y = %d; t = %d\n", *x_p, *y_p, t);
-        #endif /* DEBUG */
-
-        createKey(e_p, d_p, n, t);
-
-        /* Close the keyfile to avoid conflicts when writing new keys
-        in writeKeys() function. */
-        fclose(keys_file);
-        writeKeys(e_p, d_p);
+        /* Write the generated keys to the file */
+        writeKeys(key_p);
     }
     else {
-        /* The keys exist, so read them from the file to continue encryption. */
-        /* Close the keyfile to avoid conflicts when reading keys
+        /* The keys exist, so read them from the file to continue encryption. *
+        * Close the keyfile to avoid conflicts when reading keys
         in readKeys() function. */
         fclose(keys_file);
-        readKeys(e_p, d_p);
+        readKeys(key_p);
+    }
+
+    /* Use the keys generated to encrypt the input string. */
+    String* encrypted = newString(input->text);
+    
+    int counter;
+    for(counter = 0; counter < input->length; counter++) {
+        char tmp = stringGetChar(encrypted, counter);
+        tmp = tmp + key;
+        stringSetChar(encrypted, counter, tmp);
     }
 
     #ifdef DEBUG
-    printf("e = %d; d = %d\n", *e_p, *d_p);
-    #endif /* DEBUG */
-
-    /* TODO: Use the keys generated to encrypt the input string. */
-    String* encrypted = newString("placeholder");
-
-    #ifdef DEBUG
+    printf("The key is: %d\n", key);
     printf("The original text is: ");
     printString(input);
     printf("\nThe encrypted text is: ");
@@ -61,11 +46,8 @@ String encryptAccounts(String* input) {
 }
 
 String decryptAccounts(String* input) {
-    /* 'e' and 'd' are the public and private keys respectively */
-    int e, d;
-    int* e_p = &e; 
-    int* d_p = &d;
-
+    int key;
+    int* key_p = &key;
     FILE* keys_file = fopen(KEYFILE, "rb");
     if(keys_file == NULL) {
         /* When a valid file for stored keys is not present, there has been no 
@@ -79,28 +61,38 @@ String decryptAccounts(String* input) {
         /* Close the keyfile to avoid conflicts when reading keys
         in readKeys() function. */
         fclose(keys_file);
-        readKeys(e_p, d_p);
+        readKeys(key_p);
     }
 
-    /*TODO: decrypt the input string*/
-    String decrypted;
-    decrypted.text = "placeholder";
-    return decrypted;
+    /* Decrypt the input string */
+    String* decrypted = newString(input->text);
+
+    int counter;
+    for(counter = 0; counter < input->length; counter++) {
+        char tmp = stringGetChar(decrypted, counter);
+        tmp = tmp - key;
+        stringSetChar(decrypted, counter, tmp);
+    }
+    
+    return *decrypted;
 }
 
-void createKey(int* e, int* d, int n, int t) {
-    /* GENERATE PUBLIC KEY (e) - e must be coprime to t*/
-    while(*e < t) {
-        if(isCoPrime(*e, t)) {
-            break;
-        }
-        else {
-            (*e)++;
-        }
-    }
+void createKey(int* key) {
+    /* Generate two random prime numbers */
+    int x, y;
+    int* x_p = &x;
+    int* y_p = &y;
+    randomPrimes(x_p, y_p);
 
-    /* GENERATE PRIVATE KEY (d) - standard RSA encryption formula */
-    *d = (1 + (K * t))/ *e;
+    /* Create totient value for key generation */
+    /* int n = x * y; */ 
+    int t = (x-1)*(y-1);
+
+    #ifdef DEBUG
+    printf("x = %d; y = %d; t = %d\n", *x_p, *y_p, t);
+    #endif /* DEBUG */
+
+    *key = shortKey(t);
 }
 
 void randomPrimes(int* x, int* y) {
@@ -127,43 +119,18 @@ boolean isPrime(int input) {
     return true;
 }
 
-boolean isCoPrime(int i1, int i2) {
-    /* The method used to determine coprime is found by Euclid's algorithm. 
-     * The greatest common divisor will be 1 when both are coprime. */
-    while (i1 != 0 && i2 != 0) {
-        if(i1 < i2) {
-            i1 = i1 % i2;
-        }
-        else {
-            i2 = i2 % i1;
-        }
-    }
-    /* Max will store the greatest common divisor (GCD) */
-    int max;
-    if(i1 > i2) {
-        max = i1;
-    }
-    else {
-        max = i2; 
-    }
-    /* The integers are coprime if the GCD is 1 */
-    return max == 1;
+int shortKey(int key) {
+    return key % 100;
 }
 
-void readKeys(int* e, int* d) {
+void readKeys(int* key) {
     FILE* file = fopen(KEYFILE, "rb");
-    /* Holder for the values taken from the file. */
-    int values[2];
-    fread(values, sizeof(int), 2, file);
-    *e = values[0];
-    *d = values[1];
+    fread(key, sizeof(int), 1, file);
     fclose(file);    
 }
 
-void writeKeys(int* e, int* d) {
+void writeKeys(int* key) {
     FILE* file = fopen(KEYFILE, "wb");
-    /* The key values to be written to the file. */
-    int values[2] = {*e, *d};
-    fwrite(values, sizeof(int), 2, file);
+    fwrite(key, sizeof(int), 1, file);
     fclose(file);
 }

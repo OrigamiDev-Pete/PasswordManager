@@ -39,6 +39,18 @@ int main(void)
     HuffmanCompression(*test);
     printf("\n");
 
+    /* Encryption Test Run */
+    String* tester = newString("Encryption tester string");
+    printf("The original string: ");
+    printString(tester);
+    String encrypted = encryptAccounts(tester);
+    printf("The encrypted string: ");
+    printString(&encrypted);
+
+    printf("Now Decrypted: ");
+    String decrypted = decryptAccounts(&encrypted);
+    printString(&decrypted);
+
 	return 0;
 }
 
