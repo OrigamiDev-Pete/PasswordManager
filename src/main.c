@@ -34,10 +34,9 @@ int main(void)
 
 
     /* Huffman code printing test */
-    String* test = newString("aaaabbc");
-    printf("Huffman codes:\n");
+    printf("\nHuffman compression test:\nInput: ");
+    String* test = newString("aaaaaaabbc");
     HuffmanCompression(*test);
-    printf("\n");
 
     /* Encryption Test Run */
     String* tester = newString("Encryption tester string");
