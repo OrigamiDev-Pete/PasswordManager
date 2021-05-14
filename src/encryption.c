@@ -1,7 +1,7 @@
 /* Library Inclusion and Defines*/
 #include "encryption.h"
 
-#define DEBUG
+/* #define DEBUG */
 #define K 2 /* K is a constant of any value used in key generation */
 #define KEYFILE "keys.bin" /* A file in which the keys will be stored */
 
