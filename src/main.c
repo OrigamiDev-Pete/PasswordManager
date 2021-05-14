@@ -5,6 +5,7 @@
 #include "huffman.h"
 #include "io.h"
 #include "util.h"
+#include "encryption.h"
 
 
 
