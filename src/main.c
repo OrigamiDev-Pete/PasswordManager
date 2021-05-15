@@ -35,7 +35,8 @@ int main(void)
 
     /* Huffman code printing test */
     printf("\nHuffman compression test:\nInput: ");
-    String* test = newString("aaaaaaabbc");
+    String* test = newString("This is a test");
+    printString(test);
     HuffmanCompression(*test);
 
 	return 0;
@@ -44,7 +45,6 @@ int main(void)
 /* Rough Main Menu idea */
 
 /*
-
 
 Login Menu:
 

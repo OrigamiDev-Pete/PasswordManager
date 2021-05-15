@@ -11,6 +11,13 @@
 
 #define HUFFMAN_H
 
+/* Result of huffman compression */
+typedef struct {
+    String* comp_string;
+    String* huff_tree;
+    int code_len;
+} result_t;
+
 
 /*******************************************************************************
 * Define: Function takes a string object input, compresses it and outputs the
@@ -21,7 +28,7 @@
 * - A compressed string
 * - Huffman dictonary
 *******************************************************************************/
-String HuffmanCompression(String);
+result_t HuffmanCompression(String);
 
 
 /*******************************************************************************

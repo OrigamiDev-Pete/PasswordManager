@@ -29,12 +29,6 @@ typedef struct d_node {
   int arr_size;
 } d_node;
 
-typedef struct {
-    String comp_string;
-    String huff_tree;
-} result_t;
-
-
 
 /* I will figure out how to change this later, 
    only a temporary fix for now */
@@ -51,8 +45,9 @@ int BuildHuffmanTree(character_t character_array[], int size,
                      node_t* priorityqueue[]);
 void SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
                        int top);
-String BitConversion(String input, d_node huffman_dict[], int dict_size);
-String HuffmanCompression(String input);
+String* BitConversion(String input, d_node huffman_dict[], int dict_size);
+String* exportTree(node_t* root_node, String* huff_str, int top);
+result_t HuffmanCompression(String input);
 
 
 /*******************************************************************************
@@ -195,14 +190,12 @@ int BuildHuffmanTree(character_t character_array[], int size,
 void SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
                        int top)
 {
-    
     if(root_node->left) 
     {
         code_array[top] = 0;
         SaveHuffmanCodes(root_node->left, code_array, huffman_dict, top + 1);
     }
  
-    
     if (root_node->right) 
     {
         code_array[top] = 1;
@@ -235,7 +228,7 @@ void SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[]
 * Outputs: 
 * - a string of changed bits (hopefull huffman compression)
 *******************************************************************************/
-String BitConversion(String input, d_node huffman_dict[], int dict_size)
+String* BitConversion(String input, d_node huffman_dict[], int dict_size)
 {
     String* bit_str = newString(NULL);
 
@@ -317,11 +310,45 @@ String BitConversion(String input, d_node huffman_dict[], int dict_size)
     }
     printf("\n");
 
-    return(*bit_str);
+    return(bit_str);
 }
 
 
-String HuffmanCompression(String input)
+/*******************************************************************************
+* Author: Joshua Gonzalez
+* Function: Recursively traverses huffman tree and outputs it as a compressed 
+*           code
+* Inputs: 
+* - priority queue (root node of tree)
+* - result string
+* - top (keeps track of what node the function is up to)
+* Outputs: 
+* - coded huffman tree as a string
+*******************************************************************************/
+String* exportTree(node_t* root_node, String* huff_str, int top)
+{
+    if(root_node->isleaf == false) 
+    {
+        stringAppendChar(huff_str, '0');
+
+        if(root_node->left)
+            huff_str = exportTree(root_node->left, huff_str, top + 1);
+
+        if(root_node->right)
+            huff_str = exportTree(root_node->right, huff_str, top + 1);
+    }
+
+    if (root_node->isleaf == true) 
+    {
+        stringAppendChar(huff_str, '1');
+        stringAppendChar(huff_str, root_node->character);
+    }
+
+    return(huff_str);
+}
+
+
+result_t HuffmanCompression(String input)
 {
     /*Convert string to an array of character_t structures with each element
     * representing a unique character and its corresponding frequency*/
@@ -422,13 +449,39 @@ String HuffmanCompression(String input)
         printf(": %d\n", huffman_dict[i].arr_size);
     }
 
+    /* result structure */
+    result_t huff_comp;
+
     /* create string of changed bits (should i pass dict as const?) */
-    String* compressed_str = newString(BitConversion(input, huffman_dict, size).text);
-    printString(compressed_str);
+    huff_comp.comp_string = BitConversion(input, huffman_dict, size);
+    printString(huff_comp.comp_string);
 
-    /* create strcuture of results huffman tree string and string of bit */
-    /* should i calculate how long the huffman code should be and pass it though the result structure */
+    /* Export huffman tree */
+    top = 0;
+    String* huff_str = newString(NULL);
+    huff_comp.huff_tree = exportTree(priorityqueue[0], huff_str, top);
+    printString(huff_comp.huff_tree);
+    freeString(huff_str);
 
+    /* Calculate the length of the huffman compressed string */
+    huff_comp.code_len = 0;
+    for(i = 0; i < input.length - 1; ++i)
+    {
+        char ch = input.text[i];
+        int dict_pos;
+
+        int j;
+        for(j = 0; j < size; ++j)
+        {
+            if(ch == huffman_dict[j].character)
+            {
+                dict_pos = j;
+                break;
+            }
+        }
+        huff_comp.code_len = huff_comp.code_len + huffman_dict[dict_pos].arr_size; 
+    }
+    printf("Length of huffman code: %d\n", huff_comp.code_len);
 
     /* free pointer nodes in the priority queue array */
     for(i = 0; i < priorityQ_length; ++i)
@@ -436,5 +489,5 @@ String HuffmanCompression(String input)
         free(priorityqueue[i]);
     }
 
-    return(*compressed_str);
+    return(huff_comp);
 }
