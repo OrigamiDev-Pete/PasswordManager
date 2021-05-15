@@ -5,7 +5,6 @@
 #include <stdio.h> /* malloc, free */
 
 
-
 /* Huffman tree node */
 struct node
 {
@@ -30,12 +29,6 @@ typedef struct d_node {
 } d_node;
 
 
-/* I will figure out how to change this later, 
-   only a temporary fix for now */
-/* global variable */
-int d_index;
-
-
 /*******************************************************************************
 * Local Function Prototypes
 *******************************************************************************/
@@ -43,8 +36,8 @@ node_t* newLeafNode(char character, unsigned int frequency);
 node_t* newInternalNode(node_t* node1, node_t* node2);
 int BuildHuffmanTree(character_t character_array[], int size, 
                      node_t* priorityqueue[]);
-void SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
-                       int top);
+int SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
+                       int top, int d_index);
 String* BitConversion(String input, d_node huffman_dict[], int dict_size);
 String* exportTree(node_t* root_node, String* huff_str, int top);
 result_t HuffmanCompression(String input);
@@ -187,19 +180,19 @@ int BuildHuffmanTree(character_t character_array[], int size,
 * - int to track current level of binary tree
 * Outputs: 
 *******************************************************************************/
-void SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
-                       int top)
+int SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
+                     int top, int d_index)
 {
     if(root_node->left) 
     {
         code_array[top] = 0;
-        SaveHuffmanCodes(root_node->left, code_array, huffman_dict, top + 1);
+        d_index = SaveHuffmanCodes(root_node->left, code_array, huffman_dict, top + 1, d_index);
     }
  
     if (root_node->right) 
     {
         code_array[top] = 1;
-        SaveHuffmanCodes(root_node->right, code_array, huffman_dict, top + 1);
+        d_index = SaveHuffmanCodes(root_node->right, code_array, huffman_dict, top + 1, d_index);
     }
  
     if (root_node->isleaf == true) 
@@ -214,6 +207,8 @@ void SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[]
         huffman_dict[d_index].arr_size = top;
         ++d_index;
     }
+
+    return(d_index);
 }
 
 
@@ -425,15 +420,12 @@ result_t HuffmanCompression(String input)
     /* Create dictionary from printed codes */
     d_node huffman_dict[size];
 
-    /* resets global variable each time function is called */
-    d_index = 0;
-
-    int top = 0;
+    /* save codes to the huffman dictionary */
+    int top = 0, d_index = 0;
     int code_array[256];
 
-    SaveHuffmanCodes(priorityqueue[0], code_array, huffman_dict, top);
-
-
+    SaveHuffmanCodes(priorityqueue[0], code_array, huffman_dict, top, d_index);
+    
     /* Print Huffman Dictionary */
     printf("\nHuffman Dictionary:\n");
     for(i = 0; i < size; i++)
