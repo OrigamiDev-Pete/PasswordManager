@@ -5,6 +5,7 @@
 #include "huffman.h"
 #include "io.h"
 #include "util.h"
+#include "encryption.h"
 
 
 
@@ -38,6 +39,18 @@ int main(void)
     String* test = newString("This is a test");
     printString(test);
     HuffmanCompression(*test);
+
+    /* Encryption Test Run */
+    String* tester = newString("Encryption tester string");
+    printf("The original string: ");
+    printString(tester);
+    String encrypted = encryptAccounts(tester);
+    printf("The encrypted string: ");
+    printString(&encrypted);
+
+    printf("Now Decrypted: ");
+    String decrypted = decryptAccounts(&encrypted);
+    printString(&decrypted);
 
 	return 0;
 }

@@ -35,13 +35,11 @@ String decryptAccounts(String* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: to generate public and priavte keys for the RSA algorithm used for 
-  encryption.
-* Input: e & d - pointers to the public and private keys to be created
-        n - the modulus of the two keys
-        t - the totient function
+* Function: to generate a key by performing mathematical operations on random
+*           prime numbers. The key is used to encrypt data.
+* Input: a pointer to the varible storing the encryption key.
 *******************************************************************************/
-void createKey(int* e, int* d, int n, int t);
+void createKey(int* key);
 
 /*******************************************************************************
 * Author: Luke Phillips
@@ -61,19 +59,17 @@ boolean isPrime(int input);
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: determines if two integers are coprime
-* Input: the integers for comparison
-* Output: a boolean true if coprime or false if not
-          - note: boolean is defined in util.h
+* Function: take the totient value and use it to generate the 2 digit shift key.
+* Input: integer of the long key value.
 *******************************************************************************/
-boolean isCoPrime(int i1, int i2);
+int shortKey(int key);
 
 /*******************************************************************************
 * Author: Luke Phillips
 * Function: read the two encoded keys from the file to be used.
 * Input: two integer pointers of the location to load the keys into.
 *******************************************************************************/
-void readKeys(int* e, int* d);
+void readKeys(int* key);
 
 /*******************************************************************************
 * Author: Luke Phillips
@@ -82,6 +78,6 @@ void readKeys(int* e, int* d);
       are needed.
 * Input: two integer pointers of the keys to be stored.
 *******************************************************************************/
-void writeKeys(int* e, int* d);
+void writeKeys(int* key);
 
 #endif /* ENCRYPT_H */
