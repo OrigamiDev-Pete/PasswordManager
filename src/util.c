@@ -334,7 +334,7 @@ Node *linkedListGet(LinkedList *list, int index)
     return node;
 }
 
-void linkedListSet(LinkedList *list, int index, void *data, void (*func)(void *))
+void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *))
 {
     Node *node = list->head;
     int i;
@@ -343,9 +343,9 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*func)(void *)
         node = node->next;
     }
 
-    if (func)
+    if (freeFunc)
     {
-        (*func)(node->data);
+        (*freeFunc)(node->data);
     }
 
     node->data = data;
