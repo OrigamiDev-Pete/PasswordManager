@@ -62,7 +62,7 @@ int main(void)
 
             break;
             case 2: /* Add New account */
-
+              ; /* fix later */
               String* name = readString("Please enter website's name> ");
               String* url = readString("Please enter website's url> ");
               String* password = readString("Please enter password> ");

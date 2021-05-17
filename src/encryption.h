@@ -11,9 +11,6 @@
 
 #include "util.h"   /* String, boolean, newString, strintgGetChar,
                       StringSetChar */
-#include <stdlib.h> /* srand, rand */
-#include <stdio.h>  /* fwrite, fread, fopen, fclose */
-#include <time.h> /* time */
 
 /*******************************************************************************
 * Author: Luke Phillips

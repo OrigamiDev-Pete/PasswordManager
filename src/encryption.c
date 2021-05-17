@@ -1,5 +1,8 @@
 /* Library Inclusion and Defines*/
 #include "encryption.h"
+#include <stdlib.h> /* srand, rand */
+#include <stdio.h>  /* fwrite, fread, fopen, fclose */
+#include <time.h> /* time */
 
 /* #define DEBUG */
 #define KEYFILE "keys.bin" /* A file in which the keys will be stored */
@@ -17,21 +20,20 @@ String* encryptString(String* input) {
         writeKeys(key_p);
     }
     else {
-        /* The keys exist, so read them from the file to continue encryption. *
+        /* The keys exist, so read them from the file to continue encryption.
         * Close the keyfile to avoid conflicts when reading keys
-        in readKeys() function. */
+        * in readKeys() function. */
         fclose(keys_file);
         readKeys(key_p);
     }
 
     /* Use the keys generated to encrypt the input string. */
-    String* encrypted = newString(input->text);
     
     int counter;
     for(counter = 0; counter < input->length; counter++) {
-        char tmp = stringGetChar(encrypted, counter);
+        char tmp = stringGetChar(input, counter);
         tmp = tmp + key;
-        stringSetChar(encrypted, counter, tmp);
+        stringSetChar(input, counter, tmp);
     }
 
     #ifdef DEBUG
@@ -42,7 +44,7 @@ String* encryptString(String* input) {
     printString(encrypted);
     #endif /* DEBUG */
 
-    return encrypted;
+    return input;
 }
 
 String* decryptString(String* input) {
@@ -65,16 +67,15 @@ String* decryptString(String* input) {
     }
 
     /* Decrypt the input string */
-    String* decrypted = newString(input->text);
 
     int counter;
     for(counter = 0; counter < input->length; counter++) {
-        char tmp = stringGetChar(decrypted, counter);
+        char tmp = stringGetChar(input, counter);
         tmp = tmp - key;
-        stringSetChar(decrypted, counter, tmp);
+        stringSetChar(input, counter, tmp);
     }
     
-    return decrypted;
+    return input;
 }
 
 void createKey(int* key) {
@@ -92,7 +93,11 @@ void createKey(int* key) {
     printf("x = %d; y = %d; t = %d\n", *x_p, *y_p, t);
     #endif /* DEBUG */
 
-    *key = shortKey(t);
+    /* Shortens the key while retaining randomness. Makes more efficient. */
+    int shortened = shortKey(t);
+    /* If the shortened key is zero, encryption will not change the string. */
+    if(shortened == 0) createKey(key); /* Generate key again. */
+    else *key = shortened;
 }
 
 void randomPrimes(int* x, int* y) {

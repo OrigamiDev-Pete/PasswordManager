@@ -19,7 +19,7 @@ typedef enum compression { HUFFMAN, RUN_LENGTH } compression;
 * Input: accounts - A list of the accounts to be saved.
 *         encrypt - encrypt or not.
 *        compress - compress or not.
-*         cmpType - Type of compression to employ. Options are stored as enumated
+*         cmpType - Type of compression to employ. Options are stored as enumerated
 *                   values, HUFFMAN and RUN_LENGTH. HUFFMAN is more space effecient.
 *                   RUN_LENGTH is faster.
 * Output: Returns true if successful, false if an error occurs
@@ -28,8 +28,8 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, boolean compress, 
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Saves accounts data to the filesystem.
-* Input: accounts - A list to load the  saved accounts into.
+* Function: Loads accounts data from the filesystem.
+* Input: accounts - A list to load the saved accounts into.
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
 boolean loadData(LinkedList *accounts);

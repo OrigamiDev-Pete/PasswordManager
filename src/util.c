@@ -16,8 +16,8 @@ internal void nullTerminate(String *string);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Changes a char at a given position. Bounds-checked.
-* Input: string - An unitialised String.
+* Function: Initialises a new String.
+* Input: string - An uninitialised String.
 *           val - A C-style string can be provided which sets the new String's initial
 *                 value to val and sized appropriately. If NULL, the new String is 
 *                 initalised empty.

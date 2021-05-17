@@ -2,7 +2,7 @@
 * Author: Peter de Vroom
 * 
 * The header file supports the functionality of various systems in the program.
-* Types: boolean, String, LinkedList
+* Types: boolean, String, LinkedList, Bit Manipulation
 *******************************************************************************/
 
 #ifndef UTIL_H
