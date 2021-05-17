@@ -377,3 +377,14 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
     }
     free(list);
 }
+
+
+int checkBit(byte ch, int pos)
+{
+    --pos;
+    
+    if(ch & (1<< pos))
+        return(1);
+    else
+        return(0);
+}

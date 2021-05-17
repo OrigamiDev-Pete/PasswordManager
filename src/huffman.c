@@ -233,9 +233,9 @@ String* BitConversion(String input, d_node huffman_dict[], int dict_size)
 
     byte b = 0;
 
-    /* Traverse entire string up until end of string or NULL character */
+    /* Traverse entire string up until end of string */
     int i = 0;
-    while(i < input.length && input.text[i] != '\0')
+    while(i < input.length - 1)
     {
         /* store i'th character in string */
         char ch = input.text[i];
@@ -355,7 +355,7 @@ result_t HuffmanCompression(String input)
 
     /* checks for null character as string datatype automatically appends to 
        end */
-    for(i = 0; i < input.length && input.text[i] != '\0'; i++)
+    for(i = 0; i < input.length -1; i++)
     {
         occ = 0;
         ch = input.text[i];
@@ -418,13 +418,14 @@ result_t HuffmanCompression(String input)
     
 
     /* Create dictionary from printed codes */
-    d_node huffman_dict[size];
+    d_node huffman_dict[256];
 
     /* save codes to the huffman dictionary */
     int top = 0, d_index = 0;
     int code_array[256];
 
     SaveHuffmanCodes(priorityqueue[0], code_array, huffman_dict, top, d_index);
+
     
     /* Print Huffman Dictionary */
     printf("\nHuffman Dictionary:\n");
@@ -482,4 +483,25 @@ result_t HuffmanCompression(String input)
     }
 
     return(huff_comp);
+}
+
+
+/*******************************************************************************/
+
+/* Inputs: tree as a string and the huffman code as string */
+
+/* Build huffman tree from the huff tree code */
+
+/* traverse huffman tree to spit out result string, check each bit to convert it to a string */
+
+
+String* HuffmanDecompression(String huff_tree, String huff_code, int code_len)
+{
+    String* decomp_str = newString("hello main");
+    
+    checkBit('a', 1);
+
+    /* Example Tree: 001c1b1a */
+
+    return(decomp_str);
 }

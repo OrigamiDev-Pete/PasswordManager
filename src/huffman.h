@@ -11,6 +11,7 @@
 
 #define HUFFMAN_H
 
+
 /* Result of huffman compression */
 typedef struct {
     String* comp_string;
@@ -40,7 +41,10 @@ result_t HuffmanCompression(String);
 * Output:
 * - A decompressed string
 *******************************************************************************/
-String HuffmanDecompression(String);
+String* HuffmanDecompression(String huff_tree, String huff_code, int code_len);
+
+
+/* Combine all headers to compression.h */
 
 
 #endif /*HUFFMAN_H*/
