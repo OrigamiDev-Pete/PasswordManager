@@ -11,75 +11,6 @@
 
 int main(void)
 {
-<<<<<<< Updated upstream
-	/* setBit Demo */
-	char A = 0;
-	setBit(A, 7);
-	setBit(A, 3);
-	setBit(A, 5);
-	printf("%d\n", A);
-	printf("%c\n", A);
-
-	/* stringCompare Demo */
-	String *str1 = newString("oak ridge");
-	String *str2 = newString("oakley park");
-	printf("%d\n", stringCompare(str1, str2));
-
-
-    /* Run Length Encoding Test */
-    String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj");
-    printString(input);
-    String stringcmp = compress(*input);
-    printString(&stringcmp);
-    String stringdcmp = decompress(stringcmp);
-    printString(&stringdcmp);
-
-
-    /* Huffman code printing test */
-    printf("\nHuffman compression test:\nInput: ");
-    String* test = newString("aaaaaaabbc");
-    HuffmanCompression(*test);
-
-    /* Encryption Test Run */
-    String* tester = newString("Encryption tester string");
-    printf("The original string: ");
-    printString(tester);
-    String* encrypted = encryptString(tester);
-    printf("The encrypted string: ");
-    printString(encrypted);
-
-    printf("Now Decrypted: ");
-    String* decrypted = decryptString(encrypted);
-    printString(decrypted);
-
-
-    printf("****************************************************************************************************\n");
-    String* inputEnc = readString("Input the string to be encrypted> ");
-    String* encrypt = encryptString(inputEnc);
-    printf("\nThe encrypted string is> ");
-    printString(encrypt);
-    String* decrypt = decryptString(encrypt);
-    printf("The decrypted version is> ");
-    printString(decrypt);
-    printf("\n****************************************************************************************************\n");
-
-    int one = 1;
-    LinkedList *list = newLinkedList(&one);
-    int two = 2;
-    linkedListAppend(list, &two);
-    int three = 3;
-    linkedListAppend(list, &three);
-    int four = 4;
-    linkedListSet(list, 1, &four, NULL);
-    printLinkedList(list, printInt);
-    Node *node = linkedListGet(list, 1);
-    printf("%d", *(int *)node->data);
-
-    
-
-
-	return 0;
-=======
   boolean running = true;
   while(running=true)
   {
@@ -155,6 +86,7 @@ int main(void)
 
   }
 
+  return 0;
 }
 
 /* Rough Main Menu idea */
@@ -194,7 +126,6 @@ void printSearch(void)
   "2. Sort database alphabetically\n"
   "3. Edit account entry\n"
   "4. Delete account\n");
->>>>>>> Stashed changes
 }
 
 void printSettings(void)
@@ -254,56 +185,3 @@ Settings Menu: !(Need to type in master password to delete master account)!
    2. OPTION 3
 
 */
-
-
-  /* Run Length Encoding Test */
-    
-    String* input = newString("hw kjd kdld ldkd ldld k ldd lkddafsdfdsfsdfa dsaf asdf sadfasdf asdfasdf sadf asdfsdf asdf "); /*empty String*/
-    printString(input);
-    String stringcmp = compress(*input);
-    printString(&stringcmp);
-    String stringdcmp = decompress(stringcmp);
-    printString(&stringdcmp);
-
-    /* LinkedList Demo */
-
-    int i = 150;
-    LinkedList *list = newLinkedList(&i);
-    int j = 200;
-    linkedListAppend(list, &j);
-    int k = 250;
-    linkedListAppend(list, &k);
-    int l = 300;
-    linkedListAppend(list, &l);
-
-    printLinkedList(list, printInt);
-    freeLinkedList(list, NULL);
-
-    /* Account Demo + LinkedList */
-
-    Account *acc = newAccount(readString("Enter a name> "), readString("Enter a URL> "), readString("Enter a password> "));
-
-    Account *acc2 = newAccount(newString("Amazon"), newString("www.amazon.com"), newString("pass123"));
-
-    LinkedList *list2 = newLinkedList(acc);
-    linkedListAppend(list2, acc2);
-
-    printLinkedList(list2, printAccount);
-    freeLinkedList(list2, freeAccount);
-
-
-    /* String Demo */
-
-    String *string = newString(NULL); /* empty String */
-    stringAppend(string, "Appending to the string");
-    printString(string);
-
-    String *string2 = newString("Setting the string at initialisation");
-    printString(string2);
-
-    String *stdRead = readString("Enter a string> "); /* A string can be created directly from stdin */
-    printString(stdRead);
-
-    freeString(string);
-    freeString(string2);
-    freeString(stdRead);
