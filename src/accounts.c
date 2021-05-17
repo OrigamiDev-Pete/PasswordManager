@@ -11,7 +11,7 @@ typedef struct Account {
 } Account;
 
 
-Account *newAccount(String *name, String *url, String *password)
+Account* newAccount(String *name, String *url, String *password)
 {
     Account *acc = malloc(sizeof(Account));
     acc->name = name;
