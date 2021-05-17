@@ -4,7 +4,7 @@
 /* #define DEBUG */
 #define KEYFILE "keys.bin" /* A file in which the keys will be stored */
 
-String encryptString(String* input) {
+String* encryptString(String* input) {
     int key;
     int* key_p = &key;
     /* Open the file of stored keys if it exists */
@@ -42,10 +42,10 @@ String encryptString(String* input) {
     printString(encrypted);
     #endif /* DEBUG */
 
-    return *encrypted;
+    return encrypted;
 }
 
-String decryptString(String* input) {
+String* decryptString(String* input) {
     int key;
     int* key_p = &key;
     FILE* keys_file = fopen(KEYFILE, "rb");
@@ -55,7 +55,7 @@ String decryptString(String* input) {
         /* Decryption is not necessary when the string has not been encrypted. */
         printf("Data has not been previously encrypted. Aborting decryption.\n");
         fclose(keys_file);
-        return *input;
+        return input;
     }
     else {
         /* Close the keyfile to avoid conflicts when reading keys
@@ -74,7 +74,7 @@ String decryptString(String* input) {
         stringSetChar(decrypted, counter, tmp);
     }
     
-    return *decrypted;
+    return decrypted;
 }
 
 void createKey(int* key) {

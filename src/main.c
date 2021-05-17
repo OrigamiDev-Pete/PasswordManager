@@ -43,23 +43,23 @@ int main(void)
     String* tester = newString("Encryption tester string");
     printf("The original string: ");
     printString(tester);
-    String encrypted = encryptString(tester);
+    String* encrypted = encryptString(tester);
     printf("The encrypted string: ");
-    printString(&encrypted);
+    printString(encrypted);
 
     printf("Now Decrypted: ");
-    String decrypted = decryptString(&encrypted);
-    printString(&decrypted);
+    String* decrypted = decryptString(&encrypted);
+    printString(decrypted);
 
 
     printf("****************************************************************************************************\n");
-    String* input = readString("Input the string to be encrypted> ");
-    String encrypt = encryptString(input);
+    String* inputEnc = readString("Input the string to be encrypted> ");
+    String* encrypt = encryptString(inputEnc);
     printf("\nThe encrypted string is> ");
-    printString(&encrypt);
-    String decrypt = decryptString(&encrypt);
+    printString(encrypt);
+    String* decrypt = decryptString(&encrypt);
     printf("The decrypted version is> ");
-    printString(&decrypt);
+    printString(decrypt);
     printf("\n****************************************************************************************************\n");
     
 

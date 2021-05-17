@@ -24,7 +24,7 @@
 * Output: an string containing the encrypted version of the input.
             - note: String defined in util.h
 *******************************************************************************/
-String encryptString(String* input);
+String* encryptString(String* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
@@ -33,7 +33,7 @@ String encryptString(String* input);
 * Output: an string containing the decrypted version of the input.
             - note: String defined in util.h
 *******************************************************************************/
-String decryptString(String* input);
+String* decryptString(String* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
