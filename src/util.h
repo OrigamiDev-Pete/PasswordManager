@@ -159,9 +159,25 @@ LinkedList* newLinkedList(void *data);
 *******************************************************************************/
 void linkedListAppend(LinkedList *list, void *data);
 
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Gets a node at an index.
+* Input: list - A LinkedList
+*       index - Index of a node (bounds-checked)
+* Output: Returns a Node in the LinkedList
+*******************************************************************************/
 Node* linkedListGet(LinkedList *list, int index);
 
-void linkedListSet(LinkedList *list, int index, void *data, void (*func)(void *));
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Frees a linked list and all contained data.
+* Input: list - A LinkedList
+*       index - Index of a node (bounds-checked)
+*        data - Void pointer to data that will be replaced at index
+*        func - Function pointer to a free function if LinkedList contents need
+*               freed.
+*******************************************************************************/
+void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -209,5 +225,7 @@ typedef char byte;
 *******************************************************************************/
 #define clearBit(byte, bitToSet) byte &= ~(1 << (bitToSet-1))
 /*void clearBit(byte *byte, int bitToSet); */
+
+
 
 #endif /* UTIL_H */

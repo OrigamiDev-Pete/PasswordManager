@@ -11,78 +11,85 @@
 void printLogin();
 void printMenu();
 void printSearch();
-void printSettings();
 
 
 int main(void)
 {
+  LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;
   while(running==true)
   {
     printLogin();
     int option;
     printf("Option>");
-    scanf("%d",&option);
+    option = readInt();
     while(option!=4)
     {
       switch(option)
     {
-      case 1:
+      case 1: /* Login (Existing User) */
 
         printMenu();
         int task;
         printf("Option>");
-        scanf("%d",&task);
-        while(task!=8)
+        task = readInt();
+        while(task!=7)
         {
           switch(task)
           {
-            case 1:
+            case 1: /* Search and Sort menu */
 
               printSearch();
               int choice;
               printf("Option>");
-              scanf("%d",&choice);
+              choice = readInt();
               while(choice!=5)
               {
                 switch(choice)
                 {
-                  case 1:
+                  case 1: /* Search database */
                   break;
-                  case 2:
+                  case 2: /* Sort database alphabetically */
                   break;
-                  case 3:
+                  case 3: /* Edit account entry */
                   break;
-                  case 4: /* Enter master password*/
+                  case 4: /*  Delete account */
+                    /* Enter master password*/
                     /*String* password = readString("Enter password> ");*/
-                    
-                    printSettings();
-                    /*int del;*/
                   break;
                 }
               } 
 
             break;
-            case 2:
+            case 2: /* Add New account */
+              ; /* fix later */
+              String* name = readString("Please enter website's name> ");
+              String* url = readString("Please enter website's url> ");
+              String* password = readString("Please enter password> ");
+              
+              Account* inputAccount = newAccount(name, url, password);
+              linkedListAppend(accounts, inputAccount); 
             break;
-            case 3:
+            case 3: /* Display stored websites */
+
+              printLinkedList(accounts, printAccount);
             break;
-            case 4:
+            case 4: /* Import database (DC&DE) */
             break;
-            case 5:
+            case 5: /* Export database (E&C) */
             break;
-            case 6:
-            break;
-            case 7: running = false;
+            case 6: /* Log out */
+              running = false;
             break;
             default: printf("Invalid option.\n");
           }
         }
 
       break;
-      case 2:;
+      case 2: /*  Create New Master Account */
       break;
-      case 3:;
+      case 3:  /* Exit Program */
+        running =false;
       break;
       default: printf("Invalid option.\n");
     }
@@ -117,8 +124,7 @@ void printMenu()
   "3. Display stored websites\n"
   "4. Import database (DC&DE)\n"
   "5. Export database (E&C)\n"
-  "6. Settings\n"
-  "7. Log out\n");
+  "6. Log out\n");
 }
 
 void printSearch()
@@ -133,14 +139,6 @@ void printSearch()
   "4. Delete account\n");
 }
 
-void printSettings()
-{
-  printf("\n\n"
-  "*************************************\n"
-  "*              Settings             *\n"
-  "*************************************\n"
-  "1. DELETE MASTER ACCOUNT\n");
-}
 
 /*
 
