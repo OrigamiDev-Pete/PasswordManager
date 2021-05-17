@@ -159,6 +159,10 @@ LinkedList* newLinkedList(void *data);
 *******************************************************************************/
 void linkedListAppend(LinkedList *list, void *data);
 
+Node* linkedListGet(LinkedList *list, int index);
+
+void linkedListSet(LinkedList *list, int index, void *data, void (*func)(void *));
+
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Prints all the data contained in a LinkedList.

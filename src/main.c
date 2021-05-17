@@ -61,6 +61,19 @@ int main(void)
     printf("The decrypted version is> ");
     printString(decrypt);
     printf("\n****************************************************************************************************\n");
+
+    int one = 1;
+    LinkedList *list = newLinkedList(&one);
+    int two = 2;
+    linkedListAppend(list, &two);
+    int three = 3;
+    linkedListAppend(list, &three);
+    int four = 4;
+    linkedListSet(list, 1, &four, NULL);
+    printLinkedList(list, printInt);
+    Node *node = linkedListGet(list, 1);
+    printf("%d", *(int *)node->data);
+
     
 
 

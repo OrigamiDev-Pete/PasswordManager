@@ -323,6 +323,34 @@ void linkedListAppend(LinkedList *list, void *data)
     list->length++;
 }
 
+Node *linkedListGet(LinkedList *list, int index)
+{
+    Node *node = list->head;
+    int i;
+    for (i = 0; i < index && node->next != NULL; i++)
+    {
+        node = node->next;
+    }
+    return node;
+}
+
+void linkedListSet(LinkedList *list, int index, void *data, void (*func)(void *))
+{
+    Node *node = list->head;
+    int i;
+    for (i = 0; i < index && node->next != NULL; i++)
+    {
+        node = node->next;
+    }
+
+    if (func)
+    {
+        (*func)(node->data);
+    }
+
+    node->data = data;
+}
+
 void printLinkedList(LinkedList *list, void (*func)(void *))
 {
     Node *node = list->head;
