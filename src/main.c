@@ -48,7 +48,7 @@ int main(void)
     printString(encrypted);
 
     printf("Now Decrypted: ");
-    String* decrypted = decryptString(&encrypted);
+    String* decrypted = decryptString(encrypted);
     printString(decrypted);
 
 
@@ -57,7 +57,7 @@ int main(void)
     String* encrypt = encryptString(inputEnc);
     printf("\nThe encrypted string is> ");
     printString(encrypt);
-    String* decrypt = decryptString(&encrypt);
+    String* decrypt = decryptString(encrypt);
     printf("The decrypted version is> ");
     printString(decrypt);
     printf("\n****************************************************************************************************\n");
