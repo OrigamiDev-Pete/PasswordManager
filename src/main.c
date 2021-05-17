@@ -11,6 +11,7 @@
 
 int main(void)
 {
+<<<<<<< Updated upstream
 	/* setBit Demo */
 	char A = 0;
 	setBit(A, 7);
@@ -78,9 +79,132 @@ int main(void)
 
 
 	return 0;
+=======
+  boolean running = true;
+  while(running=true)
+  {
+    printLogin();
+    int option, login_size= 0;
+    printf("Option>");
+    scanf("%d",&option);
+    while(option!=4)
+    {
+      switch(option)
+    {
+      case 1:
+
+        printMenu();
+        int task, menu_size=0;
+        printf("Option>");
+        scanf("%d",&task);
+        while(task!=8)
+        {
+          switch(task)
+          {
+            case 1:
+
+              printSearch();
+              int choice, search_size=0;
+              printf("Option>");
+              scanf("%d",&choice);
+              while(choice!=5)
+              {
+                switch(choice)
+                {
+                  case 1:
+                  break;
+                  case 2:
+                  break;
+                  case 3:
+                  break;
+                  case 4: /* Enter master password*/
+                    String* password = readString("Enter password> ");
+                    
+                    printSettings();
+                    int del, setting_size=0;
+                  break;
+                }
+              } 
+
+            break;
+            case 2:
+            break;
+            case 3:
+            break;
+            case 4:
+            break;
+            case 5:
+            break;
+            case 6:
+            break;
+            case 7: running = false;
+            break;
+            default: printf("Invalid option.\n");
+          }
+        }
+
+      break;
+      case 2:;
+      break;
+      case 3:;
+      break;
+      default: printf("Invalid option.\n");
+    }
+
+  }
+
+  }
+
 }
 
 /* Rough Main Menu idea */
+void printLogin(void)
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*              Welcome!             *\n"
+  "*************************************\n"
+  "1. Login (Exisiting User)\n"
+  "2. Create New Master Account\n"
+  "3. Exit Program\n");
+}
+
+void printMenu(void)
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*             Main Menu             *\n"
+  "*************************************\n"
+  "1. Search and Sort menu\n"
+  "2. Add New account\n"
+  "3. Display stored websites\n"
+  "4. Import database (DC&DE)\n"
+  "5. Export database (E&C)\n"
+  "6. Settings\n"
+  "7. Log out\n");
+}
+
+void printSearch(void)
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*        Search and Sort Menu       *\n"
+  "*************************************\n"
+  "1. Search database\n"
+  "2. Sort database alphabetically\n"
+  "3. Edit account entry\n"
+  "4. Delete account\n");
+>>>>>>> Stashed changes
+}
+
+void printSettings(void)
+{
+  printg("\n\n"
+  "*************************************\n"
+  "*              Settings             *\n"
+  "*************************************\n"
+  "1. DELETE MASTER ACCOUNT\n");
+}
 
 /*
 
@@ -130,3 +254,56 @@ Settings Menu: !(Need to type in master password to delete master account)!
    2. OPTION 3
 
 */
+
+
+  /* Run Length Encoding Test */
+    
+    String* input = newString("hw kjd kdld ldkd ldld k ldd lkddafsdfdsfsdfa dsaf asdf sadfasdf asdfasdf sadf asdfsdf asdf "); /*empty String*/
+    printString(input);
+    String stringcmp = compress(*input);
+    printString(&stringcmp);
+    String stringdcmp = decompress(stringcmp);
+    printString(&stringdcmp);
+
+    /* LinkedList Demo */
+
+    int i = 150;
+    LinkedList *list = newLinkedList(&i);
+    int j = 200;
+    linkedListAppend(list, &j);
+    int k = 250;
+    linkedListAppend(list, &k);
+    int l = 300;
+    linkedListAppend(list, &l);
+
+    printLinkedList(list, printInt);
+    freeLinkedList(list, NULL);
+
+    /* Account Demo + LinkedList */
+
+    Account *acc = newAccount(readString("Enter a name> "), readString("Enter a URL> "), readString("Enter a password> "));
+
+    Account *acc2 = newAccount(newString("Amazon"), newString("www.amazon.com"), newString("pass123"));
+
+    LinkedList *list2 = newLinkedList(acc);
+    linkedListAppend(list2, acc2);
+
+    printLinkedList(list2, printAccount);
+    freeLinkedList(list2, freeAccount);
+
+
+    /* String Demo */
+
+    String *string = newString(NULL); /* empty String */
+    stringAppend(string, "Appending to the string");
+    printString(string);
+
+    String *string2 = newString("Setting the string at initialisation");
+    printString(string2);
+
+    String *stdRead = readString("Enter a string> "); /* A string can be created directly from stdin */
+    printString(stdRead);
+
+    freeString(string);
+    freeString(string2);
+    freeString(stdRead);
