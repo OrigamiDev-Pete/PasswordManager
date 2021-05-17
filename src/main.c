@@ -7,15 +7,20 @@
 #include "util.h"
 #include "encryption.h"
 
+/* Function Prototypes */
+void printLogin();
+void printMenu();
+void printSearch();
+void printSettings();
 
 
 int main(void)
 {
   boolean running = true;
-  while(running=true)
+  while(running==true)
   {
     printLogin();
-    int option, login_size= 0;
+    int option;
     printf("Option>");
     scanf("%d",&option);
     while(option!=4)
@@ -25,7 +30,7 @@ int main(void)
       case 1:
 
         printMenu();
-        int task, menu_size=0;
+        int task;
         printf("Option>");
         scanf("%d",&task);
         while(task!=8)
@@ -35,7 +40,7 @@ int main(void)
             case 1:
 
               printSearch();
-              int choice, search_size=0;
+              int choice;
               printf("Option>");
               scanf("%d",&choice);
               while(choice!=5)
@@ -49,10 +54,10 @@ int main(void)
                   case 3:
                   break;
                   case 4: /* Enter master password*/
-                    String* password = readString("Enter password> ");
+                    /*String* password = readString("Enter password> ");*/
                     
                     printSettings();
-                    int del, setting_size=0;
+                    /*int del;*/
                   break;
                 }
               } 
@@ -90,7 +95,7 @@ int main(void)
 }
 
 /* Rough Main Menu idea */
-void printLogin(void)
+void printLogin()
 {
   printf("\n\n"
   "*************************************\n"
@@ -101,7 +106,7 @@ void printLogin(void)
   "3. Exit Program\n");
 }
 
-void printMenu(void)
+void printMenu()
 {
   printf("\n\n"
   "*************************************\n"
@@ -116,7 +121,7 @@ void printMenu(void)
   "7. Log out\n");
 }
 
-void printSearch(void)
+void printSearch()
 {
   printf("\n\n"
   "*************************************\n"
@@ -128,9 +133,9 @@ void printSearch(void)
   "4. Delete account\n");
 }
 
-void printSettings(void)
+void printSettings()
 {
-  printg("\n\n"
+  printf("\n\n"
   "*************************************\n"
   "*              Settings             *\n"
   "*************************************\n"
