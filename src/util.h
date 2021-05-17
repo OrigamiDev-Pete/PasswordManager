@@ -226,5 +226,12 @@ typedef char byte;
 #define clearBit(byte, bitToSet) byte &= ~(1 << (bitToSet-1))
 /*void clearBit(byte *byte, int bitToSet); */
 
+/*******************************************************************************
+* Author: Joshua Gonzalez
+* Macro: Checks status of bit (Goes from 8 - 1)
 * Input: ch - byte to have bit checked
+*        pos - position of bit to check
+*******************************************************************************/
+int checkBit(byte ch, int pos);
+
 #endif /* UTIL_H */
