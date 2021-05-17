@@ -4,7 +4,7 @@
 /* #define DEBUG */
 #define KEYFILE "keys.bin" /* A file in which the keys will be stored */
 
-String encryptAccounts(String* input) {
+String encryptString(String* input) {
     int key;
     int* key_p = &key;
     /* Open the file of stored keys if it exists */
@@ -45,7 +45,7 @@ String encryptAccounts(String* input) {
     return *encrypted;
 }
 
-String decryptAccounts(String* input) {
+String decryptString(String* input) {
     int key;
     int* key_p = &key;
     FILE* keys_file = fopen(KEYFILE, "rb");
@@ -96,22 +96,29 @@ void createKey(int* key) {
 }
 
 void randomPrimes(int* x, int* y) {
+    /* Seeding the rand function - using time will cause the first roll to always 
+    be different. This is required to reduce predicatbility of key generated */
+    srand(time(NULL));
     int i = rand();
     int j = rand();
 
+    /* Increment each number until it is prime. */
     while(!isPrime(i)) {
         i++;
     }
     while(!isPrime(j)) {
         j++;
     }
+    /* Assign to the pointers in argument as two values cannot be returned. */
     *x = i;
     *y = j;
 }
 
 boolean isPrime(int input) {
     int i;
+    /* Check each value from 2 until the midpoint of the number. */
     for(i = 2; i < input/2; i++) {
+        /* If any number other than one is evenly divisble, it's not prime */
         if(input%i==0) {
             return false;
         }

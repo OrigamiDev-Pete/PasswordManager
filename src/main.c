@@ -37,20 +37,32 @@ int main(void)
     /* Huffman code printing test */
     printf("\nHuffman compression test:\nInput: ");
     String* test = newString("aaaaaaabbc");
-    printString(test);
     HuffmanCompression(*test);
 
     /* Encryption Test Run */
     String* tester = newString("Encryption tester string");
     printf("The original string: ");
     printString(tester);
-    String encrypted = encryptAccounts(tester);
+    String encrypted = encryptString(tester);
     printf("The encrypted string: ");
     printString(&encrypted);
 
     printf("Now Decrypted: ");
-    String decrypted = decryptAccounts(&encrypted);
+    String decrypted = decryptString(&encrypted);
     printString(&decrypted);
+
+
+    printf("****************************************************************************************************\n");
+    String* input = readString("Input the string to be encrypted> ");
+    String encrypt = encryptString(input);
+    printf("\nThe encrypted string is> ");
+    printString(&encrypt);
+    String decrypt = decryptString(&encrypt);
+    printf("The decrypted version is> ");
+    printString(&decrypt);
+    printf("\n****************************************************************************************************\n");
+    
+
 
 	return 0;
 }
@@ -58,6 +70,7 @@ int main(void)
 /* Rough Main Menu idea */
 
 /*
+
 
 Login Menu:
 

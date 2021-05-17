@@ -9,29 +9,31 @@
 #ifndef ENCRYPT_H
 #define ENCRYPT_H
 
-#include "util.h"   /*String, boolean*/
-#include <stdlib.h> /*rand*/
+#include "util.h"   /* String, boolean, newString, strintgGetChar,
+                      StringSetChar */
+#include <stdlib.h> /* srand, rand */
 #include <stdio.h>  /* fwrite, fread, fopen, fclose */
+#include <time.h> /* time */
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: to encrypt a database file containing a collection of user accounts
-* the whole file will be encrypted with each run of this function.
-* The algorithm used is a RSA encryption method.
+* Function: to encrypt a string by generating a key which is stored for 
+* decryption. The encryption algorithm used is a simplified and streamlined 
+* version of the RSA method prolific in web based encryption solutions.
 * Input: the name of the file to be encrypted.
 * Output: an string containing the encrypted version of the input.
             - note: String defined in util.h
 *******************************************************************************/
-String encryptAccounts(String* input);
+String encryptString(String* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: to decrypt a database file containing a collection of user accounts
+* Function: to use a key generated on encryption to decrypt a coded String type.
 * Input: the name of the file to be encrypted.
 * Output: an string containing the decrypted version of the input.
             - note: String defined in util.h
 *******************************************************************************/
-String decryptAccounts(String* input);
+String decryptString(String* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
