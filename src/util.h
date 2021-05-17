@@ -161,6 +161,26 @@ void linkedListAppend(LinkedList *list, void *data);
 
 /*******************************************************************************
 * Author: Peter de Vroom
+* Function: Gets a node at an index.
+* Input: list - A LinkedList
+*       index - Index of a node (bounds-checked)
+* Output: Returns a Node in the LinkedList
+*******************************************************************************/
+Node* linkedListGet(LinkedList *list, int index);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Frees a linked list and all contained data.
+* Input: list - A LinkedList
+*       index - Index of a node (bounds-checked)
+*        data - Void pointer to data that will be replaced at index
+*        func - Function pointer to a free function if LinkedList contents need
+*               freed.
+*******************************************************************************/
+void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *));
+
+/*******************************************************************************
+* Author: Peter de Vroom
 * Function: Prints all the data contained in a LinkedList.
 * Input: list - A LinkedList
 *        func - A pointer to a print function. This should match the type that
@@ -206,13 +226,5 @@ typedef char byte;
 #define clearBit(byte, bitToSet) byte &= ~(1 << (bitToSet-1))
 /*void clearBit(byte *byte, int bitToSet); */
 
-
-/*******************************************************************************
-* Author: Joshua Gonzalez
-* Macro: Checks status of bit (Goes from 8 - 1)
 * Input: ch - byte to have bit checked
-*        pos - position of bit to check
-*******************************************************************************/
-int checkBit(byte ch, int pos);
-
 #endif /* UTIL_H */

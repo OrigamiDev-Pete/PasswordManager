@@ -7,67 +7,138 @@
 #include "util.h"
 #include "encryption.h"
 
+/* Function Prototypes */
+void printLogin();
+void printMenu();
+void printSearch();
 
 
 int main(void)
 {
-	/* setBit Demo */
-	char A = 0;
-	setBit(A, 7);
-	setBit(A, 3);
-	setBit(A, 5);
-	printf("%d\n", A);
-	printf("%c\n", A);
+  LinkedList* accounts = newLinkedList(NULL);
+  boolean running = true;
+  while(running==true)
+  {
+    printLogin();
+    int option;
+    printf("Option>");
+    option = readInt();
+    while(option!=4)
+    {
+      switch(option)
+    {
+      case 1: /* Login (Existing User) */
 
-	/* stringCompare Demo */
-	String *str1 = newString("oak ridge");
-	String *str2 = newString("oakley park");
-	printf("%d\n", stringCompare(str1, str2));
+        printMenu();
+        int task;
+        printf("Option>");
+        task = readInt();
+        while(task!=7)
+        {
+          switch(task)
+          {
+            case 1: /* Search and Sort menu */
 
+              printSearch();
+              int choice;
+              printf("Option>");
+              choice = readInt();
+              while(choice!=5)
+              {
+                switch(choice)
+                {
+                  case 1: /* Search database */
+                  break;
+                  case 2: /* Sort database alphabetically */
+                  break;
+                  case 3: /* Edit account entry */
+                  break;
+                  case 4: /*  Delete account */
+                    /* Enter master password*/
+                    /*String* password = readString("Enter password> ");*/
+                  break;
+                }
+              } 
 
-    /* Run Length Encoding Test */
-    String* input = newString("aaaaaaaabbbbbbbbddddddddhhhhhhhhhhhhjj");
-    printString(input);
-    String stringcmp = compress(*input);
-    printString(&stringcmp);
-    String stringdcmp = decompress(stringcmp);
-    printString(&stringdcmp);
+            break;
+            case 2: /* Add New account */
 
+              String* name = readString("Please enter website's name> ");
+              String* url = readString("Please enter website's url> ");
+              String* password = readString("Please enter password> ");
+              
+              Account* inputAccount = newAccount(name, url, password);
+              linkedListAppend(accounts, inputAccount); 
+            break;
+            case 3: /* Display stored websites */
 
-    /* Huffman code printing test */
-    printf("\nHuffman compression test:\nInput: ");
-    String* test = newString("aaaaaaabbc");
-    HuffmanCompression(*test);
+              printLinkedList(accounts, printAccount);
+            break;
+            case 4: /* Import database (DC&DE) */
+            break;
+            case 5: /* Export database (E&C) */
+            break;
+            case 6: /* Log out */
+              running = false;
+            break;
+            default: printf("Invalid option.\n");
+          }
+        }
 
-    /* Encryption Test Run */
-    String* tester = newString("Encryption tester string");
-    printf("The original string: ");
-    printString(tester);
-    String* encrypted = encryptString(tester);
-    printf("The encrypted string: ");
-    printString(encrypted);
+      break;
+      case 2: /*  Create New Master Account */
+      break;
+      case 3:  /* Exit Program */
+        running =false;
+      break;
+      default: printf("Invalid option.\n");
+    }
 
-    printf("Now Decrypted: ");
-    String* decrypted = decryptString(encrypted);
-    printString(decrypted);
+  }
 
+  }
 
-    printf("****************************************************************************************************\n");
-    String* inputEnc = readString("Input the string to be encrypted> ");
-    String* encrypt = encryptString(inputEnc);
-    printf("\nThe encrypted string is> ");
-    printString(encrypt);
-    String* decrypt = decryptString(encrypt);
-    printf("The decrypted version is> ");
-    printString(decrypt);
-    printf("\n****************************************************************************************************\n");
-    
-
-
-	return 0;
+  return 0;
 }
 
 /* Rough Main Menu idea */
+void printLogin()
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*              Welcome!             *\n"
+  "*************************************\n"
+  "1. Login (Exisiting User)\n"
+  "2. Create New Master Account\n"
+  "3. Exit Program\n");
+}
+
+void printMenu()
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*             Main Menu             *\n"
+  "*************************************\n"
+  "1. Search and Sort menu\n"
+  "2. Add New account\n"
+  "3. Display stored websites\n"
+  "4. Import database (DC&DE)\n"
+  "5. Export database (E&C)\n"
+  "6. Log out\n");
+}
+
+void printSearch()
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*        Search and Sort Menu       *\n"
+  "*************************************\n"
+  "1. Search database\n"
+  "2. Sort database alphabetically\n"
+  "3. Edit account entry\n"
+  "4. Delete account\n");
+}
+
 
 /*
 
