@@ -32,6 +32,7 @@ typedef struct d_node {
 /*******************************************************************************
 * Local Function Prototypes
 *******************************************************************************/
+void printHuffmanCodes(node_t* root_node, int code_array[], int top);
 node_t* newLeafNode(char character, unsigned int frequency);
 node_t* newInternalNode(node_t* node1, node_t* node2);
 int BuildHuffmanTree(character_t character_array[], int size, 
@@ -41,11 +42,49 @@ int SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
 String* BitConversion(String input, d_node huffman_dict[], int dict_size);
 String* exportTree(node_t* root_node, String* huff_str, int top);
 result_t HuffmanCompression(String input);
+node_t *readNode(const String *tree, int *pos);
 
 
 /*******************************************************************************
 * Functions
 *******************************************************************************/
+
+
+/*******************************************************************************
+* Author: Joshua Gonzalez
+* Function: Prints huffman codes to stdin from huffman tree
+* Inputs: 
+* - root node of huffman tree
+* - code array
+* - top (keeps track of what node the function is up to)
+* Outputs: 
+* - void
+*******************************************************************************/
+void printHuffmanCodes(node_t* root_node, int code_array[], int top)
+{
+    if(root_node->left) 
+    {
+        code_array[top] = 0;
+        printHuffmanCodes(root_node->left, code_array, top + 1);
+    }
+ 
+    if (root_node->right) 
+    {
+        code_array[top] = 1;
+        printHuffmanCodes(root_node->right, code_array, top + 1);
+    }
+ 
+    if (root_node->isleaf == true) 
+    {
+        printf("%c: ", root_node->character);
+        int i;
+        for(i = 0; i < top; i++)
+        {
+            printf("%d", code_array[i]);
+        }
+        printf("\n");
+    }
+}
 
 
 /*******************************************************************************
@@ -445,9 +484,9 @@ result_t HuffmanCompression(String input)
     /* result structure */
     result_t huff_comp;
 
-    /* create string of changed bits (should i pass dict as const?) */
     huff_comp.comp_string = BitConversion(input, huffman_dict, size);
     printString(huff_comp.comp_string);
+    printf("\nPrinted first ch from huff_code within comp function: %c\n", huff_comp.comp_string->text[0]);
 
     /* Export huffman tree */
     top = 0;
@@ -494,27 +533,18 @@ result_t HuffmanCompression(String input)
 
 /* traverse huffman tree to spit out result string, check each bit to convert it to a string */
 
-node_t *readNode(const String *tree, int *pos);
 
-String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len)
-{
-    String* decomp_str = newString("hello main");
-    
-    checkBit('a', 1);
-    puts("1");
-    int pos = 0;
-    node_t * hufftree = readNode(huff_tree, &pos);
-
-    printf("%c", hufftree->left->left->character);
-    printf("%c", hufftree->left->right->character);
-    printf("%c", hufftree->right->character);
-
-    /* Example Tree: 001c1b1a */
-
-    return(decomp_str);
-}
-
-node_t *readNode(const String *tree, int *pos) /* 001c1b1a */
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: 
+* Inputs: 
+* - 
+* - 
+* - 
+* Outputs: 
+* - 
+*******************************************************************************/
+node_t *readNode(const String *tree, int *pos)
 {   
     if (stringGetChar(tree, *pos) == '1')
     {
@@ -530,4 +560,72 @@ node_t *readNode(const String *tree, int *pos) /* 001c1b1a */
         node_t *right = readNode(tree, pos);
         return newInternalNode(left, right);
     }
+}
+
+
+String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len)
+{
+    String* decomp_str = newString(NULL);
+    
+    int pos = 0;
+    node_t * hufftree = readNode(huff_tree, &pos);
+
+    
+    int array[256];
+    int top = 0;
+    puts("*********************************");
+    puts("Decompressed huffman tree");
+    printHuffmanCodes(hufftree, array, top);
+
+    /* example code len = 13, example string is 11111110 10100000, example huff code = ■á */
+
+    printf("\nPrinted first ch from huff_code within decomp function: %c\n", huff_code->text[0]);
+
+    int i = 0;
+    int bit_pos = 8;
+
+    int code_index = 0;
+    byte ch = huff_code->text[code_index];
+
+    node_t* temp = hufftree;
+
+    
+    while(i <= code_len)
+    {
+        if(bit_pos > 0) 
+        {  
+            if(checkBit(ch, bit_pos) == 1)
+            {
+                temp = temp->right;
+                
+                if(temp->isleaf == true)
+                {
+                    stringAppendChar(decomp_str, temp->character);
+                    temp = hufftree;
+                }
+                --bit_pos;
+            }
+            else
+            {
+                temp = temp->left;
+                if(temp->isleaf == true)
+                {
+                    stringAppendChar(decomp_str, temp->character);
+                    temp = hufftree;
+                }
+                --bit_pos;
+            }
+        }
+        else
+        {
+            bit_pos = 8;
+            ch = huff_code->text[++code_index];
+        }
+
+        ++i;
+    }
+
+    printString(decomp_str);
+
+    return(decomp_str);
 }
