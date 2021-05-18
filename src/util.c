@@ -2,7 +2,7 @@
 
 #include <stdio.h> /* printf, puts, putchar, getchar */
 
-/* #define DEBUG */
+#include "accounts.h"
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
@@ -309,17 +309,24 @@ LinkedList* newLinkedList(void *data)
 
 void linkedListAppend(LinkedList *list, void *data)
 {
-    Node *node = list->head;
-    while (node->next != NULL)
+    /* Set head node data if length is 0 */
+    if (list->length == 0)
     {
-        node = node->next;
+        list->head->data = data;
     }
+    else
+    {
+        Node *node = list->head;
+        while (node->next != NULL)
+        {
+            node = node->next;
+        }
 
-    Node *newNode = malloc(sizeof(Node));
-    newNode->next = NULL;
-    newNode->data = data;
-    node->next = newNode;
-
+        Node *newNode = malloc(sizeof(Node));
+        newNode->next = NULL;
+        newNode->data = data;
+        node->next = newNode;
+    }
     list->length++;
 }
 
@@ -352,20 +359,50 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(voi
 }
 
 void printLinkedList(LinkedList *list, void (*func)(void *))
-{
-    Node *node = list->head;
-    putchar('[');
-    while (node != NULL)
+{   
+    #ifndef DEBUG
+    /* Outside of debug mode LinkedList does not impose any formatting */
+    /* Check if LinkedList is empty */
+    if (list->length == 0)
     {
-        (*func)(node->data);
-        node = node->next;
-        if (node) {
-            putchar(',');
-            putchar(' ');
+        return;
+    }
+    else
+    {
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            (*func)(node->data);
+            node = node->next;
         }
     }
-    putchar(']');
-    putchar('\n');
+    #endif /* DEBUG */
+
+    #ifdef DEBUG
+    /* Check if LinkedList is empty */
+    if (list->length == 0)
+    {
+        putchar('[');
+        putchar(']');
+        putchar('\n');
+    }
+    else
+    {
+        Node *node = list->head;
+        putchar('[');
+        while (node != NULL)
+        {
+            (*func)(node->data);
+            node = node->next;
+            if (node) {
+                putchar(',');
+                putchar('\n');
+            }
+        }
+        putchar(']');
+        putchar('\n');
+    }
+    #endif /* DEBUG */
 }
 
 void printInt(void *num)
