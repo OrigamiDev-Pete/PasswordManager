@@ -332,6 +332,14 @@ void linkedListAppend(LinkedList *list, void *data)
 
 Node *linkedListGet(LinkedList *list, int index)
 {
+    /* Bounds check */
+    if (index > list->length)
+    {
+        fprintf(stderr, "LinkedList: Out of Bounds");
+        return NULL;
+    }
+
+    /* Get node at index */
     Node *node = list->head;
     int i;
     for (i = 0; i < index && node->next != NULL; i++)
@@ -343,19 +351,69 @@ Node *linkedListGet(LinkedList *list, int index)
 
 void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *))
 {
-    Node *node = list->head;
-    int i;
-    for (i = 0; i < index && node->next != NULL; i++)
+    /* Bounds check */
+    if (index > list->length)
     {
-        node = node->next;
+        fprintf(stderr, "LinkedList: Out of Bounds");
+        return;
     }
 
+    /* Get node at index */
+    Node *node = linkedListGet(list, index);
+
+    /* If element needs to be freed call freeFunc */
     if (freeFunc)
     {
         (*freeFunc)(node->data);
     }
 
+    /* Set data */
     node->data = data;
+}
+
+void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *))
+{
+    /* Bounds check */
+    if (index > list->length-1)
+    {
+        fprintf(stderr, "LinkedList: Out of Bounds");
+        return;
+    }
+
+    if (list->length != 0)
+    {
+        /* Get node at index (linkedListGet() is not used to obtain 
+        *  node and prevNode in one loop) */
+        Node *node = list->head;
+        Node *prevNode = NULL;
+        int i;
+        for (i = 0; i < index && node->next != NULL; i++)
+        {
+            prevNode = node;
+            node = node->next;
+        }
+
+        /* If list only contains one element then we don't need to move pointers */
+        if (list->length > 1)
+        {
+            if (index == 0)
+            {
+                list->head = node->next;
+            }
+            else
+            {
+                prevNode->next = node->next;
+            }
+        }
+
+        /* If element needs to be freed call freeFunc */
+        if (freeFunc && node->data)
+        {
+            (*freeFunc)(node->data);
+        }
+
+        list->length--;
+    }
 }
 
 void printLinkedList(LinkedList *list, void (*func)(void *))
