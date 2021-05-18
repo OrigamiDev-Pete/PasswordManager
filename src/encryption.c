@@ -41,7 +41,7 @@ String* encryptString(String* input) {
     printf("The original text is: ");
     printString(input);
     printf("\nThe encrypted text is: ");
-    printString(encrypted);
+    printString(encrypted);             /* NOTE(pete): encrypted doesn't exist anymore */
     #endif /* DEBUG */
 
     return input;
