@@ -14,6 +14,7 @@ void printSearch(void);
 
 int main(void)
 {
+  HuffmanDecompression(newString("001c1b1a"), newString("■á"), 13);
 /*   Account *acc = newAccount(newString("Test"), newString("Test.com"), newString("Pass")); */
   LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;

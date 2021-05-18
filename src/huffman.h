@@ -41,7 +41,7 @@ result_t HuffmanCompression(String);
 * Output:
 * - A decompressed string
 *******************************************************************************/
-String* HuffmanDecompression(String huff_tree, String huff_code, int code_len);
+String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len);
 
 
 /* Combine all headers to compression.h */

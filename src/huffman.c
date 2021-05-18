@@ -494,14 +494,40 @@ result_t HuffmanCompression(String input)
 
 /* traverse huffman tree to spit out result string, check each bit to convert it to a string */
 
+node_t *readNode(const String *tree, int *pos);
 
-String* HuffmanDecompression(String huff_tree, String huff_code, int code_len)
+String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len)
 {
     String* decomp_str = newString("hello main");
     
     checkBit('a', 1);
+    puts("1");
+    int pos = 0;
+    node_t * hufftree = readNode(huff_tree, &pos);
+
+    printf("%c", hufftree->left->left->character);
+    printf("%c", hufftree->left->right->character);
+    printf("%c", hufftree->right->character);
 
     /* Example Tree: 001c1b1a */
 
     return(decomp_str);
+}
+
+node_t *readNode(const String *tree, int *pos) /* 001c1b1a */
+{   
+    if (stringGetChar(tree, *pos) == '1')
+    {
+        *pos += 1;
+        return newLeafNode(stringGetChar(tree, *pos), 0);
+    }
+
+    else
+    {
+        *pos += 1;
+        node_t *left = readNode(tree, pos);
+        *pos += 1;
+        node_t *right = readNode(tree, pos);
+        return newInternalNode(left, right);
+    }
 }

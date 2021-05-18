@@ -46,6 +46,7 @@ void printAccountList(LinkedList *list)
         int c2Align = PRINT_COLUMN_DEFAULT_WIDTH;
         int c3Align = PRINT_COLUMN_DEFAULT_WIDTH;
         int passLength = PRINT_PASSWORD_DEFAULT_WIDTH;
+        
         Node *node = list->head;
         while (node != NULL)
         {
@@ -58,6 +59,7 @@ void printAccountList(LinkedList *list)
             node = node->next;
         }
 
+        /* Because the width of the data  */
         char buf[32];
         sprintf(buf, " %%-%ds %%-%ds %%s\n", c2Align, c3Align);
 
