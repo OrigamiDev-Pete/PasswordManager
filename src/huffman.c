@@ -486,14 +486,12 @@ result_t HuffmanCompression(String input)
 
     huff_comp.comp_string = BitConversion(input, huffman_dict, size);
     printString(huff_comp.comp_string);
-    printf("\nPrinted first ch from huff_code within comp function: %c\n", huff_comp.comp_string->text[0]);
 
     /* Export huffman tree */
     top = 0;
     String* huff_str = newString(NULL);
     huff_comp.huff_tree = exportTree(priorityqueue[0], huff_str, top);
     printString(huff_comp.huff_tree);
-    freeString(huff_str);
 
     /* Calculate the length of the huffman compressed string */
     huff_comp.code_len = 0;
@@ -577,52 +575,47 @@ String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len)
     puts("Decompressed huffman tree");
     printHuffmanCodes(hufftree, array, top);
 
-    /* example code len = 13, example string is 11111110 10100000, example huff code = ■á */
-
-    printf("\nPrinted first ch from huff_code within decomp function: %c\n", huff_code->text[0]);
-
-    int i = 0;
     int bit_pos = 8;
 
+    int i;
     int code_index = 0;
     byte ch = huff_code->text[code_index];
 
-    node_t* temp = hufftree;
+    node_t temp = *hufftree;
 
     
-    while(i <= code_len)
+    while(i < code_len)
     {
         if(bit_pos > 0) 
         {  
             if(checkBit(ch, bit_pos) == 1)
             {
-                temp = temp->right;
+                temp = *temp.right;
                 
-                if(temp->isleaf == true)
+                if(temp.isleaf == true)
                 {
-                    stringAppendChar(decomp_str, temp->character);
-                    temp = hufftree;
+                    stringAppendChar(decomp_str, temp.character);
+                    temp = *hufftree;
                 }
                 --bit_pos;
             }
             else
             {
-                temp = temp->left;
-                if(temp->isleaf == true)
+                temp = *temp.left;
+                if(temp.isleaf == true)
                 {
-                    stringAppendChar(decomp_str, temp->character);
-                    temp = hufftree;
+                    stringAppendChar(decomp_str, temp.character);
+                    temp = *hufftree;
                 }
                 --bit_pos;
             }
+            i++;
         }
         else
         {
             bit_pos = 8;
             ch = huff_code->text[++code_index];
         }
-
-        ++i;
     }
 
     printString(decomp_str);
