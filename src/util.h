@@ -164,20 +164,33 @@ void linkedListAppend(LinkedList *list, void *data);
 * Function: Gets a node at an index.
 * Input: list - A LinkedList
 *       index - Index of a node (bounds-checked)
-* Output: Returns a Node in the LinkedList
+* Output: Returns a Node in the LinkedList. Returns NULL of out of bounds.
 *******************************************************************************/
 Node* linkedListGet(LinkedList *list, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Frees a linked list and all contained data.
+* Function: Sets the data of a node at an index. Previously held data may need to be freed
+*           if it is heap-allocated.
 * Input: list - A LinkedList
 *       index - Index of a node (bounds-checked)
 *        data - Void pointer to data that will be replaced at index
 *        func - Function pointer to a free function if LinkedList contents need
-*               freed.
+*               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *));
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Removes an element in the LinkedList. Previously held data may need to be freed
+*           if it is heap-allocated.
+* Input: list - A LinkedList
+*       index - Index of a node (bounds-checked)
+*        data - Void pointer to data that will be replaced at index
+*        func - Function pointer to a free function if LinkedList contents need
+*               freed. Can be NULL if data is not heap-allocated.
+*******************************************************************************/
+void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom
