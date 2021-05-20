@@ -21,7 +21,7 @@
 * Output: an string containing the encrypted version of the input.
             - note: String defined in util.h
 *******************************************************************************/
-String* encryptString(String* input);
+void encryptString(String* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
@@ -30,8 +30,9 @@ String* encryptString(String* input);
 * Output: an string containing the decrypted version of the input.
             - note: String defined in util.h
 *******************************************************************************/
-String* decryptString(String* input);
+void decryptString(String* input);
 
+/* NOTE(pete): Should the following functions be public? */
 /*******************************************************************************
 * Author: Luke Phillips
 * Function: to generate a key by performing mathematical operations on random
