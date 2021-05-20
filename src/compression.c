@@ -11,7 +11,7 @@
 /*******************************************************************************
 * Local Function Prototypes
 *******************************************************************************/
-String member_decompress(String input);
+String *member_decompress(const String *input);
 
 
 /*******************************************************************************
@@ -19,7 +19,7 @@ String member_decompress(String input);
 *******************************************************************************/
 
 
-String compress(String input)
+String* compress(const String *input)
 {
     int i = 0, p, occ;
     char temp_array[256]; 
@@ -27,21 +27,21 @@ String compress(String input)
     String* compressed_string = newString(NULL);
     
 
-    while(i < input.length)
+    while(i < input->length)
     {
         p = i;
-        if(input.text[i] != ' ')
+        if(input->text[i] != ' ')
         {
-            while(p < input.length && input.text[p] == input.text[i])
+            while(p < input->length && input->text[p] == input->text[i])
             {
                 p++;
             }
 
             #ifdef DEBUG
-            printf("%c has p = %d occurences\n", input.text[p], p);
+            printf("%c has p = %d occurences\n", input->text[p], p);
             #endif /* DEBUG */
 
-            stringAppendChar(compressed_string, input.text[i]);
+            stringAppendChar(compressed_string, input->text[i]);
 
             if(p - i >= 1)
             {
@@ -84,15 +84,15 @@ String compress(String input)
     }
 
     #ifdef DEBUG
-    printString(&input);
+    printString(input);
     printString(compressed_string);
     #endif /* DEBUG */
 
-    return(*compressed_string);
+    return(compressed_string);
 }
 
 
-String decompress(String input)
+String* decompress(const String *input)
 {
 	
     String* decompressed_string = newString(NULL);
@@ -100,21 +100,21 @@ String decompress(String input)
     int i = 0, p;
 
     /* Grab the first member of the string */
-    while(i < input.length)
+    while(i < input->length)
     {
         String* member_str = newString(NULL);
 
-        for(p = i; p < input.length && input.text[p] != ' '; ++p)
+        for(p = i; p < input->length && input->text[p] != ' '; ++p)
         {
-            stringAppendChar(member_str, input.text[p]);
+            stringAppendChar(member_str, input->text[p]);
         }
 
         #ifdef DEBUG
         printString(member_str);
         #endif /* DEBUG */
        
-        stringAppend(decompressed_string, member_decompress(*member_str).text);
-        if(p < input.length)
+        stringAppend(decompressed_string, member_decompress(member_str)->text);
+        if(p < input->length)
         {
             stringAppendChar(decompressed_string, ' ');
         }
@@ -131,11 +131,11 @@ String decompress(String input)
     }
 
     #ifdef DEBUG
-    printString(&input);
+    printString(input);
     printString(decompressed_string);
     #endif /* DEBUG */
 
-    return(*decompressed_string);
+    return(decompressed_string);
 
 }
 
@@ -148,7 +148,7 @@ String decompress(String input)
 * Outputs: 
 * - decompressed word
 *******************************************************************************/
-String member_decompress(String input)
+String *member_decompress(const String *input)
 {
     int i = 0, p;
     int count;
@@ -156,13 +156,13 @@ String member_decompress(String input)
 
     String* decompressed_member = newString(NULL);
 
-    while(i < input.length - 1)
+    while(i < input->length - 1)
     {
-        char current_char = input.text[i];
+        char current_char = input->text[i];
 
-        if(input.text[i + 3] == ';')
+        if(input->text[i + 3] == ';')
         {
-            count = atoi(&input.text[i + 1]);
+            count = atoi(&input->text[i + 1]);
             i = (i + 2);
 
             #ifdef DEBUG
@@ -171,7 +171,7 @@ String member_decompress(String input)
         }
         else
         {
-            char current_count = input.text[i + 1];
+            char current_count = input->text[i + 1];
             
             /* Automatically null appends */
             sprintf(temp_array, "%c", current_count); 
@@ -196,11 +196,11 @@ String member_decompress(String input)
     }
 
     #ifdef DEBUG
-    printString(&input);
+    printString(input);
     printString(decompressed_member);
     #endif /* DEBUG */
 
-    return(*decompressed_member);
+    return(decompressed_member);
 }
 
 
