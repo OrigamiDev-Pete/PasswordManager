@@ -40,9 +40,9 @@ int BuildHuffmanTree(character_t character_array[], int size,
                      node_t* priorityqueue[]);
 int SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
                        int top, int d_index);
-String* BitConversion(String input, d_node huffman_dict[], int dict_size);
+String* BitConversion(const String *input, d_node huffman_dict[], int dict_size);
 String* exportTree(node_t* root_node, String* huff_str, int top);
-result_t HuffmanCompression(String input);
+/* result_t HuffmanCompression(String input); */
 node_t *readNode(const String *tree, int *pos);
 
 
@@ -263,7 +263,7 @@ int SaveHuffmanCodes(node_t* root_node, int code_array[], d_node huffman_dict[],
 * Outputs: 
 * - a string of changed bits (hopefull huffman compression)
 *******************************************************************************/
-String* BitConversion(String input, d_node huffman_dict[], int dict_size)
+String* BitConversion(const String *input, d_node huffman_dict[], int dict_size)
 {
     String* bit_str = newString(NULL);
 
@@ -275,10 +275,10 @@ String* BitConversion(String input, d_node huffman_dict[], int dict_size)
 
     /* Traverse entire string up until end of string */
     int i = 0;
-    while(i < input.length - 1)
+    while(i < input->length - 1)
     {
         /* store i'th character in string */
-        char ch = input.text[i];
+        char ch = input->text[i];
         /* store the dictionary position of ch */
         int dict_index = 0;
         
@@ -386,7 +386,7 @@ String* exportTree(node_t* root_node, String* huff_str, int top)
 }
 
 
-result_t HuffmanCompression(String input)
+result_t HuffmanCompression(const String *input)
 {
     /*Convert string to an array of character_t structures with each element
     * representing a unique character and its corresponding frequency*/
@@ -398,10 +398,10 @@ result_t HuffmanCompression(String input)
 
     /* checks for null character as string datatype automatically appends to 
        end */
-    for(i = 0; i < input.length -1; i++)
+    for(i = 0; i < input->length -1; i++)
     {
         occ = 0;
-        ch = input.text[i];
+        ch = input->text[i];
         int unique_ch_flag = 0;
 
         /* Sets flag to check if new character is unique*/
@@ -419,9 +419,9 @@ result_t HuffmanCompression(String input)
         if(unique_ch_flag == 0)
         {
             int j;
-            for(j = 0; j < input.length; j++)
+            for(j = 0; j < input->length; j++)
             {
-                if(ch == input.text[j])
+                if(ch == input->text[j])
                 {
                     ++occ;
                 }
@@ -513,9 +513,9 @@ result_t HuffmanCompression(String input)
     
     /* Calculate the length of the huffman compressed string */
     huff_comp.code_len = 0;
-    for(i = 0; i < input.length - 1; ++i)
+    for(i = 0; i < input->length - 1; ++i)
     {
-        char ch = input.text[i];
+        char ch = input->text[i];
         int dict_pos;
 
         int j;

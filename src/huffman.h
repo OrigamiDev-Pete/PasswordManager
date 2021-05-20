@@ -29,7 +29,7 @@ typedef struct {
 * - A compressed string
 * - Huffman dictonary
 *******************************************************************************/
-result_t HuffmanCompression(String);
+result_t HuffmanCompression(const String *input);
 
 
 /*******************************************************************************
