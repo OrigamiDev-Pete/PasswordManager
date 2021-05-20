@@ -29,7 +29,7 @@ internal void initString(String *string, const char *val)
     {
         string->length = 0;
         string->capacity = STRING_START_SIZE;
-        string->text = malloc(string->capacity);
+        string->text = malloc(string->capacity * sizeof(char));
         if (!string->text)
         {
             #ifdef DEBUG
@@ -46,7 +46,7 @@ internal void initString(String *string, const char *val)
         while (cap <= string->length)
             cap *= 2;
         string->capacity = cap;
-        string->text = malloc(string->capacity);
+        string->text = malloc(string->capacity * sizeof(char));
         if (!string->text)
         {
             #ifdef DEBUG
@@ -330,7 +330,7 @@ void linkedListAppend(LinkedList *list, void *data)
     list->length++;
 }
 
-Node *linkedListGet(LinkedList *list, int index)
+Node *linkedListGet(const LinkedList *list, int index)
 {
     /* Bounds check */
     if (index > list->length)
@@ -414,6 +414,36 @@ void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *))
 
         list->length--;
     }
+}
+
+void linkedListClear(LinkedList *list, void (*freeFunc)(void *))
+{
+    if (freeFunc)
+    {
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            Node *prevNode = node;
+            node = node->next;
+            (*freeFunc)(prevNode->data);
+            free(prevNode);
+            prevNode = NULL;
+        }
+    }
+    else
+    {
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            Node *prevNode = node;
+            node = node->next;
+            free(prevNode);
+            prevNode = NULL;
+        }
+    }
+
+    list->length = 0;
+    list->head = malloc(sizeof(Node));
 }
 
 void printLinkedList(LinkedList *list, void (*func)(void *))
@@ -502,11 +532,11 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
 }
 
 
-int checkBit(byte ch, int pos)
+int checkBit(byte byte, int pos)
 {
     --pos;
     
-    if(ch & (1<< pos))
+    if(byte & (1<< pos))
         return(1);
     else
         return(0);

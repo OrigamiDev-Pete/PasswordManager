@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Author: Peter de Vroom
+* Author: Peter de Vroom, Joshua Gonzalez
 * 
 * The header file supports the functionality of various systems in the program.
 * Types: boolean, String, LinkedList, Bit Manipulation
@@ -166,7 +166,7 @@ void linkedListAppend(LinkedList *list, void *data);
 *       index - Index of a node (bounds-checked)
 * Output: Returns a Node in the LinkedList. Returns NULL of out of bounds.
 *******************************************************************************/
-Node* linkedListGet(LinkedList *list, int index);
+Node* linkedListGet(const LinkedList *list, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -191,6 +191,16 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(voi
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *));
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Removes all elements in the LinkedList. Previously held data may need to be freed
+*           if it is heap-allocated. An empty head Node is recreated.
+* Input: list - A LinkedList
+*        func - Function pointer to a free function if LinkedList contents need
+*               freed. Can be NULL if data is not heap-allocated.
+*******************************************************************************/
+void linkedListClear(LinkedList *list, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -242,9 +252,9 @@ typedef char byte;
 /*******************************************************************************
 * Author: Joshua Gonzalez
 * Macro: Checks status of bit (Goes from 8 - 1)
-* Input: ch - byte to have bit checked
+* Input: byte - byte to have bit checked
 *        pos - position of bit to check
 *******************************************************************************/
-int checkBit(byte ch, int pos);
+int checkBit(byte byte, int pos);
 
 #endif /* UTIL_H */
