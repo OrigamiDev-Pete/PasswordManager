@@ -9,14 +9,7 @@
 #define PRINT_COLUMN_DEFAULT_WIDTH 8
 #define PRINT_PASSWORD_DEFAULT_WIDTH 20
 
-typedef struct Account {
-    String *name;
-    String *url;
-    String *password;
-} Account;
-
 internal void printDashes(int length);
-
 
 Account* newAccount(String *name, String *url, String *password)
 {
