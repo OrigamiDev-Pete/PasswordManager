@@ -7,11 +7,11 @@
 #ifndef IO_H
 #define IO_H
 
-#include "util.h"
+#include "util.h" /* boolean LinkedList */
 
 
 /* Enumerator for compression types */
-typedef enum compression { HUFFMAN, RUN_LENGTH } compression;
+typedef enum compressionType { NONE, HUFFMAN, RUN_LENGTH } compressionType;
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -24,7 +24,7 @@ typedef enum compression { HUFFMAN, RUN_LENGTH } compression;
 *                   RUN_LENGTH is faster.
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
-boolean saveData(const LinkedList *accounts, boolean encrypt, boolean compress, compression cmpType);
+boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType);
 
 /*******************************************************************************
 * Author: Peter de Vroom
