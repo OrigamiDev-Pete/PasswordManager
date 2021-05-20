@@ -14,12 +14,10 @@ void printSearch(void);
 
 int main(void)
 {
-  
-/*   Account *acc = newAccount(newString("Test"), newString("Test.com"), newString("Pass")); */
   LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;
 
-  while(running == true) 
+  while(running == true)
   {
     printLogin();
     int option;
