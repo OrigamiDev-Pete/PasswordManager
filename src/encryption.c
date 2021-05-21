@@ -28,11 +28,12 @@ void encryptString(String* input) {
     }
 
     /* Use the keys generated to encrypt the input string. */
-    
     int counter;
     for(counter = 0; counter < input->length; counter++) {
+        /* Pull then augment each character using a util.h method. */
         char tmp = stringGetChar(input, counter);
         tmp = tmp + key;
+        /* Replace the original character with the augmented to encrypt. */
         stringSetChar(input, counter, tmp);
     }
 
@@ -41,7 +42,7 @@ void encryptString(String* input) {
     printf("The original text is: ");
     printString(input);
     printf("\nThe encrypted text is: ");
-    printString(input);             /* NOTE(pete): encrypted doesn't exist anymore */
+    printString(input);
     #endif /* DEBUG */
 
 }
@@ -66,11 +67,12 @@ void decryptString(String* input) {
     }
 
     /* Decrypt the input string */
-
     int counter;
     for(counter = 0; counter < input->length; counter++) {
+        /* Reverse the augmentation of each character from encryption. */
         char tmp = stringGetChar(input, counter);
         tmp = tmp - key;
+        /* Reassign the original values to the string. */
         stringSetChar(input, counter, tmp);
     }
     
@@ -84,7 +86,6 @@ void createKey(int* key) {
     randomPrimes(x_p, y_p);
 
     /* Create totient value for key generation */
-    /* int n = x * y; */ 
     int t = (x-1)*(y-1);
 
     #ifdef DEBUG
@@ -94,13 +95,17 @@ void createKey(int* key) {
     /* Shortens the key while retaining randomness. Makes more efficient. */
     int shortened = shortKey(t);
     /* If the shortened key is zero, encryption will not change the string. */
-    if(shortened == 0) createKey(key); /* Generate key again. */
-    else *key = shortened;
+    if(shortened == 0) {
+        createKey(key);  /* Generate key again. */
+    }
+    else { 
+        *key = shortened;
+    }
 }
 
 void randomPrimes(int* x, int* y) {
     /* Seeding the rand function - using time will cause the first roll to always 
-    be different. This is required to reduce predicatbility of key generated */
+    be different. This is required to reduce predicatbility of key generated. */
     srand(time(NULL));
     int i = rand();
     int j = rand();
@@ -130,16 +135,21 @@ boolean isPrime(int input) {
 }
 
 int shortKey(int key) {
+    /* Returns the last two digits of the randomised key. Retains randomness
+    but reduced processing complexity. Also remains within the limits of
+    the ASCII table. */
     return key % 100;
 }
 
 void readKeys(int* key) {
+    /* Keyfile will persist across executions of this code. */
     FILE* file = fopen(KEYFILE, "rb");
     fread(key, sizeof(int), 1, file);
     fclose(file);    
 }
 
 void writeKeys(int* key) {
+    /* Keyfile will persist across executions of this code. */
     FILE* file = fopen(KEYFILE, "wb");
     fwrite(key, sizeof(int), 1, file);
     fclose(file);

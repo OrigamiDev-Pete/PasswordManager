@@ -155,7 +155,10 @@ void printMenu(void)
   "2. Add New account\n"
   "3. Display stored websites\n" /* NOTE(pete): Maybe 'Display stored accounts' would be more consistent */
   "4. Import database (DC&DE)\n" /* NOTE(pete): Maybe Save/Load makes more sense than Import Export. Thoughts on Auto-Saving? */ 
-  "5. Export database (E&C)\n"
+                                 /* NOTE(luke): We need to make clear that it is the encryption and compression
+                                                as they are they main parts of the project. So maybe we should
+                                                include that in the name. */
+  "5. Export database (E&C)\n"   /* NOTE(luke): Maybe "Save Database (Encrypted and Compressed)"??? */
   "6. Log out\n");
 }
 

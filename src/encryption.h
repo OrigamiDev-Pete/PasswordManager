@@ -15,10 +15,10 @@
 /*******************************************************************************
 * Author: Luke Phillips
 * Function: to encrypt a string by generating a key which is stored for 
-* decryption. The encryption algorithm used is a simplified and streamlined 
-* version of the RSA method prolific in web based encryption solutions.
-* Input: the name of the file to be encrypted.
-* Output: an string containing the encrypted version of the input.
+* decryption. The key generation algorithm used is a simplified version of 
+* the RSA method prolific in web based encryption solutions.
+* Input: The string to be encrypted, as a pointer.
+* Output: none
             - note: String defined in util.h
 *******************************************************************************/
 void encryptString(String* input);
@@ -26,13 +26,16 @@ void encryptString(String* input);
 /*******************************************************************************
 * Author: Luke Phillips
 * Function: to use a key generated on encryption to decrypt a coded String type.
-* Input: the name of the file to be encrypted.
-* Output: an string containing the decrypted version of the input.
+* Input: the string to be decrypted, as a pointer.
+* Output: none
             - note: String defined in util.h
 *******************************************************************************/
 void decryptString(String* input);
 
 /* NOTE(pete): Should the following functions be public? */
+/* Response(Luke): These functions will only be called internally, the only
+one with use outside encryption is the isPrime() method. */
+
 /*******************************************************************************
 * Author: Luke Phillips
 * Function: to generate a key by performing mathematical operations on random
@@ -50,9 +53,9 @@ void randomPrimes(int* x, int* y);
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: determines if an integer is prime
-* Input: the integer
-* Output: a boolean true if prime, false if not prime
+* Function: determines if an integer is prime.
+* Input: the integer to be tested.
+* Output: a boolean true if prime, false if not prime.
           - note: boolean is defined in util.h
 *******************************************************************************/
 boolean isPrime(int input);
@@ -66,17 +69,18 @@ int shortKey(int key);
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: read the two encoded keys from the file to be used.
-* Input: two integer pointers of the location to load the keys into.
+* Function: read the key from the file to be used.
+* Input: integer pointer of the location to load the key into.
 *******************************************************************************/
 void readKeys(int* key);
 
 /*******************************************************************************
 * Author: Luke Phillips
-* Function: encode the two keys and store securely in a file for future use.
+* Function: store key securely in a file for future use, file will be unreadable
+*           to the users of the program without this code.
     - future uses are further encryption, or decryption, for which the keys
       are needed.
-* Input: two integer pointers of the keys to be stored.
+* Input: integer pointer of the key to be stored.
 *******************************************************************************/
 void writeKeys(int* key);
 
