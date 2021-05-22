@@ -10,7 +10,7 @@ BIN_DIR := ./bin
 OBJ := $(OBJ_DIR)/main.o $(OBJ_DIR)/util.o $(OBJ_DIR)/accounts.o $(OBJ_DIR)/io.o $(OBJ_DIR)/encryption.o $(OBJ_DIR)/compression.o $(OBJ_DIR)/huffman.o
 
 build: $(OBJ) | $(BIN_DIR)
-	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/Pass.out
+	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/main.out
 
 $(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -g -c $< -o $@
@@ -29,7 +29,7 @@ clean:
 
 win: $(OBJ)
 	.\WindowsSetup.bat
-	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/Pass.exe
+	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/main.exe
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@

@@ -7,7 +7,7 @@
 #ifndef IO_H
 #define IO_H
 
-#include "util.h" /* boolean LinkedList */
+#include "util.h" /* boolean, LinkedList */
 
 
 /* Enumerator for compression types */
@@ -18,10 +18,9 @@ typedef enum compressionType { NONE, HUFFMAN, RUN_LENGTH } compressionType;
 * Function: Saves accounts data to the filesystem.
 * Input: accounts - A list of the accounts to be saved.
 *         encrypt - encrypt or not.
-*        compress - compress or not.
 *         cmpType - Type of compression to employ. Options are stored as enumerated
-*                   values, HUFFMAN and RUN_LENGTH. HUFFMAN is more space effecient.
-*                   RUN_LENGTH is faster.
+*                   values, HUFFMAN, RUN_LENGTH and NONE. HUFFMAN is more space 
+*                   effecient. RUN_LENGTH is faster. NONE does not apply compression.
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
 boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType);
@@ -33,6 +32,20 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
 boolean loadData(LinkedList *accounts);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Clears the accounts database file.
+*******************************************************************************/
+boolean deleteData(void);
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Returns a String with the platform specific path
+* Input: accounts - A list to load the saved accounts into.
+* Output: Returns true if successful, false if an error occurs
+*******************************************************************************/
+String* platformPath(void);
 
 /*******************************************************************************
 * Author: Peter de Vroom

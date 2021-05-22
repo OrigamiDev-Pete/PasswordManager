@@ -31,7 +31,7 @@ void printAccountList(LinkedList *list)
 {
     if (list->length == 0)
     {
-        puts("No Accounts. Select \"Add New Account\" to create a new account.");
+        puts("No Accounts. Select \"Add New Account\" to create a new account.\n");
         return;
     }
     else
@@ -69,10 +69,11 @@ void printAccountList(LinkedList *list)
                         ((Account *)node->data)->password->text);
             node = node->next;
         }
+        putchar('\n');
     }
 }
 
-void printDashes(int length)
+internal void printDashes(int length)
 {
     int i;
     for (i = 0; i < (length); i++)

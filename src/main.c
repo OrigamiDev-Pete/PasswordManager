@@ -1,23 +1,23 @@
-#include <stdio.h>
+#include <stdio.h> /* printf, puts */
 
 #include "accounts.h"
-#include "compression.h"
 #include "io.h"
 #include "util.h"
-#include "encryption.h"
 
 /* Function Prototypes */
 void printLogin(void);
 void printMenu(void);
 void printSearch(void);
+static void parseCommandLineArgs(int argc, char *argv[]);
+static void printHelp();
 
-
-
-
-
-
-int main(void)
+int main(int argc, char *argv[])
 {
+  if (argc > 1)
+  {
+    parseCommandLineArgs(argc, argv);
+    return 0;
+  }
 
   LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;
@@ -98,6 +98,7 @@ int main(void)
               }
               case 4: /* Import database (DC&DE) */
               {
+                saveData(accounts, true, HUFFMAN);
                 break;
               }
               case 5: /* Export database (E&C) */
@@ -179,6 +180,106 @@ void printSearch(void)
   "4. Delete account\n");
 }
 
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Parses command line arguments. If a valid command is parsed the
+*           program executes the command and terminates in place without running
+*           the main program. If the command is invalid help text is printed
+*           to the standard output.
+* Input: argc - number of command line arguments
+*        argv - command line arguments
+*******************************************************************************/
+static void parseCommandLineArgs(int argc, char *argv[])
+{
+  switch (argv[1][0])
+  {
+    case '-':
+    {
+      switch (argv[1][1])
+      {
+        case 'l':
+        {
+          if (argc < 3)
+          {
+            LinkedList *list = newLinkedList(NULL);
+            if (loadData(list))
+            {
+              printAccountList(list);
+            }
+            else
+            {
+              puts("Error reading 'accounts.pwm'. Make sure accounts data has been created before reading.");
+            }
+            freeLinkedList(list, freeAccount);
+          }
+          else if (argc == 3)
+          {
+            /* Search and display account */
+          }
+          else
+          {
+            puts("Too many parameters. Expected -l <Name>");
+          }
+          break;
+        }
+        case 'a':
+        {
+          if (argc == 5)
+          {
+            LinkedList *list = newLinkedList(NULL);
+            Account *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]));
+            loadData(list);
+            linkedListAppend(list, acc);
+            saveData(list, true, HUFFMAN);
+            freeLinkedList(list, freeAccount);
+          }
+          else if (argc < 5)
+          {
+            puts("Too few parameters. Expected -a <Name> <URL> <Password>");
+          }
+          else
+          {
+            puts("Too many parameters. Expected -a <Name> <URL> <Password>");
+          }
+          break;
+        }
+        case 'h':
+        {
+          printHelp();
+          break;
+        }
+        default:
+        {
+          puts("--- Unknown Command ---");
+          printf("Could not find command \"-%c\".\n\n", argv[1][1]);
+          printHelp();
+          break;
+        }
+      }
+      break;
+    }
+    default:
+    {
+      printHelp();
+    }
+  }
+}
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Prints help text for proper operation.
+*******************************************************************************/
+static void printHelp(void)
+{
+  puts("Password Manager\n");
+  puts("Usage: main [COMMAND] <arguments>\n");
+  puts("Commands:");
+  puts("-l                           Prints accounts");
+  puts("-l <Name>                    Searches for <Name> and prints the account");
+  puts("-a <Name> <URL> <Password>   Adds a new account");
+  puts("-h                           Prints help menu\n");
+}
 
 /*
 

@@ -5,27 +5,22 @@
 #include "accounts.h" /* Account */
 #include "compression.h"
 #include "encryption.h"
-#include "huffman.h"
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
-internal String *accountsToString(const LinkedList *accounts);
-internal String *fileToString(FILE *f);
+internal String* accountsToString(const LinkedList *accounts);
+internal String* fileToString(FILE *f);
 internal void stringToAccounts(const String *string, LinkedList *accounts);
 
 boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType)
 {
+    String *path = platformPath();
+    stringAppend(path, "accounts.pwm");
+
     /* Saving an empty list will effectively clear the data file. */
     if (accounts->length == 0)
     {
-        FILE *f = fopen("accounts.pwm", "w");
-        if (f)
-        {
-            fclose(f);
-            return true;
-        }
-        else
-            return false;
+        deleteData();
     }
 
     /* Turn accounts into a String to be passed to encryption/compression, then saved */
@@ -66,7 +61,8 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
     }
 
 
-    FILE *f = fopen("accounts.pwm", "w");
+    FILE *f = fopen(path->text, "w");
+    freeString(path);
     if (f)
     {
         /* FILE FORMAT:
@@ -89,31 +85,10 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
     }
     else
         return false;
-
-
-
-
-    puts("Original:");
-    puts("---------------------------");
-    printString(str);
-    result_t result = HuffmanCompression(str);
-    freeString(str);
-    encryptString(result.comp_string);
-    puts("Compressed->Encrypted:");
-    puts("---------------------------");
-    printString(result.comp_string);
-    decryptString(result.comp_string);
-    String *str2 = HuffmanDecompression(result.huff_tree, result.comp_string, result.code_len);
-    puts("Decompressed->Dencrypted:");
-    puts("---------------------------");
-    printString(str2);
-    freeString(str2);
-
-    return true;
 }
 
 
-String *accountsToString(const LinkedList *accounts)
+internal String *accountsToString(const LinkedList *accounts)
 {
     String *str = newString(NULL);
     
@@ -134,7 +109,10 @@ String *accountsToString(const LinkedList *accounts)
 
 boolean loadData(LinkedList *accounts)
 {
-    FILE *f = fopen("accounts.pwm", "r");
+
+    String *path = platformPath();
+    stringAppend(path, "accounts.pwm");
+    FILE *f = fopen(path->text, "r");
     if (f)
     {
         byte encryptedflag;
@@ -188,7 +166,6 @@ boolean loadData(LinkedList *accounts)
                 String *decompStr = HuffmanDecompression(huffmanTree, str, huffmanTreeLengthBits);
 
                 stringToAccounts(decompStr, accounts);
-                printString(decompStr);
                 freeString(huffmanTree);
                 freeString(decompStr);
                 freeString(str);
@@ -202,7 +179,22 @@ boolean loadData(LinkedList *accounts)
         return false;
 }
 
-String *fileToString(FILE *f)
+boolean deleteData(void)
+{
+    String *path = platformPath();
+    stringAppend(path, "accounts.pwm");
+
+    FILE *f = fopen(path->text, "w");
+    if (f)
+    {
+        fclose(f);
+        return true;
+    }
+    else
+        return false;
+}
+
+internal String *fileToString(FILE *f)
 {
     String *str = newString(NULL);
     int c;
@@ -213,7 +205,7 @@ String *fileToString(FILE *f)
     return str;
 }
 
-void stringToAccounts(const String *string, LinkedList *accounts)
+internal void stringToAccounts(const String *string, LinkedList *accounts)
 {
     linkedListClear(accounts, freeAccount);
     int i = 0;
@@ -241,6 +233,21 @@ void stringToAccounts(const String *string, LinkedList *accounts)
         Account *acc = newAccount(name, url, password);
         linkedListAppend(accounts, acc);
     }
+}
+
+String* platformPath(void)
+{
+    String *path = newString(NULL);
+    #ifdef __linux__
+    stringAppend(path, getenv("HOME"));
+    stringAppendChar(path, '/');
+    return path;
+    #endif
+    #ifdef __MINGW32__
+    String *path = newString(getenv("USERPROFILE"));
+    stringAppend(path, "\\Documents\\");
+    return path;
+    #endif
 }
 
 int readInt(void)

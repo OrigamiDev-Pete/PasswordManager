@@ -418,6 +418,9 @@ void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *))
 
 void linkedListClear(LinkedList *list, void (*freeFunc)(void *))
 {
+    if (list->length == 0)
+        return;
+    
     if (freeFunc)
     {
         Node *node = list->head;
@@ -505,6 +508,9 @@ void printDouble(void *dbl)
 
 void freeLinkedList(LinkedList *list, void (*func)(void *))
 {
+    if (list->length == 0)
+        return;
+
     if (func)
     {
         Node *node = list->head;
