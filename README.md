@@ -14,11 +14,11 @@
 
 ## Quick-Start Operation Guide:
 1. Download and save the repository to a folder.
-2. Use your compiler's make command to build the project. 
-    * mingw32-make win (for MinGW on windows)
-    * make (for ED)
-    * make build (for Linux)
-3. Run the build project with './Pass.out'
+2. Build the project using Make.
+    * `make` (for Linux/ED)
+    * `mingw32-make win` (for MinGW on windows)
+3. The executable file will be created in the bin folder.
+3. Run the project with './main.out' ('.\main.exe' on Windows)
 4. Follow the on-screen prompts to use the program.
 
 ## Illegal Characters for Passwords:
