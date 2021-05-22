@@ -2,7 +2,6 @@
 
 #include "accounts.h"
 #include "compression.h"
-#include "huffman.h"
 #include "io.h"
 #include "util.h"
 #include "encryption.h"
@@ -12,8 +11,14 @@ void printLogin(void);
 void printMenu(void);
 void printSearch(void);
 
+
+
+
+
+
 int main(void)
 {
+
   LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;
 

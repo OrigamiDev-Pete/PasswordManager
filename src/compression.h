@@ -6,6 +6,7 @@
 *******************************************************************************/
 
 #include "util.h"
+#include "huffman.h"
 
 #ifndef COMPRESSION_H
 
