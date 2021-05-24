@@ -2,12 +2,9 @@
 
 #include <stdio.h> /* malloc, free */
 
-#include "util.h" /* String, freeString */
+#include "util.h" /* String, freeString, LinkedList */
 
 #define internal static /* static is a vague keyword, internal is more clear */
-
-#define PRINT_COLUMN_DEFAULT_WIDTH 8
-#define PRINT_PASSWORD_DEFAULT_WIDTH 20
 
 internal void printDashes(int length);
 
@@ -27,50 +24,14 @@ void printAccount(void *acc)
                                                  ((Account *)acc)->password->text);
 }
 
-void printAccountList(LinkedList *list)
+boolean accountSort(void *accountA, void *accountB)
 {
-    if (list->length == 0)
-    {
-        puts("No Accounts. Select \"Add New Account\" to create a new account.\n");
-        return;
-    }
+    Account accA = *(Account *)accountA;
+    Account accB = *(Account *)accountB;
+    if (stringCompare(accA.name, accB.name) == 1)
+        return true;
     else
-    {
-        int c2Align = PRINT_COLUMN_DEFAULT_WIDTH;
-        int c3Align = PRINT_COLUMN_DEFAULT_WIDTH;
-        int passLength = PRINT_PASSWORD_DEFAULT_WIDTH;
-        
-        Node *node = list->head;
-        while (node != NULL)
-        {
-            if (c2Align < ((Account *)(node)->data)->name->length)
-                c2Align = ((Account *)(node)->data)->name->length + 1;
-            if (c3Align < ((Account *)(node)->data)->url->length)
-                c3Align = ((Account *)(node)->data)->url->length + 1;
-            if (passLength < ((Account *)(node)->data)->password->length)
-                passLength = ((Account *)(node)->data)->password->length + PRINT_COLUMN_DEFAULT_WIDTH;
-            node = node->next;
-        }
-
-        /* Because the width of the data  */
-        char buf[32];
-        sprintf(buf, " %%-%ds %%-%ds %%s\n", c2Align, c3Align);
-
-        int dashLength = c2Align + c3Align + passLength;
-        printDashes(dashLength);
-        printf(buf, "Name", "URL", "Password");
-        printDashes(dashLength);
-
-        node = list->head;
-        while (node != NULL)
-        {
-            printf(buf, ((Account *)node->data)->name->text,
-                        ((Account *)node->data)->url->text,
-                        ((Account *)node->data)->password->text);
-            node = node->next;
-        }
-        putchar('\n');
-    }
+        return false;
 }
 
 internal void printDashes(int length)

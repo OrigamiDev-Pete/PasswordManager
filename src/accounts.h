@@ -33,6 +33,17 @@ Account* newAccount(String *name, String *url, String *password);
 
 /*******************************************************************************
 * Author: Peter de Vroom
+* Function: Compares the names between two accounts.
+* Input: accountA - An Account. accountA is a void pointer to allow for flexibility
+*                  with LinkedLists.
+*        accountB - An Account. accountB is a void pointer to allow for flexibility
+*                  with LinkedLists
+* Output: Returns true if accountA is greater than accountB, otherwise returns false
+*******************************************************************************/
+boolean accountSort(void *accountA, void *accountB);
+
+/*******************************************************************************
+* Author: Peter de Vroom
 * Function: Prints an account to stdout.
 * Input: account - An Account. account is a void pointer to allow for flexibility
 *                  with LinkedLists.

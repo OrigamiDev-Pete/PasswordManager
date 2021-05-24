@@ -4,10 +4,15 @@
 #include "io.h"
 #include "util.h"
 
+#define PRINT_COLUMN_DEFAULT_WIDTH 8
+#define PRINT_PASSWORD_DEFAULT_WIDTH 20
+
 /* Function Prototypes */
 void printLogin(void);
 void printMenu(void);
 void printSearch(void);
+static void printAccountList(LinkedList *accounts);
+static LinkedList *fuzzyAccountSearch(LinkedList accounts, String keyword, int numberToFind);
 static void parseCommandLineArgs(int argc, char *argv[]);
 static void printHelp();
 
@@ -86,6 +91,7 @@ int main(int argc, char *argv[])
                 
                 Account* inputAccount = newAccount(name, url, password);
                 linkedListAppend(accounts, inputAccount); 
+                linkedListSort(accounts, accountSort);
                 break;
               }
               case 3: /* Display stored websites */
@@ -180,6 +186,58 @@ void printSearch(void)
   "4. Delete account\n");
 }
 
+static void printAccountList(LinkedList *list)
+{
+    if (list->length == 0)
+    {
+        puts("No Accounts. Select \"Add New Account\" to create a new account.\n");
+        return;
+    }
+    else
+    {
+        int c2Align = PRINT_COLUMN_DEFAULT_WIDTH;
+        int c3Align = PRINT_COLUMN_DEFAULT_WIDTH;
+        int passLength = PRINT_PASSWORD_DEFAULT_WIDTH;
+        
+        Node *node = list->head;
+        while (node != NULL)
+        {
+            if (c2Align < ((Account *)(node)->data)->name->length)
+                c2Align = ((Account *)(node)->data)->name->length + 1;
+            if (c3Align < ((Account *)(node)->data)->url->length)
+                c3Align = ((Account *)(node)->data)->url->length + 1;
+            if (passLength < ((Account *)(node)->data)->password->length)
+                passLength = ((Account *)(node)->data)->password->length + PRINT_COLUMN_DEFAULT_WIDTH;
+            node = node->next;
+        }
+
+        /* Because the width of the data  */
+        char buf[32];
+        sprintf(buf, " %%-%ds %%-%ds %%s\n", c2Align, c3Align);
+
+        int dashLength = c2Align + c3Align + passLength;
+        printDashes(dashLength);
+        printf(buf, "Name", "URL", "Password");
+        printDashes(dashLength);
+
+        node = list->head;
+        while (node != NULL)
+        {
+            printf(buf, ((Account *)node->data)->name->text,
+                        ((Account *)node->data)->url->text,
+                        ((Account *)node->data)->password->text);
+            node = node->next;
+        }
+        putchar('\n');
+    }
+}
+
+static LinkedList *fuzzyAccountSearch(LinkedList accounts, String keyword, int numberToFind)
+{
+  LinkedList *list = newLinkedList(NULL);
+  
+
+}
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -231,6 +289,7 @@ static void parseCommandLineArgs(int argc, char *argv[])
             Account *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]));
             loadData(list);
             linkedListAppend(list, acc);
+            linkedListSort(list, accountSort);
             saveData(list, true, HUFFMAN);
             freeLinkedList(list, freeAccount);
           }

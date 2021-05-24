@@ -175,7 +175,7 @@ Node* linkedListGet(const LinkedList *list, int index);
 * Input: list - A LinkedList
 *       index - Index of a node (bounds-checked)
 *        data - Void pointer to data that will be replaced at index
-*        func - Function pointer to a free function if LinkedList contents need
+*    freeFunc - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *));
@@ -187,7 +187,7 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(voi
 * Input: list - A LinkedList
 *       index - Index of a node (bounds-checked)
 *        data - Void pointer to data that will be replaced at index
-*        func - Function pointer to a free function if LinkedList contents need
+*    freeFunc - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *));
@@ -197,10 +197,19 @@ void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *));
 * Function: Removes all elements in the LinkedList. Previously held data may need to be freed
 *           if it is heap-allocated. An empty head Node is recreated.
 * Input: list - A LinkedList
-*        func - Function pointer to a free function if LinkedList contents need
+*    freefunc - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListClear(LinkedList *list, void (*freeFunc)(void *));
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Sorts a LinkedList using a custom sorting function. 
+* Input: list - A LinkedList
+*    sortFunc - Function pointer to a sort function. Expects true if para1 is
+*               greater than para2.
+*******************************************************************************/
+void linkedListSort(LinkedList *list, boolean (*sortFunc)(void *, void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom

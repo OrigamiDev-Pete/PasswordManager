@@ -449,6 +449,47 @@ void linkedListClear(LinkedList *list, void (*freeFunc)(void *))
     list->head = malloc(sizeof(Node));
 }
 
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Swaps data in two nodes.
+* Input: nodeA - A LinkedList Node.
+*        nodeB - A LinkedList Node.
+*******************************************************************************/
+internal void linkedListSwap(Node *nodeA, Node *nodeB)
+{
+    void *temp = nodeA->data;
+    nodeA->data = nodeB->data;
+    nodeB->data = temp;
+}
+
+void linkedListSort(LinkedList *list, boolean (*sortFunc)(void *, void *))
+{
+    /* If sortFunc is NULL do nothing */
+    if (!sortFunc)
+        return;
+
+    /* Selection Sort */
+    int i;
+    Node *smallest;
+    Node *start;
+    for (i = 0; i < list->length-1; i++)
+    {
+        start = linkedListGet(list, i);
+        smallest = start;
+        int j;
+        for (j = i+1; j < list->length; j++)
+        {
+            Node *nextNode = linkedListGet(list, j);
+            if (sortFunc(smallest->data, nextNode->data))
+            {
+                if (smallest != nextNode)
+                    smallest = nextNode;
+            }
+        }
+        linkedListSwap(smallest, start);
+    }
+}
+
 void printLinkedList(LinkedList *list, void (*func)(void *))
 {   
     #ifndef DEBUG
