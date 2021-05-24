@@ -18,6 +18,7 @@ internal void printDashes(int length);
 internal int fuzzyAccountSearch(LinkedList *accounts, String *keyword);
 internal void parseCommandLineArgs(int argc, char *argv[]);
 internal void printHelp();
+internal void printAdmin();
 
 int main(int argc, char *argv[])
 {
@@ -386,12 +387,42 @@ internal void parseCommandLineArgs(int argc, char *argv[])
           printHelp();
           break;
         }
-        default:
+        /* Author: Luke - Added administrator run time mode */
+        case 'p':
         {
-          puts("--- Unknown Command ---");
-          printf("Could not find command \"-%c\".\n\n", argv[1][1]);
-          printHelp();
-          break;
+          /*if(stringCompare(newString(argv[1]), newString("admin"))) {*/
+            boolean running = true;
+            while(running) {
+              printAdmin();
+              int choice;
+              printf("Option> ");
+              choice = readInt();
+              switch(choice) {
+                case 1:     /* Reset all program data */
+                {
+                  int delKeys = remove("keys.bin");
+                  int delAcc = remove("accounts.pwm");
+                  if(delKeys != 1 && delAcc != 1) {
+                    puts("--- All Stored Data Has Been Reset ---\n");
+                  }
+                  else {
+                    puts("Failed, some data was not deleted or did not exist.");
+                  }       
+                  break;
+                }
+                case 2:     /* Exit administrator mode */
+                {
+                  running = false;
+                  break;
+                }
+                default: 
+                {
+                  printf("Invalid option.\n");
+                  break;
+                }
+              }
+            }
+          /*}*/
         }
       }
       break;
@@ -416,23 +447,31 @@ internal void printHelp(void)
   puts("-l <Name>                    Searches for <Name> and prints the account");
   puts("-a <Name> <URL> <Password>   Adds a new account");
   puts("-h                           Prints help menu\n");
+  puts("-p <Pass>                    Enter Administrator mode if <Pass> is correct\n");
+}
+
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: Prints options for administrator menu.
+*******************************************************************************/
+static void printAdmin(void) 
+{
+  puts("*************************************");
+  puts("*        Administrator Menu         *");
+  puts("*************************************");
+  puts("  1. Reset All Data");
+  puts("  2. Exit Program");
 }
 
 /*
-
-
 Login Menu:
-
 *************************************
 *         Password Mananger         *
 *************************************
   1. Login (Exisiting User)
   2. Create New Master Account
   3. Exit Program
-
-
 Main Menu (Succesfull Login):
-
 *************************************
 *            Main Menu              *
 *************************************
@@ -443,10 +482,7 @@ Main Menu (Succesfull Login):
    5. Export database (E&C)
    6. Settings
    7. Log out
-
-
 Search Menu:
-
 *************************************
 *       Search and Sort Menu        *
 *************************************
@@ -454,15 +490,11 @@ Search Menu:
   2. Sort database alphabetically
   3. Edit account entry
   4. Delete account
-
-
 Settings Menu: !(Need to type in master password to delete master account)!
-
 *************************************
 *           Settings Menu           *
 *************************************
    1. DELETE MASTER ACCOUNT
    2. OPTION 2
    2. OPTION 3
-
 */
