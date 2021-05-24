@@ -52,18 +52,6 @@ void printAccount(void *account);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Prints accounts in a table format.
-*        -----------------------------------------------
-*         Name       URL                Password
-*        -----------------------------------------------
-*         Google     www.google.com     password123
-*
-* Input: list - A LinkedList
-*******************************************************************************/
-void printAccountList(LinkedList *list);
-
-/*******************************************************************************
-* Author: Peter de Vroom
 * Function: Frees an account and all Strings within.
 * Input: account - An Account. account is a void pointer to allow for flexibility
 *                  with LinkedLists.

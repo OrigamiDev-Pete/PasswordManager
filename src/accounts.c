@@ -6,8 +6,6 @@
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
-internal void printDashes(int length);
-
 Account* newAccount(String *name, String *url, String *password)
 {
     Account *acc = malloc(sizeof(Account));
@@ -32,15 +30,6 @@ boolean accountSort(void *accountA, void *accountB)
         return true;
     else
         return false;
-}
-
-internal void printDashes(int length)
-{
-    int i;
-    for (i = 0; i < (length); i++)
-        putchar('-');
-    putchar('\n');
-
 }
 
 void freeAccount(void *account)

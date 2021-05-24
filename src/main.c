@@ -7,14 +7,17 @@
 #define PRINT_COLUMN_DEFAULT_WIDTH 8
 #define PRINT_PASSWORD_DEFAULT_WIDTH 20
 
+#define internal static /* static is a vague keyword, internal is more clear */
+
 /* Function Prototypes */
 void printLogin(void);
 void printMenu(void);
 void printSearch(void);
-static void printAccountList(LinkedList *accounts);
-static LinkedList *fuzzyAccountSearch(LinkedList accounts, String keyword, int numberToFind);
-static void parseCommandLineArgs(int argc, char *argv[]);
-static void printHelp();
+internal void printAccountList(LinkedList *accounts);
+internal void printDashes(int length);
+internal int fuzzyAccountSearch(LinkedList *accounts, String *keyword);
+internal void parseCommandLineArgs(int argc, char *argv[]);
+internal void printHelp();
 
 int main(int argc, char *argv[])
 {
@@ -186,7 +189,17 @@ void printSearch(void)
   "4. Delete account\n");
 }
 
-static void printAccountList(LinkedList *list)
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Prints accounts in a table format.
+*        -----------------------------------------------
+*         Name       URL                Password
+*        -----------------------------------------------
+*         Google     www.google.com     password123
+*
+* Input: list - A LinkedList
+*******************************************************************************/
+internal void printAccountList(LinkedList *list)
 {
     if (list->length == 0)
     {
@@ -232,11 +245,45 @@ static void printAccountList(LinkedList *list)
     }
 }
 
-static LinkedList *fuzzyAccountSearch(LinkedList accounts, String keyword, int numberToFind)
+internal void printDashes(int length)
 {
-  LinkedList *list = newLinkedList(NULL);
-  
+    int i;
+    for (i = 0; i < (length); i++)
+        putchar('-');
+    putchar('\n');
 
+}
+
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: Gets the index of the closest matching Account name to the provided
+*           keyword.
+* Input: accounts - A LinkedList
+*         keyword - A String to match against each Account.
+* Output: Index to closest match.
+*******************************************************************************/
+internal int fuzzyAccountSearch(LinkedList *accounts, String *keyword)
+{
+  int i;
+  int mostAccurateIndex = 0;
+  int prevAccuracy = 0;
+  for (i = 0; i < accounts->length; i++)
+  {
+    Account currentAccount = *(Account *)linkedListGet(accounts, i)->data;
+    int accuracy = 0;
+    int strIndex;
+    for (strIndex = 0; strIndex < keyword->length && i < currentAccount.name->length; strIndex++)
+    {
+      if (stringGetChar(keyword, strIndex) == stringGetChar(currentAccount.name, strIndex))
+        accuracy++;
+    }
+    if (accuracy > prevAccuracy)
+    {
+      mostAccurateIndex = i;
+      prevAccuracy = accuracy;
+    }
+  }
+  return mostAccurateIndex;
 }
 
 /*******************************************************************************
@@ -248,7 +295,7 @@ static LinkedList *fuzzyAccountSearch(LinkedList accounts, String keyword, int n
 * Input: argc - number of command line arguments
 *        argv - command line arguments
 *******************************************************************************/
-static void parseCommandLineArgs(int argc, char *argv[])
+internal void parseCommandLineArgs(int argc, char *argv[])
 {
   switch (argv[1][0])
   {
@@ -274,6 +321,37 @@ static void parseCommandLineArgs(int argc, char *argv[])
           else if (argc == 3)
           {
             /* Search and display account */
+            LinkedList *list = newLinkedList(NULL);
+            if (loadData(list))
+            {
+              String *keyword = newString(argv[2]);
+              int index = fuzzyAccountSearch(list, keyword);
+
+              /* Create a stack-allocated LinkedList in this case to house the one account.
+              *  Heap allocation is avoided here so as to not double free the contents of
+              *  the new LinkedList. Rather acc will merely contain a copy of one of the accounts
+              *  in list */
+              LinkedList acc;
+              acc.head = linkedListGet(list, index);
+              acc.head->next = NULL;
+              acc.length = 1;
+
+              /* If the search and result do not exactly match, tell the user. */
+              if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
+              {
+                printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
+                  keyword->text,
+                  ((Account *)acc.head->data)->name->text);
+              }
+
+              printAccountList(&acc);
+              freeString(keyword);
+            }
+            else
+            {
+              puts("Error reading 'accounts.pwm'. Make sure accounts data has been created before reading.");
+            }
+            freeLinkedList(list, freeAccount);
           }
           else
           {
@@ -329,7 +407,7 @@ static void parseCommandLineArgs(int argc, char *argv[])
 * Author: Peter de Vroom
 * Function: Prints help text for proper operation.
 *******************************************************************************/
-static void printHelp(void)
+internal void printHelp(void)
 {
   puts("Password Manager\n");
   puts("Usage: main [COMMAND] <arguments>\n");
