@@ -59,4 +59,15 @@ void printAccountList(LinkedList *list);
 *******************************************************************************/
 void freeAccount(void *account);
 
+/*******************************************************************************
+* Author: Sam Zammit
+* Function: Compares the names of 2 accounts to see which one comes first 
+            alphabetically.
+* Input: list - A LinkedList
+* Output: Returns 1 if the two accounts are already in alphabetical order, 0 if
+          not.
+*******************************************************************************/
+
+boolean compareAccounts(void* acc1, void* acc2);
+
 #endif /* ACCOUNTS_H */

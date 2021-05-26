@@ -89,3 +89,14 @@ void freeAccount(void *account)
     freeString(((Account *)account)->password);
     free(account);
 }
+
+boolean compareAccounts(void* acc1, void* acc2){
+    Account* a1 = (Account*)acc1;
+    Account* a2 = (Account*)acc2;
+
+    if(stringCompare(a1->name, a2->name) > 0){
+        return true;
+    }else{
+        return false;
+    }
+}

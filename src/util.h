@@ -225,6 +225,23 @@ void printDouble(void *flt);
 *******************************************************************************/
 void freeLinkedList(LinkedList *list, void (*func)(void *));
 
+/*******************************************************************************
+* Author: Sam Zammit
+* Function: Uses a bubble sort to sort the names of the accounts in alphabetical
+            order
+* Input: list - A LinkedList
+*******************************************************************************/
+
+void sortLinkedListAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)); 
+
+/*******************************************************************************
+* Author: Sam Zammit
+* Function: A small function that will swap two nodes in a linked list. 
+* Input: 2 nodes from the strcuture Node. These are the two nodes that will be
+        swapped.
+*******************************************************************************/
+
+void swapNodes(struct Node *a, struct Node *b);
 
 /**********************************************************
 * * *                 BIT MANIPULATION                * * *

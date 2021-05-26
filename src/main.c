@@ -11,6 +11,7 @@ void printSearch(void);
 static void parseCommandLineArgs(int argc, char *argv[]);
 static void printHelp();
 static void printAdmin();
+int searchAccounts(LinkedList *list, String *searchWord);
 
 int main(int argc, char *argv[])
 {
@@ -296,6 +297,33 @@ static void parseCommandLineArgs(int argc, char *argv[])
     }
   }
 }
+
+int searchAccounts(LinkedList *list, String *searchWord){
+    int i, j, accurate, mostAccurate, MAindex;
+    int size = list->length;
+    String accName;
+    mostAccurate = 0;
+    accurate = 0;
+    MAindex = 0;
+
+
+    for(i = 0; i < size; i++){
+
+        accName = *((Account*)linkedListGet(list, i)->data)->name;
+
+        for(j = 0; j < searchWord->length && j < accName.length; j++){
+            if(stringGetChar(searchWord, j) == stringGetChar(&accName, j)){
+              accurate++;
+            }
+            if(accurate > mostAccurate){
+              MAindex = i;
+              mostAccurate = accurate;
+            }
+        }
+    }
+  return MAindex;
+}
+
 
 /*******************************************************************************
 * Author: Peter de Vroom

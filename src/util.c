@@ -536,6 +536,38 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
     }
     free(list);
 }
+void sortLinkedListAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)){
+    int swapped, i;
+    int size = list->length;
+
+    swapped = 1;
+
+    while(swapped){
+
+        swapped = 0;
+
+        for(i = 0; i < size - 1; i++ ){
+            
+            struct Node* a = linkedListGet(list, i);
+            struct Node* b = linkedListGet(list, i+1);
+
+            if ((compareAccounts)(a->data, b->data) == 1){
+                swapNodes(a, b);
+                swapped = 1;
+            }
+
+        }
+        if (swapped == 0){
+            break;
+        }
+    } 
+}
+
+void swapNodes(struct Node *a, struct Node *b){
+    void *temp = b->data;
+    b->data = a->data;
+    a->data = temp;
+}
 
 
 int checkBit(byte byte, int pos)
