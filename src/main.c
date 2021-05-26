@@ -7,13 +7,22 @@
 #define internal static /* static is a vague keyword, internal is more clear */
 
 /* Function Prototypes */
-void printLogin(void);
 void printMenu(void);
 void printSearch(void);
+void printSettings(void);
 internal void parseCommandLineArgs(int argc, char *argv[]);
 internal void printHelp();
 internal void printAdmin();
 int searchAccounts(LinkedList *list, String *searchWord);
+
+/*  Global Variable */
+boolean encryption = true;
+compressionType compression = HUFFMAN;
+
+/*******************************************************************************
+* Author: Giovanni Tjandra
+* Function: User interface
+*******************************************************************************/
 
 int main(int argc, char *argv[])
 {
@@ -28,108 +37,173 @@ int main(int argc, char *argv[])
 
   while(running == true)
   {
-    printLogin();
-    int option;
-    printf("Option>");
-    option = readInt();
+    int task=0;
 
-    while(option != 4)
+    while(task != 7)
     {
-      switch (option) 
+      printMenu();
+      printf("Option>");
+      task = readInt();
+
+      switch (task)
       {
-        case 1: /* Login (Existing User) */
+        case 1: /* Search and Sort menu */
         {
-          int task;
-
-          while(task != 7) /* NOTE(pete): Moved while statement */
+          int choice=0;
+          while(choice!=4)
           {
-            printMenu();
+            printSearch();
             printf("Option>");
-            task = readInt();
-
-            switch (task)
-            {
-              case 1: /* Search and Sort menu */
+            choice = readInt();
+              switch(choice)
               {
-                printSearch();
-                int choice;
-                printf("Option>");
-                choice = readInt();
+                case 1: /* Search database */
+                { 
+                  String *keyword = readString("Please enter the account name>");
+                  int index = searchAccounts(accounts, keyword);
 
-                while(choice!=5)
-                {
-                  switch(choice)
+                  /* Create a stack-allocated LinkedList in this case to house the one account.
+                  *  Heap allocation is avoided here so as to not double free the contents of
+                  *  the new LinkedList. Rather acc will merely contain a copy of one of the accounts
+                  *  in list */
+                  LinkedList acc;
+                  acc.head = linkedListGet(accounts, index);
+                  acc.head->next = NULL;
+                  acc.length = 1;
+
+                  /* If the search and result do not exactly match, tell the user. */
+                  if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
                   {
-                    case 1: /* Search database */
-                    { 
-                      break;
-                    }
-                    case 2: /* Sort database alphabetically */
-                    {
-                      break;
-                    }
-                    case 3: /* Edit account entry */
-                    {
-                      break;
-                    }
-                    case 4: /*  Delete account */
-                    {
-                      /* Enter master password*/
-                      /*String* password = readString("Enter password> ");*/
-                      break;
-                    }
+                    printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
+                    keyword->text,
+                    ((Account *)acc.head->data)->name->text);
                   }
-                }
+
+                  printAccountList(&acc);
+                  freeString(keyword);
                 break;
               }
-              case 2: /* Add New account */
+              case 2: /* Edit account entry */
               {
+                printAccountList(accounts);
+                int entry=0;
+                printf("Please select an account>");
+                entry = readInt();
                 String* name = readString("Please enter website's name> ");
                 String* url = readString("Please enter website's url> ");
                 String* username = readString("Please enter a username> ");
                 String* password = readString("Please enter password> ");
                 
                 Account* inputAccount = newAccount(name, url, username, password);
-                linkedListAppend(accounts, inputAccount); 
+                linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
+                sortLinkedListAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/
                 break;
               }
-              case 3: /* Display stored websites */
+              case 3: /*  Delete account */
               {
                 printAccountList(accounts);
-                #ifdef DEBUG
-                printLinkedList(accounts, printAccount);
-                #endif
-                break;
-              }
-              case 4: /* Import database (DC&DE) */
-              {
-                saveData(accounts, true, HUFFMAN);
-                break;
-              }
-              case 5: /* Export database (E&C) */
-              {
-                break;
-              }
-              case 6: /* Log out */
-              {
-                running = false;
-                break;
-              }
-              default:
-              {
-                printf("Invalid option.\n");
+                int entry=0;
+                printf("Please select an account>");
+                entry = readInt();
+
+                linkedListRemove(accounts, entry, freeAccount);
                 break;
               }
             }
           }
           break;
         }
-        case 2:
-        { /*  Create New Master Account */
+        case 2: /* Add New account */
+        {
+          String* name = readString("Please enter website's name> ");
+          String* url = readString("Please enter website's url> ");
+          String* username = readString("Please enter a username> ");
+          String* password = readString("Please enter password> ");
+          
+          Account* inputAccount = newAccount(name, url, username, password);
+          linkedListAppend(accounts, inputAccount);
+          sortLinkedListAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/ 
           break;
         }
-        case 3: 
-        { /* Exit Program */
+        case 3: /* Display stored websites */
+        {
+          printAccountList(accounts);
+          #ifdef DEBUG
+          printLinkedList(accounts, printAccount);
+          #endif
+          break;
+        }
+        case 4: /* Load database */
+        {
+          loadData(accounts);
+          break;
+        }
+        case 5: /* Save database */
+        {
+          saveData(accounts, true, HUFFMAN);
+          break;
+        }
+        case 6: /* Settings */
+        {
+          int option=0;
+
+          while (option !=3)
+          {
+            printSettings();
+            printf("Option>");
+            option = readInt();
+
+            switch (option)
+            {
+            case 1: /* config encryption */
+
+              if (encryption)
+              {
+                encryption=false;
+              }
+              else
+              {
+                encryption=true;
+              }
+              break;
+            
+            case 2: /* config compression */
+            {
+              int type=0;
+
+              printf("\n1. Huffman\n"
+              "2. Run length\n"
+              "3. None\n");
+              printf("Option>");
+              type = readInt();
+
+              switch (type)
+              {
+              case 1:
+                compression = HUFFMAN;
+                break;
+              
+              case 2:
+                compression = RUN_LENGTH;
+                break;
+              
+              case 3:
+                compression = NONE;
+                break;
+              
+              default:
+                break;
+              }
+              break;
+            }
+            default:
+              break;
+            }
+          }
+          break;
+        }
+        case 7: /* Log out */
+        {
           running = false;
           break;
         }
@@ -140,22 +214,15 @@ int main(int argc, char *argv[])
         }
       }
     }
+    break;
   }
-  return 0;
+return 0;
 }
 
-/* Rough Main Menu idea */
-void printLogin(void)
-{
-  printf("\n\n"
-  "*************************************\n"
-  "*              Welcome!             *\n"
-  "*************************************\n"
-  "1. Login (Exisiting User)\n"
-  "2. Create New Master Account\n"
-  "3. Exit Program\n");
-}
-
+/*******************************************************************************
+* Author: Giovanni Tjandra
+* Function: Main Menu
+*******************************************************************************/
 void printMenu(void)
 {
   printf("\n\n"
@@ -164,26 +231,63 @@ void printMenu(void)
   "*************************************\n"
   "1. Search and Sort menu\n"
   "2. Add New account\n"
-  "3. Display stored websites\n" /* NOTE(pete): Maybe 'Display stored accounts' would be more consistent */
-  "4. Import database (DC&DE)\n" /* NOTE(pete): Maybe Save/Load makes more sense than Import Export. Thoughts on Auto-Saving? */ 
-                                 /* NOTE(luke): We need to make clear that it is the encryption and compression
-                                                as they are they main parts of the project. So maybe we should
-                                                include that in the name. */
-  "5. Export database (E&C)\n"   /* NOTE(luke): Maybe "Save Database (Encrypted and Compressed)"??? */
-  "6. Log out\n");
+  "3. Display stored accounts\n" 
+  "4. Load database\n" 
+  "5. Save database\n"                          
+  "7. Log out\n");
 }
 
+/*******************************************************************************
+* Author: Giovanni Tjandra
+* Function: Edit Menu
+*******************************************************************************/
 void printSearch(void)
 {
   printf("\n\n"
   "*************************************\n"
-  "*        Search and Sort Menu       *\n"
+  "*             Edit Menu             *\n"
   "*************************************\n"
   "1. Search database\n"
-  "2. Sort database alphabetically\n"
-  "3. Edit account entry\n"
-  "4. Delete account\n");
+  "2. Edit account entry\n"
+  "3. Delete account\n"
+  "4. Return to main menu\n");
 }
+
+/*******************************************************************************
+* Author: Giovanni Tjandra
+* Function: Settings menu
+*******************************************************************************/
+void printSettings(void)
+{
+  printf("\n\n"
+  "*************************************\n"
+  "*             Settings              *\n"
+  "*************************************\n");
+  if(encryption)
+  {
+    printf("1. Encryption: Enabled\n");
+  }
+  else 
+  {
+    printf("1. Encryption: Disabled\n");
+  }
+
+  if(compression==HUFFMAN)
+  {
+    printf("2. Compression: Huffman\n");
+  }
+  else if(compression==RUN_LENGTH)
+  {
+    printf("2. Compression: Run Length\n");
+  }
+  else
+  {
+    printf("2. Compression: None\n");
+  }
+
+  printf("3. Return to main menu\n");
+}
+
 
 
 /*******************************************************************************
@@ -383,39 +487,3 @@ static void printAdmin(void)
   puts("  1. Reset All Data");
   puts("  2. Exit Program");
 }
-
-/*
-Login Menu:
-*************************************
-*         Password Mananger         *
-*************************************
-  1. Login (Exisiting User)
-  2. Create New Master Account
-  3. Exit Program
-Main Menu (Succesfull Login):
-*************************************
-*            Main Menu              *
-*************************************
-   1. Search and Sort menu
-   2. Add New account
-   3. Display stored websites
-   4. Import database (DC&DE)
-   5. Export database (E&C)
-   6. Settings
-   7. Log out
-Search Menu:
-*************************************
-*       Search and Sort Menu        *
-*************************************
-  1. Search database
-  2. Sort database alphabetically
-  3. Edit account entry
-  4. Delete account
-Settings Menu: !(Need to type in master password to delete master account)!
-*************************************
-*           Settings Menu           *
-*************************************
-   1. DELETE MASTER ACCOUNT
-   2. OPTION 2
-   2. OPTION 3
-*/
