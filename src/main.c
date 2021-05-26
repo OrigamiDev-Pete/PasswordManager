@@ -1,16 +1,18 @@
-#include <stdio.h> /* printf, puts */
+#include <stdio.h> /* printf, puts, remove */
 
 #include "accounts.h"
 #include "io.h"
 #include "util.h"
 
+#define internal static /* static is a vague keyword, internal is more clear */
+
 /* Function Prototypes */
 void printLogin(void);
 void printMenu(void);
 void printSearch(void);
-static void parseCommandLineArgs(int argc, char *argv[]);
-static void printHelp();
-static void printAdmin();
+internal void parseCommandLineArgs(int argc, char *argv[]);
+internal void printHelp();
+internal void printAdmin();
 int searchAccounts(LinkedList *list, String *searchWord);
 
 int main(int argc, char *argv[])
@@ -84,9 +86,10 @@ int main(int argc, char *argv[])
               {
                 String* name = readString("Please enter website's name> ");
                 String* url = readString("Please enter website's url> ");
+                String* username = readString("Please enter a username> ");
                 String* password = readString("Please enter password> ");
                 
-                Account* inputAccount = newAccount(name, url, password);
+                Account* inputAccount = newAccount(name, url, username, password);
                 linkedListAppend(accounts, inputAccount); 
                 break;
               }
@@ -184,7 +187,7 @@ void printSearch(void)
 
 
 /*******************************************************************************
-* Author: Peter de Vroom
+* Author: Peter de Vroom, Luke Phillips
 * Function: Parses command line arguments. If a valid command is parsed the
 *           program executes the command and terminates in place without running
 *           the main program. If the command is invalid help text is printed
@@ -218,6 +221,32 @@ static void parseCommandLineArgs(int argc, char *argv[])
           else if (argc == 3)
           {
             /* Search and display account */
+            LinkedList *list = newLinkedList(NULL);
+            if (loadData(list))
+            {
+              String *keyword = newString(argv[2]);
+              int index = searchAccounts(list, keyword);
+
+              /* Create a stack-allocated LinkedList in this case to house the one account.
+              *  Heap allocation is avoided here so as to not double free the contents of
+              *  the new LinkedList. Rather acc will merely contain a copy of one of the accounts
+              *  in list */
+              LinkedList acc;
+              acc.head = linkedListGet(list, index);
+              acc.head->next = NULL;
+              acc.length = 1;
+
+              /* If the search and result do not exactly match, tell the user. */
+              if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
+              {
+                printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
+                  keyword->text,
+                  ((Account *)acc.head->data)->name->text);
+              }
+
+              printAccountList(&acc);
+              freeString(keyword);
+            }
           }
           else
           {
@@ -227,22 +256,23 @@ static void parseCommandLineArgs(int argc, char *argv[])
         }
         case 'a':
         {
-          if (argc == 5)
+          if (argc == 6)
           {
             LinkedList *list = newLinkedList(NULL);
-            Account *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]));
+            Account *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]), newString(argv[5]));
             loadData(list);
             linkedListAppend(list, acc);
+            sortLinkedListAlphabetically(list, compareAccounts);
             saveData(list, true, HUFFMAN);
             freeLinkedList(list, freeAccount);
           }
           else if (argc < 5)
           {
-            puts("Too few parameters. Expected -a <Name> <URL> <Password>");
+            puts("Too few parameters. Expected -a <Name> <URL> <Username> <Password>");
           }
           else
           {
-            puts("Too many parameters. Expected -a <Name> <URL> <Password>");
+            puts("Too many parameters. Expected -a <Name> <URL> <Username> <Password>");
           }
           break;
         }

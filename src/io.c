@@ -1,10 +1,10 @@
 #include "io.h"
 
-#include <stdio.h> /* fopen, fclose, scanf, getchar */
+#include <stdio.h> /* fopen, fclose, scanf, getchar, fscanf, fprintf, getc */
 
-#include "accounts.h" /* Account */
-#include "compression.h"
-#include "encryption.h"
+#include "accounts.h" /* Account, newAccount, freeAccount */
+#include "compression.h" /* encryptString, decryptString */
+#include "encryption.h" /* compress, HuffmanCompression,  */
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
@@ -14,9 +14,6 @@ internal void stringToAccounts(const String *string, LinkedList *accounts);
 
 boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType)
 {
-    String *path = platformPath();
-    stringAppend(path, "accounts.pwm");
-
     /* Saving an empty list will effectively clear the data file. */
     if (accounts->length == 0)
     {
@@ -61,8 +58,7 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
     }
 
 
-    FILE *f = fopen(path->text, "w");
-    freeString(path);
+    FILE *f = fopen("accounts.pwm", "w");
     if (f)
     {
         /* FILE FORMAT:
@@ -100,6 +96,8 @@ internal String *accountsToString(const LinkedList *accounts)
         stringAppendChar(str, '\n');
         stringAppend(str, acc->url->text);
         stringAppendChar(str, '\n');
+        stringAppend(str, acc->username->text);
+        stringAppendChar(str, '\n');
         stringAppend(str, acc->password->text);
         stringAppendChar(str, '\n');
     }
@@ -109,10 +107,7 @@ internal String *accountsToString(const LinkedList *accounts)
 
 boolean loadData(LinkedList *accounts)
 {
-
-    String *path = platformPath();
-    stringAppend(path, "accounts.pwm");
-    FILE *f = fopen(path->text, "r");
+    FILE *f = fopen("accounts.pwm", "r");
     if (f)
     {
         byte encryptedflag;
@@ -181,10 +176,7 @@ boolean loadData(LinkedList *accounts)
 
 boolean deleteData(void)
 {
-    String *path = platformPath();
-    stringAppend(path, "accounts.pwm");
-
-    FILE *f = fopen(path->text, "w");
+    FILE *f = fopen("accounts.pwm", "w");
     if (f)
     {
         fclose(f);
@@ -212,7 +204,7 @@ internal void stringToAccounts(const String *string, LinkedList *accounts)
     char c;
     while ((c = stringGetChar(string, i)) != '\0')
     {
-        String *name, *url, *password;
+        String *name, *url, *username, *password;
         name = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
         {
@@ -225,12 +217,18 @@ internal void stringToAccounts(const String *string, LinkedList *accounts)
             stringAppendChar(url, c);
         }
 
+        username = newString(NULL);
+        while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
+        {
+            stringAppendChar(username, c);
+        }
+
         password = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
         {
             stringAppendChar(password, c);
         }
-        Account *acc = newAccount(name, url, password);
+        Account *acc = newAccount(name, url, username, password);
         linkedListAppend(accounts, acc);
     }
 }
@@ -244,7 +242,7 @@ String* platformPath(void)
     return path;
     #endif
     #ifdef __MINGW32__
-    String *path = newString(getenv("USERPROFILE"));
+    stringAppend(path, getenv("USERPROFILE"));
     stringAppend(path, "\\Documents\\");
     return path;
     #endif

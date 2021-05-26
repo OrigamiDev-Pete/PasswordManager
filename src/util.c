@@ -2,13 +2,14 @@
 
 #include <stdio.h> /* printf, puts, putchar, getchar */
 
-#include "accounts.h"
-
 #define internal static /* static is a vague keyword, internal is more clear */
 
 /**********************************************************
 * * *                      STRING                     * * *
 ***********************************************************/
+
+#define STRING_START_SIZE 64        /* Size selected to minimise reallocation */
+#define STRING_MAX_SIZE 200000000   /* Size well beyond anything the program need handle */
 
 internal void checkAndResizeString(String *string, int newLength);
 internal int stringLength(const char *str);
@@ -25,7 +26,7 @@ internal void nullTerminate(String *string);
 internal void initString(String *string, const char *val)
 {
     /* Initialise an empty String if val is NULL */
-    if (val == NULL)
+    if (!val)
     {
         string->length = 0;
         string->capacity = STRING_START_SIZE;
@@ -551,7 +552,7 @@ void sortLinkedListAlphabetically(LinkedList *list, boolean (*compareFunction)(v
             struct Node* a = linkedListGet(list, i);
             struct Node* b = linkedListGet(list, i+1);
 
-            if ((compareAccounts)(a->data, b->data) == 1){
+            if ((compareFunction)(a->data, b->data) == 1){
                 swapNodes(a, b);
                 swapped = 1;
             }

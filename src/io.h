@@ -7,7 +7,8 @@
 #ifndef IO_H
 #define IO_H
 
-#include "util.h" /* boolean, LinkedList */
+#include "util.h" /* boolean, LinkedList, linkedListGet, linkedListClear, linkedListAppend,
+                   * String, stringAppendChar, stringAppend, freeString */
 
 
 /* Enumerator for compression types */
@@ -45,7 +46,7 @@ boolean deleteData(void);
 * Input: accounts - A list to load the saved accounts into.
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
-String* platformPath(void);
+/* String* platformPath(void); */
 
 /*******************************************************************************
 * Author: Peter de Vroom

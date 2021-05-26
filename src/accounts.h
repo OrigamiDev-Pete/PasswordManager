@@ -8,7 +8,7 @@
 #ifndef ACCOUNTS_H
 #define ACCOUNTS_H
 
-#include "util.h"
+#include "util.h" /* String, freeString */
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -18,6 +18,7 @@
 typedef struct Account {
     String *name;
     String *url;
+    String *username;
     String *password;
 } Account;
 
@@ -29,7 +30,7 @@ typedef struct Account {
 *    password - Password String
 * Output: Returns an newly allocated and initialised Account
 *******************************************************************************/
-Account* newAccount(String *name, String *url, String *password);
+Account* newAccount(String *name, String *url, String *username, String *password);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -42,10 +43,10 @@ void printAccount(void *account);
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Prints accounts in a table format.
-*        -----------------------------------------------
-*         Name       URL                Password
-*        -----------------------------------------------
-*         Google     www.google.com     password123
+*        -----------------------------------------------------------
+*         Name       URL                 Username      Password
+*        -----------------------------------------------------------
+*         Google     www.google.com      user          password123
 *
 * Input: list - A LinkedList
 *******************************************************************************/

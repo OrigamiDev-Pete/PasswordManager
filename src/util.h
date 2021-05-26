@@ -34,8 +34,6 @@ typedef struct String {
     size_t length;
     size_t capacity;
 } String;
-#define STRING_START_SIZE 64
-#define STRING_MAX_SIZE 200000000
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -240,7 +238,6 @@ void sortLinkedListAlphabetically(LinkedList *list, boolean (*compareFunction)(v
 * Input: 2 nodes from the strcuture Node. These are the two nodes that will be
         swapped.
 *******************************************************************************/
-
 void swapNodes(struct Node *a, struct Node *b);
 
 /**********************************************************
