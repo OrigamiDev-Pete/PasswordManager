@@ -7,6 +7,13 @@
 /* #define DEBUG */
 #define KEYFILE "keys.bin" /* A file in which the keys will be stored */
 
+/* Function Definitions */
+void randomPrimes(int* x, int* y);
+boolean isPrime(int input);
+int shortKey(int key);
+void readKeys(int* key);
+void writeKeys(int* key);
+
 void encryptString(String* input) {
     int key;
     int* key_p = &key;
@@ -103,6 +110,11 @@ void createKey(int* key) {
     }
 }
 
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: generate two random prime numbers to be used in key generation
+* Input: pointer to two integers to fill with the prime numbers.
+*******************************************************************************/
 void randomPrimes(int* x, int* y) {
     /* Seeding the rand function - using time will cause the first roll to always 
     be different. This is required to reduce predicatbility of key generated. */
@@ -122,6 +134,13 @@ void randomPrimes(int* x, int* y) {
     *y = j;
 }
 
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: determines if an integer is prime.
+* Input: the integer to be tested.
+* Output: a boolean true if prime, false if not prime.
+          - note: boolean is defined in util.h
+*******************************************************************************/
 boolean isPrime(int input) {
     int i;
     /* Check each value from 2 until the midpoint of the number. */
@@ -134,6 +153,11 @@ boolean isPrime(int input) {
     return true;
 }
 
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: take the totient value and use it to generate the 2 digit shift key.
+* Input: integer of the long key value.
+*******************************************************************************/
 int shortKey(int key) {
     /* Returns the last two digits of the randomised key. Retains randomness
     but reduced processing complexity. Also remains within the limits of
@@ -141,6 +165,11 @@ int shortKey(int key) {
     return key % 100;
 }
 
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: read the key from the file to be used.
+* Input: integer pointer of the location to load the key into.
+*******************************************************************************/
 void readKeys(int* key) {
     /* Keyfile will persist across executions of this code. */
     FILE* file = fopen(KEYFILE, "rb");
@@ -148,6 +177,14 @@ void readKeys(int* key) {
     fclose(file);    
 }
 
+/*******************************************************************************
+* Author: Luke Phillips
+* Function: store key securely in a file for future use, file will be unreadable
+*           to the users of the program without this code.
+    - future uses are further encryption, or decryption, for which the keys
+      are needed.
+* Input: integer pointer of the key to be stored.
+*******************************************************************************/
 void writeKeys(int* key) {
     /* Keyfile will persist across executions of this code. */
     FILE* file = fopen(KEYFILE, "wb");

@@ -284,7 +284,7 @@ static void parseCommandLineArgs(int argc, char *argv[])
         /* Author: Luke - Added administrator run time mode */
         case 'p':
         {
-          /*if(stringCompare(newString(argv[1]), newString("admin"))) {*/
+          /*if(!stringCompare(newString(argv[1]), newString("admin"))) {*/
             boolean running = true;
             while(running) {
               printAdmin();

@@ -3,6 +3,8 @@
 * Date Updated: 26/04/2021
 * 
 * The header file for the ecryption functionality of the program.
+* Only the functions needed outside of the encryption file are declared.
+* Other helper functions are declared within encryption.c
 *
 *******************************************************************************/
 
@@ -43,45 +45,5 @@ one with use outside encryption is the isPrime() method. */
 * Input: a pointer to the varible storing the encryption key.
 *******************************************************************************/
 void createKey(int* key);
-
-/*******************************************************************************
-* Author: Luke Phillips
-* Function: generate two random prime numbers to be used in key generation
-* Input: pointer to two integers to fill with the prime numbers.
-*******************************************************************************/
-void randomPrimes(int* x, int* y);
-
-/*******************************************************************************
-* Author: Luke Phillips
-* Function: determines if an integer is prime.
-* Input: the integer to be tested.
-* Output: a boolean true if prime, false if not prime.
-          - note: boolean is defined in util.h
-*******************************************************************************/
-boolean isPrime(int input);
-
-/*******************************************************************************
-* Author: Luke Phillips
-* Function: take the totient value and use it to generate the 2 digit shift key.
-* Input: integer of the long key value.
-*******************************************************************************/
-int shortKey(int key);
-
-/*******************************************************************************
-* Author: Luke Phillips
-* Function: read the key from the file to be used.
-* Input: integer pointer of the location to load the key into.
-*******************************************************************************/
-void readKeys(int* key);
-
-/*******************************************************************************
-* Author: Luke Phillips
-* Function: store key securely in a file for future use, file will be unreadable
-*           to the users of the program without this code.
-    - future uses are further encryption, or decryption, for which the keys
-      are needed.
-* Input: integer pointer of the key to be stored.
-*******************************************************************************/
-void writeKeys(int* key);
 
 #endif /* ENCRYPT_H */
