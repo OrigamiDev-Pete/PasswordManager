@@ -10,6 +10,7 @@
 void printMenu(void);
 void printSearch(void);
 void printSettings(void);
+internal String* readAndValidateString(const char *prompt);
 internal void parseCommandLineArgs(int argc, char *argv[]);
 internal void printHelp();
 internal void printAdmin();
@@ -21,7 +22,8 @@ internal compressionType compression = HUFFMAN;
 
 /*******************************************************************************
 * Author: Giovanni Tjandra
-* Function: User interface
+* Function: The main function handles all of the program's user interace.
+*           When command-line args are passed the main function will exit early.
 *******************************************************************************/
 
 int main(int argc, char *argv[])
@@ -35,12 +37,12 @@ int main(int argc, char *argv[])
   LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;
 
-  int i;
+/*   int i;
   for (i = 0; i < 101; i++)
   {
     linkedListAppend(accounts, newAccount(newString("test"),newString("test"),newString("test"),newString("test")));
   }
-  linkedListSortAlphabetically(accounts, compareAccounts);
+  linkedListSortAlphabetically(accounts, compareAccounts); */
 
   while(running == true)
   {
@@ -51,7 +53,6 @@ int main(int argc, char *argv[])
       printMenu();
       printf("Option> ");
       task = readInt();
-
       switch (task)
       {
         case 1: /* Search and Sort menu */
@@ -62,33 +63,33 @@ int main(int argc, char *argv[])
             printSearch();
             printf("Option> ");
             choice = readInt();
-              switch(choice)
+            switch(choice)
+            {
+              case 1: /* Search database */
               {
-                case 1: /* Search database */
+                /* NOTE(pete): correct searching requires that the list is sorted.
+                  *             This should be fine under normal operation. */
+                String *keyword = readString("Please enter the account name> ");
+                int index = searchAccounts(accounts, keyword);
+
+                /* Create a stack-allocated LinkedList in this case to house the one account.
+                *  Heap allocation is avoided here so as to not double free the contents of
+                *  the new LinkedList. Rather acc will merely contain a copy 
+                *  to a reference of one of the accounts in the list */
+                LinkedList acc;
+                acc.head = linkedListGet(accounts, index);
+                acc.length = 1;
+
+                /* If the search and result do not exactly match, tell the user. */
+                if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
                 {
-                  /* NOTE(pete): correct searching requires that the list is sorted.
-                   *             This should be fine under normal operation. */
-                  String *keyword = readString("Please enter the account name> ");
-                  int index = searchAccounts(accounts, keyword);
+                  printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
+                  keyword->text,
+                  ((Account *)acc.head->data)->name->text);
+                }
 
-                  /* Create a stack-allocated LinkedList in this case to house the one account.
-                  *  Heap allocation is avoided here so as to not double free the contents of
-                  *  the new LinkedList. Rather acc will merely contain a copy 
-                  *  to a reference of one of the accounts in the list */
-                  LinkedList acc;
-                  acc.head = linkedListGet(accounts, index);
-                  acc.length = 1;
-
-                  /* If the search and result do not exactly match, tell the user. */
-                  if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
-                  {
-                    printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
-                    keyword->text,
-                    ((Account *)acc.head->data)->name->text);
-                  }
-
-                  printAccountList(&acc);
-                  freeString(keyword);
+                printAccountList(&acc);
+                freeString(keyword);
                 break;
               }
               case 2: /* Edit account entry */
@@ -100,10 +101,11 @@ int main(int argc, char *argv[])
                 entry--; /* LinkedList is 0 based but table format is 1 based so we need to decrement. */
                 if (entry < accounts->length)
                 {
-                  String* name = readString("Please enter website's name> ");
-                  String* url = readString("Please enter website's url> ");
-                  String* username = readString("Please enter a username> ");
-                  String* password = readString("Please enter password> ");
+                  /* Run Length compression won't allow ';' characters so must be checked*/
+                  String *name = readAndValidateString("Please enter a website's name> ");
+                  String *url = readAndValidateString("Please enter a website's url> ");
+                  String *username = readAndValidateString("Please enter a website's username> ");
+                  String *password = readAndValidateString("Please enter a website's password> ");
                   
                   Account* inputAccount = newAccount(name, url, username, password);
                   linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
@@ -140,16 +142,22 @@ int main(int argc, char *argv[])
 
                 break;
               }
+              default:
+              {
+                puts("Invalid option");
+                break;
+              }
             }
           }
           break;
         }
         case 2: /* Add New account */
         {
-          String* name = readString("Please enter website's name> ");
-          String* url = readString("Please enter website's url> ");
-          String* username = readString("Please enter a username> ");
-          String* password = readString("Please enter password> ");
+          /* Run Length compression won't allow ';' characters so must be checked*/
+          String *name = readAndValidateString("Please enter a website's name> ");
+          String *url = readAndValidateString("Please enter a website's url> ");
+          String *username = readAndValidateString("Please enter a website's username> ");
+          String *password = readAndValidateString("Please enter a website's password> ");
           
           Account* inputAccount = newAccount(name, url, username, password);
           linkedListAppend(accounts, inputAccount);
@@ -178,7 +186,7 @@ int main(int argc, char *argv[])
         }
         case 5: /* Save database */
         {
-          if (saveData(accounts, encryption, compression))
+          if (accounts->length != 0)
           {
             printf("Saved Successfully!");
             if(encryption) printf(" Encrypted,");
@@ -186,9 +194,8 @@ int main(int argc, char *argv[])
             printf(" Saved to 'accounts.pwm'");
           }
           else
-          {
-            puts("There was a problem saving. File was not saved.");
-          }
+            puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
+
           break;
         }
         case 6: /* Settings */
@@ -203,50 +210,49 @@ int main(int argc, char *argv[])
 
             switch (option)
             {
-            case 1: /* config encryption */
-
-              if (encryption)
+              case 1: /* config encryption */
               {
-                encryption=false;
+                if (encryption)
+                {
+                  encryption=false;
+                }
+                else
+                {
+                  encryption=true;
+                }
+                break;
               }
-              else
+              case 2: /* config compression */
               {
-                encryption=true;
+                int type=0;
+
+                printf("\n1. Huffman\n"
+                "2. Run length\n"
+                "3. None\n");
+                printf("Option> ");
+                type = readInt();
+
+                switch (type)
+                {
+                  case 1:
+                    compression = HUFFMAN;
+                    break;
+                  
+                  case 2:
+                    compression = RUN_LENGTH;
+                    break;
+                  
+                  case 3:
+                    compression = NONE;
+                    break;
+                  
+                  default:
+                    break;
+                }
+                break;
               }
-              break;
-            
-            case 2: /* config compression */
-            {
-              int type=0;
-
-              printf("\n1. Huffman\n"
-              "2. Run length\n"
-              "3. None\n");
-              printf("Option> ");
-              type = readInt();
-
-              switch (type)
-              {
-              case 1:
-                compression = HUFFMAN;
-                break;
-              
-              case 2:
-                compression = RUN_LENGTH;
-                break;
-              
-              case 3:
-                compression = NONE;
-                break;
-              
               default:
                 break;
-              }
-              break;
-            }
-            default:
-              printf("Invalid option.\n");
-              break;
             }
           }
           break;
@@ -338,7 +344,28 @@ void printSettings(void)
   printf("3. Return to main menu\n");
 }
 
-
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: This acts as a wrapper around readString, adding a layer of 
+*           abitrary validation. In this case Strings are invalid if they are
+*           empty or if they contain ';' characters.
+* Input: string - A String pointer. This requires a double pointer 
+*        prompt - command line arguments
+*******************************************************************************/
+internal String *readAndValidateString(const char *prompt)
+{
+  String *string;
+  while ((string = readString(prompt))->length == 1 ||
+        stringContains(string, ';'))
+  {
+  if (stringContains(string, ';'))
+    puts("String cannot contain ';' characters");
+  else
+    puts("String cannot be empty");
+  freeString(string);
+  }
+  return string;
+}
 
 /*******************************************************************************
 * Author: Peter de Vroom, Luke Phillips
@@ -349,7 +376,7 @@ void printSettings(void)
 * Input: argc - number of command line arguments
 *        argv - command line arguments
 *******************************************************************************/
-static void parseCommandLineArgs(int argc, char *argv[])
+internal void parseCommandLineArgs(int argc, char *argv[])
 {
   switch (argv[1][0])
   {

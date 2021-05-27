@@ -36,12 +36,6 @@ boolean loadData(LinkedList *accounts);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Clears the accounts database file.
-*******************************************************************************/
-boolean deleteData(void);
-
-/*******************************************************************************
-* Author: Peter de Vroom
 * Function: Returns a String with the platform specific path
 * Input: accounts - A list to load the saved accounts into.
 * Output: Returns true if successful, false if an error occurs
