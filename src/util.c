@@ -537,7 +537,7 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
     }
     free(list);
 }
-void sortLinkedListAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)){
+void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)){
     int swapped, i;
     int size = list->length;
 

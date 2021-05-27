@@ -230,7 +230,7 @@ void freeLinkedList(LinkedList *list, void (*func)(void *));
 * Input: list - A LinkedList
 *******************************************************************************/
 
-void sortLinkedListAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)); 
+void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)); 
 
 /*******************************************************************************
 * Author: Sam Zammit
