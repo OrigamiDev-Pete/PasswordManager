@@ -61,7 +61,7 @@ void printAccountList(LinkedList *list)
         /* Because the width of the Strings could be anything we need to scale
          * the columns to fit the largest entry. */
         char headerBuffer[32];
-        sprintf(headerBuffer, "     %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
+        sprintf(headerBuffer, "       %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
 
         int dashLength = c2Align + c3Align + c4Align + passLength;
         printDashes(dashLength);

@@ -188,10 +188,15 @@ int main(int argc, char *argv[])
         {
           if (accounts->length != 0)
           {
-            printf("Saved Successfully!");
-            if(encryption) printf(" Encrypted,");
-            if(compression == 1 || compression == 2) printf(" Compressed,");
-            printf(" Saved to 'accounts.pwm'");
+            if (saveData(accounts, encryption, compression))
+            {
+              printf("Saved Successfully!");
+              if(encryption) printf(" Encrypted,");
+              if(compression == 1 || compression == 2) printf(" Compressed,");
+              printf(" Saved to 'accounts.pwm'");
+            }
+            else
+              puts("There was an problem with saving the file. Accounts were not saved.");
           }
           else
             puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
@@ -349,8 +354,8 @@ void printSettings(void)
 * Function: This acts as a wrapper around readString, adding a layer of 
 *           abitrary validation. In this case Strings are invalid if they are
 *           empty or if they contain ';' characters.
-* Input: string - A String pointer. This requires a double pointer 
-*        prompt - command line arguments
+* Input: prompt - takes a c-string that is printed before input is taken.
+* Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
 internal String *readAndValidateString(const char *prompt)
 {
@@ -358,11 +363,11 @@ internal String *readAndValidateString(const char *prompt)
   while ((string = readString(prompt))->length == 1 ||
         stringContains(string, ';'))
   {
-  if (stringContains(string, ';'))
-    puts("String cannot contain ';' characters");
-  else
-    puts("String cannot be empty");
-  freeString(string);
+    if (stringContains(string, ';'))
+      puts("String cannot contain ';' characters");
+    else
+      puts("String cannot be empty");
+    freeString(string);
   }
   return string;
 }
