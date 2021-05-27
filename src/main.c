@@ -37,13 +37,6 @@ int main(int argc, char *argv[])
   LinkedList_t* accounts = newLinkedList(NULL);
   boolean running = true;
 
-/*   int i;
-  for (i = 0; i < 101; i++)
-  {
-    linkedListAppend(accounts, newAccount(newString("test"),newString("test"),newString("test"),newString("test")));
-  }
-  linkedListSortAlphabetically(accounts, compareAccounts); */
-
   while(running == true)
   {
     int task=0;
@@ -192,7 +185,7 @@ int main(int argc, char *argv[])
             {
               printf("Saved Successfully!");
               if(encryption) printf(" Encrypted,");
-              if(compression == 1 || compression == 2) printf(" Compressed,");
+              if(compression == HUFFMAN || compression == RUN_LENGTH) printf(" Compressed,");
               printf(" Saved to 'accounts.pwm'");
             }
             else
