@@ -59,6 +59,9 @@ node_t *readNode(const String_t *tree, int *pos);
 * - top (keeps track of what node the function is up to)
 * Outputs: 
 * - void
+*
+* Refernce:
+* - https://www.geeksforgeeks.org/huffman-coding-greedy-algo-3/
 *******************************************************************************/
 void printHuffmanCodes(node_t* root_node, int code_array[], int top)
 {
