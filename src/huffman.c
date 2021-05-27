@@ -37,9 +37,10 @@ node_t* newLeafNode(char character, unsigned int frequency);
 node_t* newInternalNode(node_t* node1, node_t* node2);
 int BuildHuffmanTree(character_t character_array[], int size, 
                      node_t* priorityqueue[]);
-int SaveHuffmanCodes(node_t* root_node, int code_array[], dnode_t huffman_dict[],
-                       int top, int d_index);
-String* BitConversion(const String *input, dnode_t huffman_dict[], int dict_size);
+int SaveHuffmanCodes(node_t* root_node, int code_array[],
+                     dnode_t huffman_dict[], int top, int d_index);
+String* BitConversion(const String *input, dnode_t huffman_dict[],
+                      int dict_size);
 String* exportTree(node_t* root_node, String* huff_str, int top);
 node_t *readNode(const String *tree, int *pos);
 
