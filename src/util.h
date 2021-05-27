@@ -33,7 +33,7 @@ typedef struct String {
     char *text;
     size_t length;
     size_t capacity;
-} String;
+} String_t;
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -44,7 +44,7 @@ typedef struct String {
 *              initalised empty.
 * Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
-String* newString(const char *val);
+String_t* newString(const char *val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -53,7 +53,7 @@ String* newString(const char *val);
 *           val - A C-style string which is appended to the String. val should
 *                 be null-terminated.
 *******************************************************************************/
-void stringAppend(String *string, const char *val);
+void stringAppend(String_t *string, const char *val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -61,7 +61,7 @@ void stringAppend(String *string, const char *val);
 * Input: string - A String.
 *           val - A char which is appended to the String.
 *******************************************************************************/
-void stringAppendChar(String *string, char val);
+void stringAppendChar(String_t *string, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -70,7 +70,7 @@ void stringAppendChar(String *string, char val);
 *           val - index of a character.
 * Output: Returns a char at the given position. Returns '\0' if out of bounds.
 *******************************************************************************/
-char stringGetChar(const String *string, int index);
+char stringGetChar(const String_t *string, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -79,7 +79,7 @@ char stringGetChar(const String *string, int index);
 *         index - Index of a character in String.
 *           val - Character to set.
 *******************************************************************************/
-void stringSetChar(String *string, int index, char val);
+void stringSetChar(String_t *string, int index, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -88,7 +88,7 @@ void stringSetChar(String *string, int index, char val);
 *             c - a character.
 * Output: Returns true if string contains c, otherwise returns false.
 *******************************************************************************/
-boolean stringContains(String *string, char c);
+boolean stringContains(String_t *string, char c);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -102,7 +102,7 @@ boolean stringContains(String *string, char c);
 *         Returns 1 if string1 is greater than string2.
 *         Returns -1 if string1 is less than string2.
 *******************************************************************************/
-int stringCompare(String *string1, String *string2);
+int stringCompare(String_t *string1, String_t *string2);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -110,14 +110,14 @@ int stringCompare(String *string1, String *string2);
 * Input: prompt - takes a c-string that is printed before input is taken.
 * Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
-String* readString(const char *prompt);
+String_t* readString(const char *prompt);
 
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Prints a String
 * Input: string - A String
 *******************************************************************************/
-void printString(const String *string);
+void printString(const String_t *string);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -141,12 +141,12 @@ void freeString(void *string);
 typedef struct Node {
     void *data;
     struct Node *next;
-} Node;
+} Node_t;
 
 typedef struct LinkedList {
-    Node *head;
+    Node_t *head;
     size_t length;
-} LinkedList;
+} LinkedList_t;
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -155,7 +155,7 @@ typedef struct LinkedList {
 * Input: data - A void pointer to some data.
 * Output: Returns a pointer to a heap-allocated LinkedList
 *******************************************************************************/
-LinkedList* newLinkedList(void *data);
+LinkedList_t* newLinkedList(void *data);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -164,7 +164,7 @@ LinkedList* newLinkedList(void *data);
 * Input: list - A LinkedList
 *        data - A void pointer to some data.
 *******************************************************************************/
-void linkedListAppend(LinkedList *list, void *data);
+void linkedListAppend(LinkedList_t *list, void *data);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -173,7 +173,7 @@ void linkedListAppend(LinkedList *list, void *data);
 *       index - Index of a node (bounds-checked)
 * Output: Returns a Node in the LinkedList. Returns NULL of out of bounds.
 *******************************************************************************/
-Node* linkedListGet(const LinkedList *list, int index);
+Node_t* linkedListGet(const LinkedList_t *list, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -185,7 +185,7 @@ Node* linkedListGet(const LinkedList *list, int index);
 *        func - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
-void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *));
+void linkedListSet(LinkedList_t *list, int index, void *data, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -197,7 +197,7 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(voi
 *        func - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
-void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *));
+void linkedListRemove(LinkedList_t *list, int index, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -207,7 +207,7 @@ void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *));
 *        func - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
-void linkedListClear(LinkedList *list, void (*freeFunc)(void *));
+void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -216,7 +216,7 @@ void linkedListClear(LinkedList *list, void (*freeFunc)(void *));
 *        func - A pointer to a print function. This should match the type that
 *               needs to be printed. func must take a void pointer for flexibility.
 *******************************************************************************/
-void printLinkedList(LinkedList *list, void (*func)(void *));
+void printLinkedList(LinkedList_t *list, void (*func)(void *));
 
 /** Sample print functions **/
 void printInt(void *num);
@@ -230,7 +230,7 @@ void printDouble(void *flt);
 *        func - A pointer to a free function. Can be NULL if data is not
 *               heap-allocated. func must take a void pointer for flexibility.
 *******************************************************************************/
-void freeLinkedList(LinkedList *list, void (*func)(void *));
+void freeLinkedList(LinkedList_t *list, void (*func)(void *));
 
 /*******************************************************************************
 * Author: Sam Zammit
@@ -239,7 +239,7 @@ void freeLinkedList(LinkedList *list, void (*func)(void *));
 * Input: list - A LinkedList
 *******************************************************************************/
 
-void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)); 
+void linkedListSortAlphabetically(LinkedList_t *list, boolean (*compareFunction)(void *, void *)); 
 
 /*******************************************************************************
 * Author: Sam Zammit
@@ -247,7 +247,7 @@ void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(v
 * Input: 2 nodes from the strcuture Node. These are the two nodes that will be
         swapped.
 *******************************************************************************/
-void swapNodes(struct Node *a, struct Node *b);
+void swapNodes(Node_t *a, Node_t *b);
 
 /**********************************************************
 * * *                 BIT MANIPULATION                * * *

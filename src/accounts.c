@@ -9,9 +9,9 @@
 
 internal void printDashes(int length);
 
-Account* newAccount(String *name, String *url, String *username, String *password)
+Account_t* newAccount(String_t *name, String_t *url, String_t *username, String_t *password)
 {
-    Account *acc = malloc(sizeof(Account));
+    Account_t *acc = malloc(sizeof(Account_t));
     acc->name = name;
     acc->url = url;
     acc->username = username;
@@ -22,13 +22,13 @@ Account* newAccount(String *name, String *url, String *username, String *passwor
 void printAccount(void *acc)
 {
     printf("{name: %s, url: %s, username: %s, password: %s}", 
-          ((Account *)acc)->name->text, 
-          ((Account *)acc)->url->text,
-          ((Account *)acc)->username->text,
-          ((Account *)acc)->password->text);
+          ((Account_t *)acc)->name->text, 
+          ((Account_t *)acc)->url->text,
+          ((Account_t *)acc)->username->text,
+          ((Account_t *)acc)->password->text);
 }
 
-void printAccountList(LinkedList *list)
+void printAccountList(LinkedList_t *list)
 {
     if (list->length == 0)
     {
@@ -42,19 +42,19 @@ void printAccountList(LinkedList *list)
         int c4Align = 14;
         int passLength = PRINT_PASSWORD_DEFAULT_WIDTH;
         
-        Node *node = list->head;
+        Node_t *node = list->head;
         /* while (node != NULL) */
         int i;
         for (i = 0; i < list->length; i++)
         {
-            if (c2Align < ((Account *)node->data)->name->length)
-                c2Align = ((Account *)node->data)->name->length + 1;
-            if (c3Align < ((Account *)node->data)->url->length)
-                c3Align = ((Account *)node->data)->url->length + 1;
-            if (c4Align < ((Account *)node->data)->username->length)
-                c4Align = ((Account *)node->data)->username->length + 1;
-            if (passLength < ((Account *)node->data)->password->length)
-                passLength = ((Account *)node->data)->password->length + PRINT_COLUMN_DEFAULT_WIDTH;
+            if (c2Align < ((Account_t *)node->data)->name->length)
+                c2Align = ((Account_t *)node->data)->name->length + 1;
+            if (c3Align < ((Account_t *)node->data)->url->length)
+                c3Align = ((Account_t *)node->data)->url->length + 1;
+            if (c4Align < ((Account_t *)node->data)->username->length)
+                c4Align = ((Account_t *)node->data)->username->length + 1;
+            if (passLength < ((Account_t *)node->data)->password->length)
+                passLength = ((Account_t *)node->data)->password->length + PRINT_COLUMN_DEFAULT_WIDTH;
             node = node->next;
         }
 
@@ -77,10 +77,10 @@ void printAccountList(LinkedList *list)
         for (i = 0; i < list->length; i++)
         {
             printf(buffer, index++,
-                        ((Account *)node->data)->name->text,
-                        ((Account *)node->data)->url->text,
-                        ((Account *)node->data)->username->text,
-                        ((Account *)node->data)->password->text);
+                        ((Account_t *)node->data)->name->text,
+                        ((Account_t *)node->data)->url->text,
+                        ((Account_t *)node->data)->username->text,
+                        ((Account_t *)node->data)->password->text);
             node = node->next;
         }
         putchar('\n');
@@ -104,15 +104,15 @@ internal void printDashes(int length)
 
 void freeAccount(void *account)
 {
-    freeString(((Account *)account)->name);
-    freeString(((Account *)account)->url);   
-    freeString(((Account *)account)->password);
+    freeString(((Account_t *)account)->name);
+    freeString(((Account_t *)account)->url);   
+    freeString(((Account_t *)account)->password);
     free(account);
 }
 
 boolean compareAccounts(void* acc1, void* acc2){
-    Account* a1 = (Account*)acc1;
-    Account* a2 = (Account*)acc2;
+    Account_t* a1 = (Account_t*)acc1;
+    Account_t* a2 = (Account_t*)acc2;
 
     if(stringCompare(a1->name, a2->name) > 0){
         return true;

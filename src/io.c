@@ -8,15 +8,15 @@
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
-internal String* accountsToString(const LinkedList *accounts);
-internal String* fileToString(FILE *f);
-internal void stringToAccounts(const String *string, LinkedList *accounts);
+internal String_t* accountsToString(const LinkedList_t *accounts);
+internal String_t* fileToString(FILE *f);
+internal void stringToAccounts(const String_t *string, LinkedList_t *accounts);
 
-boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType)
+boolean saveData(const LinkedList_t *accounts, boolean encrypt, compressionType cmpType)
 {
 
     /* Turn accounts into a String to be passed to encryption/compression, then saved */
-    String *str = accountsToString(accounts);
+    String_t *str = accountsToString(accounts);
     result_t cmpResult;
 
     switch (cmpType)
@@ -31,7 +31,7 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
         }
         case RUN_LENGTH:
         {
-            String *compStr = compress(str);
+            String_t *compStr = compress(str);
             freeString(str);
             str = compStr;
             compStr = NULL;
@@ -79,14 +79,14 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
 }
 
 
-internal String *accountsToString(const LinkedList *accounts)
+internal String_t *accountsToString(const LinkedList_t *accounts)
 {
-    String *str = newString(NULL);
+    String_t *str = newString(NULL);
     
     int i;
     for (i = 0; i < accounts->length; i++)
     {
-        Account *acc = linkedListGet(accounts, i)->data;
+        Account_t *acc = linkedListGet(accounts, i)->data;
         stringAppend(str, acc->name->text);
         stringAppendChar(str, '\n');
         stringAppend(str, acc->url->text);
@@ -100,7 +100,7 @@ internal String *accountsToString(const LinkedList *accounts)
     return str;
 }
 
-boolean loadData(LinkedList *accounts)
+boolean loadData(LinkedList_t *accounts)
 {
     FILE *f = fopen("accounts.pwm", "r");
     if (f)
@@ -115,7 +115,7 @@ boolean loadData(LinkedList *accounts)
         {
             case NONE:
             {
-                String *str = fileToString(f);
+                String_t *str = fileToString(f);
                 if (encryptedflag)
                     decryptString(str);
 
@@ -125,11 +125,11 @@ boolean loadData(LinkedList *accounts)
             }
             case RUN_LENGTH:
             {
-                String *str = fileToString(f);
+                String_t *str = fileToString(f);
                 if (encryptedflag)
                     decryptString(str);
 
-                String *decompStr = decompress(str);
+                String_t *decompStr = decompress(str);
 
                 stringToAccounts(decompStr, accounts);
                 freeString(decompStr);
@@ -141,19 +141,19 @@ boolean loadData(LinkedList *accounts)
                 int huffmanTreeLengthBits, huffmanTreeLengthBytes;
                 fscanf(f, "%d %d ", &huffmanTreeLengthBits, &huffmanTreeLengthBytes);
 
-                String *huffmanTree = newString(NULL);
+                String_t *huffmanTree = newString(NULL);
                 int i;
                 for (i = 0; i < huffmanTreeLengthBytes-1; i++)
                 {
                     stringAppendChar(huffmanTree, getc(f));
                 }
 
-                String *str = fileToString(f);
+                String_t *str = fileToString(f);
 
                 if (encryptedflag)
                     decryptString(str);
 
-                String *decompStr = HuffmanDecompression(huffmanTree, str, huffmanTreeLengthBits);
+                String_t *decompStr = HuffmanDecompression(huffmanTree, str, huffmanTreeLengthBits);
 
                 stringToAccounts(decompStr, accounts);
                 freeString(huffmanTree);
@@ -169,9 +169,9 @@ boolean loadData(LinkedList *accounts)
         return false;
 }
 
-internal String *fileToString(FILE *f)
+internal String_t *fileToString(FILE *f)
 {
-    String *str = newString(NULL);
+    String_t *str = newString(NULL);
     int c;
     while ((c = getc(f)) != EOF)
     {
@@ -180,14 +180,14 @@ internal String *fileToString(FILE *f)
     return str;
 }
 
-internal void stringToAccounts(const String *string, LinkedList *accounts)
+internal void stringToAccounts(const String_t *string, LinkedList_t *accounts)
 {
     linkedListClear(accounts, freeAccount);
     int i = 0;
     char c;
     while ((c = stringGetChar(string, i)) != '\0')
     {
-        String *name, *url, *username, *password;
+        String_t *name, *url, *username, *password;
         name = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
         {
@@ -211,14 +211,14 @@ internal void stringToAccounts(const String *string, LinkedList *accounts)
         {
             stringAppendChar(password, c);
         }
-        Account *acc = newAccount(name, url, username, password);
+        Account_t *acc = newAccount(name, url, username, password);
         linkedListAppend(accounts, acc);
     }
 }
 
-String* platformPath(void)
+String_t* platformPath(void)
 {
-    String *path = newString(NULL);
+    String_t *path = newString(NULL);
     #ifdef __linux__
     stringAppend(path, getenv("HOME"));
     stringAppendChar(path, '/');

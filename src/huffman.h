@@ -14,8 +14,8 @@
 
 /* Result of huffman compression */
 typedef struct {
-    String* comp_string;
-    String* huff_tree;
+    String_t* comp_string;
+    String_t* huff_tree;
     int code_len;
 } result_t;
 
@@ -30,7 +30,7 @@ typedef struct {
 *   - compressed huffman tree
 *   - length of full huffman code
 *******************************************************************************/
-result_t HuffmanCompression(const String *input);
+result_t HuffmanCompression(const String_t *input);
 
 
 /*******************************************************************************
@@ -42,7 +42,7 @@ result_t HuffmanCompression(const String *input);
 * Output:
 * - A decompressed string object pointer
 *******************************************************************************/
-String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len);
+String_t* HuffmanDecompression(String_t *huff_tree, String_t *huff_code, int code_len);
 
 
 #endif /*HUFFMAN_H*/

@@ -10,11 +10,11 @@
 void printMenu(void);
 void printSearch(void);
 void printSettings(void);
-internal String* readAndValidateString(const char *prompt);
+internal String_t* readAndValidateString(const char *prompt);
 internal void parseCommandLineArgs(int argc, char *argv[]);
 internal void printHelp();
 internal void printAdmin();
-int searchAccounts(LinkedList *list, String *searchWord);
+int searchAccounts(LinkedList_t *list, String_t *searchWord);
 
 /*  Global Variables */
 internal boolean encryption = true;
@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  LinkedList* accounts = newLinkedList(NULL);
+  LinkedList_t* accounts = newLinkedList(NULL);
   boolean running = true;
 
 /*   int i;
@@ -69,23 +69,23 @@ int main(int argc, char *argv[])
               {
                 /* NOTE(pete): correct searching requires that the list is sorted.
                   *             This should be fine under normal operation. */
-                String *keyword = readString("Please enter the account name> ");
+                String_t *keyword = readString("Please enter the account name> ");
                 int index = searchAccounts(accounts, keyword);
 
                 /* Create a stack-allocated LinkedList in this case to house the one account.
                 *  Heap allocation is avoided here so as to not double free the contents of
                 *  the new LinkedList. Rather acc will merely contain a copy 
                 *  to a reference of one of the accounts in the list */
-                LinkedList acc;
+                LinkedList_t acc;
                 acc.head = linkedListGet(accounts, index);
                 acc.length = 1;
 
                 /* If the search and result do not exactly match, tell the user. */
-                if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
+                if (stringCompare(keyword, ((Account_t *)acc.head->data)->name) != 0)
                 {
                   printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
                   keyword->text,
-                  ((Account *)acc.head->data)->name->text);
+                  ((Account_t *)acc.head->data)->name->text);
                 }
 
                 printAccountList(&acc);
@@ -102,12 +102,12 @@ int main(int argc, char *argv[])
                 if (entry < accounts->length)
                 {
                   /* Run Length compression won't allow ';' characters so must be checked*/
-                  String *name = readAndValidateString("Please enter a website's name> ");
-                  String *url = readAndValidateString("Please enter a website's url> ");
-                  String *username = readAndValidateString("Please enter a website's username> ");
-                  String *password = readAndValidateString("Please enter a website's password> ");
+                  String_t *name = readAndValidateString("Please enter a website's name> ");
+                  String_t *url = readAndValidateString("Please enter a website's url> ");
+                  String_t *username = readAndValidateString("Please enter a website's username> ");
+                  String_t *password = readAndValidateString("Please enter a website's password> ");
                   
-                  Account* inputAccount = newAccount(name, url, username, password);
+                  Account_t* inputAccount = newAccount(name, url, username, password);
                   linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
                   linkedListSortAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/
                 }
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
                   entry--; /* LinkedList is 0 based but table format is 1 based so we need to decrement. */
                   if (entry < accounts->length)
                   {
-                    Account acc = *(Account *)linkedListGet(accounts, entry)->data;
+                    Account_t acc = *(Account_t *)linkedListGet(accounts, entry)->data;
                     printf("Account: %s has been deleted.\n", acc.name->text);
                     linkedListRemove(accounts, entry, freeAccount);
                   }
@@ -154,12 +154,12 @@ int main(int argc, char *argv[])
         case 2: /* Add New account */
         {
           /* Run Length compression won't allow ';' characters so must be checked*/
-          String *name = readAndValidateString("Please enter a website's name> ");
-          String *url = readAndValidateString("Please enter a website's url> ");
-          String *username = readAndValidateString("Please enter a website's username> ");
-          String *password = readAndValidateString("Please enter a website's password> ");
+          String_t *name = readAndValidateString("Please enter a website's name> ");
+          String_t *url = readAndValidateString("Please enter a website's url> ");
+          String_t *username = readAndValidateString("Please enter a website's username> ");
+          String_t *password = readAndValidateString("Please enter a website's password> ");
           
-          Account* inputAccount = newAccount(name, url, username, password);
+          Account_t* inputAccount = newAccount(name, url, username, password);
           linkedListAppend(accounts, inputAccount);
           linkedListSortAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/ 
           break;
@@ -357,9 +357,9 @@ void printSettings(void)
 * Input: prompt - takes a c-string that is printed before input is taken.
 * Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
-internal String *readAndValidateString(const char *prompt)
+internal String_t *readAndValidateString(const char *prompt)
 {
-  String *string;
+  String_t *string;
   while ((string = readString(prompt))->length == 1 ||
         stringContains(string, ';'))
   {
@@ -393,7 +393,7 @@ internal void parseCommandLineArgs(int argc, char *argv[])
         {
           if (argc < 3)
           {
-            LinkedList *list = newLinkedList(NULL);
+            LinkedList_t *list = newLinkedList(NULL);
             if (loadData(list))
             {
               printAccountList(list);
@@ -407,27 +407,27 @@ internal void parseCommandLineArgs(int argc, char *argv[])
           else if (argc == 3)
           {
             /* Search and display account */
-            LinkedList *list = newLinkedList(NULL);
+            LinkedList_t *list = newLinkedList(NULL);
             if (loadData(list))
             {
-              String *keyword = newString(argv[2]);
+              String_t *keyword = newString(argv[2]);
               int index = searchAccounts(list, keyword);
 
               /* Create a stack-allocated LinkedList in this case to house the one account.
               *  Heap allocation is avoided here so as to not double free the contents of
               *  the new LinkedList. Rather acc will merely contain a copy of one of the accounts
               *  in list */
-              LinkedList acc;
+              LinkedList_t acc;
               /* Take a dereferenced copy of the Node */
               acc.head = linkedListGet(list, index);
               acc.length = 1;
 
               /* If the search and result do not exactly match, tell the user. */
-              if (stringCompare(keyword, ((Account *)acc.head->data)->name) != 0)
+              if (stringCompare(keyword, ((Account_t *)acc.head->data)->name) != 0)
               {
                 printf("Could not find \"%s\". Nearest match found: \"%s\"\n", 
                   keyword->text,
-                  ((Account *)acc.head->data)->name->text);
+                  ((Account_t *)acc.head->data)->name->text);
               }
 
               printAccountList(&acc);
@@ -444,8 +444,8 @@ internal void parseCommandLineArgs(int argc, char *argv[])
         {
           if (argc == 6)
           {
-            LinkedList *list = newLinkedList(NULL);
-            Account *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]), newString(argv[5]));
+            LinkedList_t *list = newLinkedList(NULL);
+            Account_t *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]), newString(argv[5]));
             loadData(list);
             linkedListAppend(list, acc);
             linkedListSortAlphabetically(list, compareAccounts);
@@ -514,10 +514,10 @@ internal void parseCommandLineArgs(int argc, char *argv[])
   }
 }
 
-int searchAccounts(LinkedList *list, String *searchWord){
+int searchAccounts(LinkedList_t *list, String_t *searchWord){
     int i, j, accurate, mostAccurate, MAindex;
     int size = list->length;
-    String *accName;
+    String_t *accName;
     mostAccurate = 0;
     accurate = 0;
     MAindex = 0;
@@ -525,7 +525,7 @@ int searchAccounts(LinkedList *list, String *searchWord){
 
     for(i = 0; i < size; i++){
 
-        accName = ((Account*)linkedListGet(list, i)->data)->name;
+        accName = ((Account_t*)linkedListGet(list, i)->data)->name;
 
         for(j = 0; j < searchWord->length && j < accName->length; j++){
             if(stringGetChar(searchWord, j) == stringGetChar(accName, j)){

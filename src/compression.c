@@ -11,7 +11,7 @@
 /*******************************************************************************
 * Local Function Prototypes
 *******************************************************************************/
-String *member_decompress(const String *input);
+String_t *member_decompress(const String_t *input);
 
 
 /*******************************************************************************
@@ -19,12 +19,12 @@ String *member_decompress(const String *input);
 *******************************************************************************/
 
 
-String* compress(const String *input)
+String_t* compress(const String_t *input)
 {
     int i = 0, p, occ;
     char temp_array[256]; 
 
-    String* compressed_string = newString(NULL);
+    String_t* compressed_string = newString(NULL);
     
 
     /* iterate through each word in an input string */
@@ -54,7 +54,7 @@ String* compress(const String *input)
 
                 sprintf(temp_array, "%d", occ); /* Automatically null appends */
 
-                String* occ_str = newString(temp_array);
+                String_t* occ_str = newString(temp_array);
 
                 stringAppend(compressed_string, occ_str->text);
 
@@ -98,17 +98,17 @@ String* compress(const String *input)
 }
 
 
-String* decompress(const String *input)
+String_t* decompress(const String_t *input)
 {
 	
-    String* decompressed_string = newString(NULL);
+    String_t* decompressed_string = newString(NULL);
 
     int i = 0, p;
 
     /* Grab the first member/word of the string */
     while(i < input->length)
     {
-        String* member_str = newString(NULL);
+        String_t* member_str = newString(NULL);
 
         for(p = i; p < input->length && input->text[p] != ' '; ++p)
         {
@@ -155,13 +155,13 @@ String* decompress(const String *input)
 * Outputs: 
 * - decompressed string object pointer
 *******************************************************************************/
-String *member_decompress(const String *input)
+String_t *member_decompress(const String_t *input)
 {
     int i = 0, p;
     int count;
     char temp_array[256];
 
-    String* decompressed_member = newString(NULL);
+    String_t* decompressed_member = newString(NULL);
 
     /* convert pairs of letter and occurence */
     while(i < input->length - 1)

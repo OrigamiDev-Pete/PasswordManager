@@ -23,7 +23,7 @@
 * Output: none
             - note: String defined in util.h
 *******************************************************************************/
-void encryptString(String* input);
+void encryptString(String_t* input);
 
 /*******************************************************************************
 * Author: Luke Phillips
@@ -32,7 +32,7 @@ void encryptString(String* input);
 * Output: none
             - note: String defined in util.h
 *******************************************************************************/
-void decryptString(String* input);
+void decryptString(String_t* input);
 
 /* NOTE(pete): Should the following functions be public? */
 /* Response(Luke): These functions will only be called internally, the only

@@ -24,7 +24,7 @@ typedef enum compressionType { NONE, HUFFMAN, RUN_LENGTH } compressionType;
 *                   effecient. RUN_LENGTH is faster. NONE does not apply compression.
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
-boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType);
+boolean saveData(const LinkedList_t *accounts, boolean encrypt, compressionType cmpType);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -32,7 +32,7 @@ boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cm
 * Input: accounts - A list to load the saved accounts into.
 * Output: Returns true if successful, false if an error occurs
 *******************************************************************************/
-boolean loadData(LinkedList *accounts);
+boolean loadData(LinkedList_t *accounts);
 
 /*******************************************************************************
 * Author: Peter de Vroom

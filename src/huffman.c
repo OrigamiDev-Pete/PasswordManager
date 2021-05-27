@@ -39,10 +39,10 @@ int BuildHuffmanTree(character_t character_array[], int size,
                      node_t* priorityqueue[]);
 int SaveHuffmanCodes(node_t* root_node, int code_array[],
                      dnode_t huffman_dict[], int top, int d_index);
-String* BitConversion(const String *input, dnode_t huffman_dict[],
+String_t* BitConversion(const String_t *input, dnode_t huffman_dict[],
                       int dict_size);
-String* exportTree(node_t* root_node, String* huff_str, int top);
-node_t *readNode(const String *tree, int *pos);
+String_t* exportTree(node_t* root_node, String_t* huff_str, int top);
+node_t *readNode(const String_t *tree, int *pos);
 
 
 /*******************************************************************************
@@ -270,10 +270,10 @@ int SaveHuffmanCodes(node_t* root_node, int code_array[],
 * Outputs: 
 * - a string of changed bits (in the order of the full huffman compression code)
 *******************************************************************************/
-String* BitConversion(const String *input, dnode_t huffman_dict[],
+String_t* BitConversion(const String_t *input, dnode_t huffman_dict[],
                       int dict_size)
 {
-    String* bit_str = newString(NULL);
+    String_t* bit_str = newString(NULL);
 
     /* store the current position of the bit and code */
     int pos_bit = 8;
@@ -371,7 +371,7 @@ String* BitConversion(const String *input, dnode_t huffman_dict[],
 * Outputs: 
 * - coded huffman tree as a string pointer object
 *******************************************************************************/
-String* exportTree(node_t* root_node, String* huff_str, int top)
+String_t* exportTree(node_t* root_node, String_t* huff_str, int top)
 {
     if(root_node->isleaf == false) 
     {
@@ -394,7 +394,7 @@ String* exportTree(node_t* root_node, String* huff_str, int top)
 }
 
 
-result_t HuffmanCompression(const String *input)
+result_t HuffmanCompression(const String_t *input)
 {
     /*Convert string to an array of character_t structures with each element
     * representing a unique character and its corresponding frequency*/
@@ -509,7 +509,7 @@ result_t HuffmanCompression(const String *input)
 
     /* Export huffman tree */
     top = 0;
-    String* huff_str = newString(NULL);
+    String_t* huff_str = newString(NULL);
     huff_comp.huff_tree = exportTree(priorityqueue[0], huff_str, top);
     
     /*DEBUG: Prints compressed huffman tree */
@@ -563,7 +563,7 @@ result_t HuffmanCompression(const String *input)
 * Outputs: 
 * - Huffman binary tree node_t pointer
 *******************************************************************************/
-node_t *readNode(const String *tree, int *pos)
+node_t *readNode(const String_t *tree, int *pos)
 {   
     /* If there is a 1 in the string create a leaf node from the character 
       beside it */
@@ -586,9 +586,9 @@ node_t *readNode(const String *tree, int *pos)
 }
 
 
-String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len)
+String_t* HuffmanDecompression(String_t *huff_tree, String_t *huff_code, int code_len)
 {
-    String* decomp_str = newString(NULL);
+    String_t* decomp_str = newString(NULL);
     
     /* Generate the huffman tree */
     int pos = 0;

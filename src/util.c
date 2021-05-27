@@ -11,9 +11,9 @@
 #define STRING_START_SIZE 64        /* Size selected to minimise reallocation */
 #define STRING_MAX_SIZE 200000000   /* Size well beyond anything the program need handle */
 
-internal void checkAndResizeString(String *string, int newLength);
+internal void checkAndResizeString(String_t *string, int newLength);
 internal int stringLength(const char *str);
-internal void nullTerminate(String *string);
+internal void nullTerminate(String_t *string);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -23,7 +23,7 @@ internal void nullTerminate(String *string);
 *                 value to val and sized appropriately. If NULL, the new String is 
 *                 initalised empty.
 *******************************************************************************/
-internal void initString(String *string, const char *val)
+internal void initString(String_t *string, const char *val)
 {
     /* Initialise an empty String if val is NULL */
     if (!val)
@@ -66,9 +66,9 @@ internal void initString(String *string, const char *val)
     }
 }
 
-String* newString(const char *val)
+String_t* newString(const char *val)
 {
-    String *string = malloc(sizeof(String));
+    String_t *string = malloc(sizeof(String_t));
     if (!string)
     {
         #ifdef DEBUG
@@ -80,7 +80,7 @@ String* newString(const char *val)
     return string;
 }
 
-void stringAppend(String *string, const char *val)
+void stringAppend(String_t *string, const char *val)
 {
     if (val == NULL)
     {
@@ -108,7 +108,7 @@ void stringAppend(String *string, const char *val)
     #endif /* DEBUG */
 }
 
-void stringAppendChar(String *string, char val)
+void stringAppendChar(String_t *string, char val)
 {
     checkAndResizeString(string, string->length+1);
     /* Remove null-terminator */
@@ -120,7 +120,7 @@ void stringAppendChar(String *string, char val)
     nullTerminate(string);
 }
 
-char stringGetChar(const String *string, int index)
+char stringGetChar(const String_t *string, int index)
 {
     /* Bounds-check */
     if (index < string->length)
@@ -135,7 +135,7 @@ char stringGetChar(const String *string, int index)
     return '\0';
 }
 
-void stringSetChar(String *string, int index, char val)
+void stringSetChar(String_t *string, int index, char val)
 {
     /* Bounds-check */    
     if (index < string->length)
@@ -150,7 +150,7 @@ void stringSetChar(String *string, int index, char val)
     }
 }
 
-boolean stringContains(String *string, char c)
+boolean stringContains(String_t *string, char c)
 {
     int i;
     for (i = 0; i < string->length-1; i++)
@@ -161,7 +161,7 @@ boolean stringContains(String *string, char c)
     return false;
 }
 
-int stringCompare(String *string1, String *string2)
+int stringCompare(String_t *string1, String_t *string2)
 {
     int i;
     for (i = 0; i < string1->length-1 && i < string2->length-1; i++)
@@ -184,14 +184,14 @@ int stringCompare(String *string1, String *string2)
     return 0;
 }
 
-String* readString(const char *prompt)
+String_t* readString(const char *prompt)
 {
     if (prompt)
     {
         printf("%s", prompt);
     }
 
-    String *string = newString(NULL);
+    String_t *string = newString(NULL);
     char c;
     /* Safely read stdin */
     while ((c = getchar()) != '\n' && c != '\0' && c != EOF)
@@ -203,7 +203,7 @@ String* readString(const char *prompt)
     return string;
 }
 
-void printString(const String *string)
+void printString(const String_t *string)
 {
     #ifndef DEBUG
     puts(string->text);
@@ -225,7 +225,7 @@ void printString(const String *string)
 
 void freeString(void *string)
 {
-    free(((String *)string)->text);
+    free(((String_t *)string)->text);
     free(string);
 }
 
@@ -237,7 +237,7 @@ void freeString(void *string)
 * Input: string - A String.
 *     newLength - index of character in String.
 *******************************************************************************/
-internal void checkAndResizeString(String *string, int newLength)
+internal void checkAndResizeString(String_t *string, int newLength)
 {
     if (newLength >= string->capacity)
     {
@@ -294,7 +294,7 @@ internal int stringLength(const char *str)
 * Function: Checks if string is null-terminated and adds one if not.
 * Input: string - A String.
 *******************************************************************************/
-internal void nullTerminate(String *string)
+internal void nullTerminate(String_t *string)
 {
     string->text[string->length++] = '\0'; 
 }
@@ -303,11 +303,11 @@ internal void nullTerminate(String *string)
 * * *                   LINKED LIST                   * * *
 ***********************************************************/
 
-LinkedList* newLinkedList(void *data)
+LinkedList_t* newLinkedList(void *data)
 {
-    LinkedList *list = malloc(sizeof(LinkedList));
+    LinkedList_t *list = malloc(sizeof(LinkedList_t));
 
-    Node *head = malloc(sizeof(Node));
+    Node_t *head = malloc(sizeof(Node_t));
     head->data = data;
     head->next = NULL;
     list->head = head;
@@ -319,7 +319,7 @@ LinkedList* newLinkedList(void *data)
     return list;
 }
 
-void linkedListAppend(LinkedList *list, void *data)
+void linkedListAppend(LinkedList_t *list, void *data)
 {
     /* Set head node data if length is 0 */
     if (list->length == 0)
@@ -328,13 +328,13 @@ void linkedListAppend(LinkedList *list, void *data)
     }
     else
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         while (node->next != NULL)
         {
             node = node->next;
         }
 
-        Node *newNode = malloc(sizeof(Node));
+        Node_t *newNode = malloc(sizeof(Node_t));
         newNode->next = NULL;
         newNode->data = data;
         node->next = newNode;
@@ -342,7 +342,7 @@ void linkedListAppend(LinkedList *list, void *data)
     list->length++;
 }
 
-Node *linkedListGet(const LinkedList *list, int index)
+Node_t *linkedListGet(const LinkedList_t *list, int index)
 {
     /* Bounds check */
     if (index > list->length)
@@ -352,7 +352,7 @@ Node *linkedListGet(const LinkedList *list, int index)
     }
 
     /* Get node at index */
-    Node *node = list->head;
+    Node_t *node = list->head;
     int i;
     for (i = 0; i < index && node->next != NULL; i++)
     {
@@ -361,7 +361,7 @@ Node *linkedListGet(const LinkedList *list, int index)
     return node;
 }
 
-void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(void *))
+void linkedListSet(LinkedList_t *list, int index, void *data, void (*freeFunc)(void *))
 {
     /* Bounds check */
     if (index > list->length)
@@ -371,7 +371,7 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(voi
     }
 
     /* Get node at index */
-    Node *node = linkedListGet(list, index);
+    Node_t *node = linkedListGet(list, index);
 
     /* If element needs to be freed call freeFunc */
     if (freeFunc)
@@ -383,7 +383,7 @@ void linkedListSet(LinkedList *list, int index, void *data, void (*freeFunc)(voi
     node->data = data;
 }
 
-void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *))
+void linkedListRemove(LinkedList_t *list, int index, void (*freeFunc)(void *))
 {
     /* Bounds check */
     if (index > list->length-1)
@@ -396,8 +396,8 @@ void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *))
     {
         /* Get node at index (linkedListGet() is not used to obtain 
         *  node and prevNode in one loop) */
-        Node *node = list->head;
-        Node *prevNode = NULL;
+        Node_t *node = list->head;
+        Node_t *prevNode = NULL;
         int i;
         for (i = 0; i < index && node->next != NULL; i++)
         {
@@ -428,17 +428,17 @@ void linkedListRemove(LinkedList *list, int index, void (*freeFunc)(void *))
     }
 }
 
-void linkedListClear(LinkedList *list, void (*freeFunc)(void *))
+void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *))
 {
     if (list->length == 0)
         return;
     
     if (freeFunc)
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         while (node != NULL)
         {
-            Node *prevNode = node;
+            Node_t *prevNode = node;
             node = node->next;
             (*freeFunc)(prevNode->data);
             free(prevNode);
@@ -447,10 +447,10 @@ void linkedListClear(LinkedList *list, void (*freeFunc)(void *))
     }
     else
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         while (node != NULL)
         {
-            Node *prevNode = node;
+            Node_t *prevNode = node;
             node = node->next;
             free(prevNode);
             prevNode = NULL;
@@ -458,10 +458,10 @@ void linkedListClear(LinkedList *list, void (*freeFunc)(void *))
     }
 
     list->length = 0;
-    list->head = malloc(sizeof(Node));
+    list->head = malloc(sizeof(Node_t));
 }
 
-void printLinkedList(LinkedList *list, void (*func)(void *))
+void printLinkedList(LinkedList_t *list, void (*func)(void *))
 {   
     #ifndef DEBUG
     /* Outside of debug mode LinkedList does not impose any formatting */
@@ -472,7 +472,7 @@ void printLinkedList(LinkedList *list, void (*func)(void *))
     }
     else
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         while (node != NULL)
         {
             (*func)(node->data);
@@ -491,7 +491,7 @@ void printLinkedList(LinkedList *list, void (*func)(void *))
     }
     else
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         putchar('[');
         while (node != NULL)
         {
@@ -518,17 +518,17 @@ void printDouble(void *dbl)
     printf("%lf", *(double *)dbl);
 }
 
-void freeLinkedList(LinkedList *list, void (*func)(void *))
+void freeLinkedList(LinkedList_t *list, void (*func)(void *))
 {
     if (list->length == 0)
         return;
 
     if (func)
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         while (node != NULL)
         {
-            Node *prevNode = node;
+            Node_t *prevNode = node;
             node = node->next;
             (*func)(prevNode->data);
             free(prevNode);
@@ -537,10 +537,10 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
     }
     else
     {
-        Node *node = list->head;
+        Node_t *node = list->head;
         while (node != NULL)
         {
-            Node *prevNode = node;
+            Node_t *prevNode = node;
             node = node->next;
             free(prevNode);
             prevNode = NULL;
@@ -548,7 +548,7 @@ void freeLinkedList(LinkedList *list, void (*func)(void *))
     }
     free(list);
 }
-void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(void *, void *)){
+void linkedListSortAlphabetically(LinkedList_t *list, boolean (*compareFunction)(void *, void *)){
     int swapped, i;
     int size = list->length;
 
@@ -560,8 +560,8 @@ void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(v
 
         for(i = 0; i < size - 1; i++ ){
             
-            struct Node* a = linkedListGet(list, i);
-            struct Node* b = linkedListGet(list, i+1);
+            Node_t* a = linkedListGet(list, i);
+            Node_t* b = linkedListGet(list, i+1);
 
             if ((compareFunction)(a->data, b->data) == 1){
                 swapNodes(a, b);
@@ -575,7 +575,7 @@ void linkedListSortAlphabetically(LinkedList *list, boolean (*compareFunction)(v
     } 
 }
 
-void swapNodes(struct Node *a, struct Node *b){
+void swapNodes(Node_t *a, Node_t *b){
     void *temp = b->data;
     b->data = a->data;
     a->data = temp;

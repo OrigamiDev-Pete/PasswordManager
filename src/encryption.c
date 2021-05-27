@@ -14,7 +14,7 @@ int shortKey(int key);
 void readKeys(int* key);
 void writeKeys(int* key);
 
-void encryptString(String* input) {
+void encryptString(String_t* input) {
     int key;
     int* key_p = &key;
     /* Open the file of stored keys if it exists */
@@ -54,7 +54,7 @@ void encryptString(String* input) {
 
 }
 
-void decryptString(String* input) {
+void decryptString(String_t* input) {
     int key;
     int* key_p = &key;
     FILE* keys_file = fopen(KEYFILE, "rb");

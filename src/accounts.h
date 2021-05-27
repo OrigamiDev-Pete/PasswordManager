@@ -16,11 +16,11 @@
 * Container struct for Account values.
 *******************************************************************************/
 typedef struct Account {
-    String *name;
-    String *url;
-    String *username;
-    String *password;
-} Account;
+    String_t *name;
+    String_t *url;
+    String_t *username;
+    String_t *password;
+} Account_t;
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -30,7 +30,7 @@ typedef struct Account {
 *    password - Password String
 * Output: Returns an newly allocated and initialised Account
 *******************************************************************************/
-Account* newAccount(String *name, String *url, String *username, String *password);
+Account_t* newAccount(String_t *name, String_t *url, String_t *username, String_t *password);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -50,7 +50,7 @@ void printAccount(void *account);
 *
 * Input: list - A LinkedList
 *******************************************************************************/
-void printAccountList(LinkedList *list);
+void printAccountList(LinkedList_t *list);
 
 /*******************************************************************************
 * Author: Peter de Vroom

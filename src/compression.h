@@ -19,7 +19,7 @@
 * Output:
 * - A compressed string object pointer
 *******************************************************************************/
-String* compress(const String *input);
+String_t* compress(const String_t *input);
 
 
 /*******************************************************************************
@@ -29,7 +29,7 @@ String* compress(const String *input);
 * Output:
 * - A decompressed string object pointer
 *******************************************************************************/
-String* decompress(const String *input);
+String_t* decompress(const String_t *input);
 
 
 #endif /*COMPRESSION_H*/
