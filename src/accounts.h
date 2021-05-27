@@ -43,10 +43,10 @@ void printAccount(void *account);
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Prints accounts in a table format.
-*        -----------------------------------------------------------
-*         Name       URL                 Username      Password
-*        -----------------------------------------------------------
-*         Google     www.google.com      user          password123
+*        ---------------------------------------------------------------
+*             Name       URL                 Username      Password
+*        ---------------------------------------------------------------
+*         1.  Google     www.google.com      user          password123
 *
 * Input: list - A LinkedList
 *******************************************************************************/

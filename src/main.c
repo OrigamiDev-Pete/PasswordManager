@@ -15,9 +15,9 @@ internal void printHelp();
 internal void printAdmin();
 int searchAccounts(LinkedList *list, String *searchWord);
 
-/*  Global Variable */
-boolean encryption = true;
-compressionType compression = HUFFMAN;
+/*  Global Variables */
+internal boolean encryption = true;
+internal compressionType compression = HUFFMAN;
 
 /*******************************************************************************
 * Author: Giovanni Tjandra
@@ -58,17 +58,18 @@ int main(int argc, char *argv[])
               switch(choice)
               {
                 case 1: /* Search database */
-                { 
+                {
+                  /* NOTE(pete): correct searching requires that the list is sorted.
+                   *             This should be fine under normal operation. */
                   String *keyword = readString("Please enter the account name>");
                   int index = searchAccounts(accounts, keyword);
 
                   /* Create a stack-allocated LinkedList in this case to house the one account.
                   *  Heap allocation is avoided here so as to not double free the contents of
-                  *  the new LinkedList. Rather acc will merely contain a copy of one of the accounts
-                  *  in list */
+                  *  the new LinkedList. Rather acc will merely contain a copy 
+                  *  to a reference of one of the accounts in the list */
                   LinkedList acc;
                   acc.head = linkedListGet(accounts, index);
-                  acc.head->next = NULL;
                   acc.length = 1;
 
                   /* If the search and result do not exactly match, tell the user. */
@@ -89,6 +90,7 @@ int main(int argc, char *argv[])
                 int entry=0;
                 printf("Please select an account>");
                 entry = readInt();
+                entry--; /* LinkedList is 0 based but table format is 1 based so we need to decrement. */
                 String* name = readString("Please enter website's name> ");
                 String* url = readString("Please enter website's url> ");
                 String* username = readString("Please enter a username> ");
@@ -101,12 +103,21 @@ int main(int argc, char *argv[])
               }
               case 3: /*  Delete account */
               {
-                printAccountList(accounts);
-                int entry=0;
-                printf("Please select an account>");
-                entry = readInt();
+                if (accounts->length != 0)
+                {
+                  printAccountList(accounts);
+                  int entry = 0;
+                  printf("Please select an account>");
+                  entry = readInt();
+                  entry--; /* LinkedList is 0 based but table format is 1 based so we need to decrement. */
 
-                linkedListRemove(accounts, entry, freeAccount);
+                  Account acc = *(Account *)linkedListGet(accounts, entry)->data;
+                  printf("Account: %s has been deleted.", acc.name->text);
+                  linkedListRemove(accounts, entry, freeAccount);
+                }
+                else
+                  puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
+
                 break;
               }
             }
@@ -140,7 +151,7 @@ int main(int argc, char *argv[])
         }
         case 5: /* Save database */
         {
-          saveData(accounts, true, HUFFMAN);
+          saveData(accounts, encryption, compression);
           break;
         }
         case 6: /* Settings */
@@ -229,12 +240,13 @@ void printMenu(void)
   "*************************************\n"
   "*             Main Menu             *\n"
   "*************************************\n"
-  "1. Search and Sort menu\n"
+  "1. Edit menu\n"
   "2. Add New account\n"
   "3. Display stored accounts\n" 
   "4. Load database\n" 
-  "5. Save database\n"                          
-  "7. Log out\n");
+  "5. Save database\n"                       
+  "6. Settings\n"                       
+  "7. Exit\n");
 }
 
 /*******************************************************************************
@@ -336,8 +348,8 @@ static void parseCommandLineArgs(int argc, char *argv[])
               *  the new LinkedList. Rather acc will merely contain a copy of one of the accounts
               *  in list */
               LinkedList acc;
+              /* Take a dereferenced copy of the Node */
               acc.head = linkedListGet(list, index);
-              acc.head->next = NULL;
               acc.length = 1;
 
               /* If the search and result do not exactly match, tell the user. */
@@ -435,7 +447,7 @@ static void parseCommandLineArgs(int argc, char *argv[])
 int searchAccounts(LinkedList *list, String *searchWord){
     int i, j, accurate, mostAccurate, MAindex;
     int size = list->length;
-    String accName;
+    String *accName;
     mostAccurate = 0;
     accurate = 0;
     MAindex = 0;
@@ -443,16 +455,16 @@ int searchAccounts(LinkedList *list, String *searchWord){
 
     for(i = 0; i < size; i++){
 
-        accName = *((Account*)linkedListGet(list, i)->data)->name;
+        accName = ((Account*)linkedListGet(list, i)->data)->name;
 
-        for(j = 0; j < searchWord->length && j < accName.length; j++){
-            if(stringGetChar(searchWord, j) == stringGetChar(&accName, j)){
+        for(j = 0; j < searchWord->length && j < accName->length; j++){
+            if(stringGetChar(searchWord, j) == stringGetChar(accName, j)){
               accurate++;
             }
-            if(accurate > mostAccurate){
-              MAindex = i;
-              mostAccurate = accurate;
-            }
+        }
+        if(accurate > mostAccurate){
+          MAindex = i;
+          mostAccurate = accurate;
         }
     }
   return MAindex;
@@ -461,18 +473,18 @@ int searchAccounts(LinkedList *list, String *searchWord){
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Prints help text for proper operation.
+* Function: Prints help text for command-line arguments.
 *******************************************************************************/
 static void printHelp(void)
 {
   puts("Password Manager\n");
   puts("Usage: main [COMMAND] <arguments>\n");
   puts("Commands:");
-  puts("-l                           Prints accounts");
-  puts("-l <Name>                    Searches for <Name> and prints the account");
-  puts("-a <Name> <URL> <Password>   Adds a new account");
-  puts("-h                           Prints help menu\n");
-  puts("-p <Pass>                    Enter Administrator mode if <Pass> is correct\n");
+  puts("-l                                      Prints accounts");
+  puts("-l <Name>                               Searches for <Name> and prints the account");
+  puts("-a <Name> <URL> <Username> <Password>   Adds a new account");
+  puts("-h                                      Prints help menu\n");
+  puts("-p <Pass>                               Enter Administrator mode if <Pass> is correct\n");
 }
 
 /*******************************************************************************

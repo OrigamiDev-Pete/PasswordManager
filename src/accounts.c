@@ -43,7 +43,9 @@ void printAccountList(LinkedList *list)
         int passLength = PRINT_PASSWORD_DEFAULT_WIDTH;
         
         Node *node = list->head;
-        while (node != NULL)
+        /* while (node != NULL) */
+        int i;
+        for (i = 0; i < list->length; i++)
         {
             if (c2Align < ((Account *)node->data)->name->length)
                 c2Align = ((Account *)node->data)->name->length + 1;
@@ -58,18 +60,24 @@ void printAccountList(LinkedList *list)
 
         /* Because the width of the Strings could be anything we need to scale
          * the columns to fit the largest entry. */
-        char buf[32];
-        sprintf(buf, " %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
+        char headerBuffer[32];
+        sprintf(headerBuffer, "     %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
 
         int dashLength = c2Align + c3Align + c4Align + passLength;
         printDashes(dashLength);
-        printf(buf, "Name", "URL", "Username", "Password");
+        printf(headerBuffer, "Name", "URL", "Username", "Password");
         printDashes(dashLength);
 
+        char buffer[32];
+        sprintf(buffer, " %%d. %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
+
         node = list->head;
-        while (node != NULL)
+        int index = 1;
+        /* while (node != NULL) */
+        for (i = 0; i < list->length; i++)
         {
-            printf(buf, ((Account *)node->data)->name->text,
+            printf(buffer, index++,
+                        ((Account *)node->data)->name->text,
                         ((Account *)node->data)->url->text,
                         ((Account *)node->data)->username->text,
                         ((Account *)node->data)->password->text);
