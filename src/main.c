@@ -10,7 +10,7 @@
 void printMenu(void);
 void printSearch(void);
 void printSettings(void);
-internal void readAndValidateString(String **string, const char *prompt);
+internal String* readAndValidateString(const char *prompt);
 internal void parseCommandLineArgs(int argc, char *argv[]);
 internal void printHelp();
 internal void printAdmin();
@@ -102,14 +102,10 @@ int main(int argc, char *argv[])
                 if (entry < accounts->length)
                 {
                   /* Run Length compression won't allow ';' characters so must be checked*/
-                  String *name = NULL;
-                  String *url = NULL;
-                  String *username = NULL;
-                  String *password = NULL;
-                  readAndValidateString(&name, "Please enter a website's name> ");
-                  readAndValidateString(&url, "Please enter a website's url> ");
-                  readAndValidateString(&username, "Please enter a website's username> ");
-                  readAndValidateString(&password, "Please enter a website's password> ");
+                  String *name = readAndValidateString("Please enter a website's name> ");
+                  String *url = readAndValidateString("Please enter a website's url> ");
+                  String *username = readAndValidateString("Please enter a website's username> ");
+                  String *password = readAndValidateString("Please enter a website's password> ");
                   
                   Account* inputAccount = newAccount(name, url, username, password);
                   linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
@@ -158,14 +154,10 @@ int main(int argc, char *argv[])
         case 2: /* Add New account */
         {
           /* Run Length compression won't allow ';' characters so must be checked*/
-          String *name = NULL;
-          String *url = NULL;
-          String *username = NULL;
-          String *password = NULL;
-          readAndValidateString(&name, "Please enter a website's name> ");
-          readAndValidateString(&url, "Please enter a website's url> ");
-          readAndValidateString(&username, "Please enter a website's username> ");
-          readAndValidateString(&password, "Please enter a website's password> ");
+          String *name = readAndValidateString("Please enter a website's name> ");
+          String *url = readAndValidateString("Please enter a website's url> ");
+          String *username = readAndValidateString("Please enter a website's username> ");
+          String *password = readAndValidateString("Please enter a website's password> ");
           
           Account* inputAccount = newAccount(name, url, username, password);
           linkedListAppend(accounts, inputAccount);
@@ -352,17 +344,27 @@ void printSettings(void)
   printf("3. Return to main menu\n");
 }
 
-internal void readAndValidateString(String **string, const char *prompt)
+/*******************************************************************************
+* Author: Peter de Vroom
+* Function: This acts as a wrapper around readString, adding a layer of 
+*           abitrary validation. In this case Strings are invalid if they are
+*           empty or if they contain ';' characters.
+* Input: string - A String pointer. This requires a double pointer 
+*        prompt - command line arguments
+*******************************************************************************/
+internal String *readAndValidateString(const char *prompt)
 {
-  while ((*string = readString(prompt))->length == 1 ||
-        stringContains(*string, ';'))
+  String *string;
+  while ((string = readString(prompt))->length == 1 ||
+        stringContains(string, ';'))
   {
-  if (stringContains(*string, ';'))
+  if (stringContains(string, ';'))
     puts("String cannot contain ';' characters");
   else
     puts("String cannot be empty");
-  freeString(*string);
+  freeString(string);
   }
+  return string;
 }
 
 /*******************************************************************************
