@@ -35,6 +35,13 @@ int main(int argc, char *argv[])
   LinkedList* accounts = newLinkedList(NULL);
   boolean running = true;
 
+  int i;
+  for (i = 0; i < 101; i++)
+  {
+    linkedListAppend(accounts, newAccount(newString("test"),newString("test"),newString("test"),newString("test")));
+  }
+  linkedListSortAlphabetically(accounts, compareAccounts);
+
   while(running == true)
   {
     int task=0;
@@ -42,7 +49,7 @@ int main(int argc, char *argv[])
     while(task != 7)
     {
       printMenu();
-      printf("Option>");
+      printf("Option> ");
       task = readInt();
 
       switch (task)
@@ -53,7 +60,7 @@ int main(int argc, char *argv[])
           while(choice!=4)
           {
             printSearch();
-            printf("Option>");
+            printf("Option> ");
             choice = readInt();
               switch(choice)
               {
@@ -61,7 +68,7 @@ int main(int argc, char *argv[])
                 {
                   /* NOTE(pete): correct searching requires that the list is sorted.
                    *             This should be fine under normal operation. */
-                  String *keyword = readString("Please enter the account name>");
+                  String *keyword = readString("Please enter the account name> ");
                   int index = searchAccounts(accounts, keyword);
 
                   /* Create a stack-allocated LinkedList in this case to house the one account.
@@ -91,14 +98,21 @@ int main(int argc, char *argv[])
                 printf("Please select an account>");
                 entry = readInt();
                 entry--; /* LinkedList is 0 based but table format is 1 based so we need to decrement. */
-                String* name = readString("Please enter website's name> ");
-                String* url = readString("Please enter website's url> ");
-                String* username = readString("Please enter a username> ");
-                String* password = readString("Please enter password> ");
-                
-                Account* inputAccount = newAccount(name, url, username, password);
-                linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
-                sortLinkedListAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/
+                if (entry < accounts->length)
+                {
+                  String* name = readString("Please enter website's name> ");
+                  String* url = readString("Please enter website's url> ");
+                  String* username = readString("Please enter a username> ");
+                  String* password = readString("Please enter password> ");
+                  
+                  Account* inputAccount = newAccount(name, url, username, password);
+                  linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
+                  linkedListSortAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/
+                }
+                else
+                {
+                  puts("Invalid selection");
+                }
                 break;
               }
               case 3: /*  Delete account */
@@ -107,13 +121,19 @@ int main(int argc, char *argv[])
                 {
                   printAccountList(accounts);
                   int entry = 0;
-                  printf("Please select an account>");
+                  printf("Please select an account> ");
                   entry = readInt();
                   entry--; /* LinkedList is 0 based but table format is 1 based so we need to decrement. */
-
-                  Account acc = *(Account *)linkedListGet(accounts, entry)->data;
-                  printf("Account: %s has been deleted.", acc.name->text);
-                  linkedListRemove(accounts, entry, freeAccount);
+                  if (entry < accounts->length)
+                  {
+                    Account acc = *(Account *)linkedListGet(accounts, entry)->data;
+                    printf("Account: %s has been deleted.\n", acc.name->text);
+                    linkedListRemove(accounts, entry, freeAccount);
+                  }
+                  else
+                  {
+                    puts("Invalid selection");
+                  }
                 }
                 else
                   puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
@@ -133,7 +153,7 @@ int main(int argc, char *argv[])
           
           Account* inputAccount = newAccount(name, url, username, password);
           linkedListAppend(accounts, inputAccount);
-          sortLinkedListAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/ 
+          linkedListSortAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/ 
           break;
         }
         case 3: /* Display stored websites */
@@ -146,12 +166,26 @@ int main(int argc, char *argv[])
         }
         case 4: /* Load database */
         {
-          loadData(accounts);
+          if (loadData(accounts))
+          {
+            puts("Loaded Successfully!");
+          }
+          else
+          {
+            puts("Error reading 'accounts.pwm'. Make sure accounts data has been created before reading.");
+          }
           break;
         }
         case 5: /* Save database */
         {
-          saveData(accounts, encryption, compression);
+          if (saveData(accounts, encryption, compression))
+          {
+            puts("Saved Successfully!");
+          }
+          else
+          {
+            puts("There was a problem saving. File was not saved.");
+          }
           break;
         }
         case 6: /* Settings */
@@ -161,7 +195,7 @@ int main(int argc, char *argv[])
           while (option !=3)
           {
             printSettings();
-            printf("Option>");
+            printf("Option> ");
             option = readInt();
 
             switch (option)
@@ -185,7 +219,7 @@ int main(int argc, char *argv[])
               printf("\n1. Huffman\n"
               "2. Run length\n"
               "3. None\n");
-              printf("Option>");
+              printf("Option> ");
               type = readInt();
 
               switch (type)
@@ -208,12 +242,13 @@ int main(int argc, char *argv[])
               break;
             }
             default:
+              printf("Invalid option.\n");
               break;
             }
           }
           break;
         }
-        case 7: /* Log out */
+        case 7: /* Exit Program */
         {
           running = false;
           break;
@@ -378,7 +413,7 @@ static void parseCommandLineArgs(int argc, char *argv[])
             Account *acc = newAccount(newString(argv[2]), newString(argv[3]), newString(argv[4]), newString(argv[5]));
             loadData(list);
             linkedListAppend(list, acc);
-            sortLinkedListAlphabetically(list, compareAccounts);
+            linkedListSortAlphabetically(list, compareAccounts);
             saveData(list, true, HUFFMAN);
             freeLinkedList(list, freeAccount);
           }
