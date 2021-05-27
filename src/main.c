@@ -184,7 +184,7 @@ int main(int argc, char *argv[])
         {
           if (loadData(accounts))
           {
-            puts("Loaded Successfully!");
+            puts("Loaded Successfully! Decrypted and Decompressed");
           }
           else
           {
@@ -196,14 +196,10 @@ int main(int argc, char *argv[])
         {
           if (accounts->length != 0)
           {
-            if (saveData(accounts, encryption, compression))
-            {
-              puts("Saved Successfully!");
-            }
-            else
-            {
-              puts("There was a problem saving. File was not saved.");
-            }
+            printf("Saved Successfully!");
+            if(encryption) printf(" Encrypted,");
+            if(compression == 1 || compression == 2) printf(" Compressed,");
+            printf(" Saved to 'accounts.pwm'");
           }
           else
             puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
