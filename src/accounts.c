@@ -69,7 +69,7 @@ void printAccountList(LinkedList *list)
         printDashes(dashLength);
 
         char buffer[32];
-        sprintf(buffer, " %%d. %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
+        sprintf(buffer, " %%3d.  %%-%ds %%-%ds %%-%ds %%s\n", c2Align, c3Align, c4Align);
 
         node = list->head;
         int index = 1;
