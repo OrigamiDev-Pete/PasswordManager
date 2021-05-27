@@ -7,12 +7,13 @@
 /* #define DEBUG */
 
 /* Huffman tree node */
-typedef struct{
+struct node{
     char character;
     unsigned int frequency;
-    node_t *left, *right;
+    struct node *left, *right;
     boolean isleaf;
-}node_t;
+};
+typedef struct node node_t;
 
 /* Stores unique character and corresponding frequency  */
 typedef struct{
