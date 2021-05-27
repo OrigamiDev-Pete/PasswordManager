@@ -13,23 +13,21 @@
 #define COMPRESSION_H
 
 /*******************************************************************************
-* Define: Function takes a string object input, compresses it and outputs the
-* compressed version of the input
+* Define: Function compresses a string object input using run-length encoding
 * Input:
-* - Uncompressed String
+* - Uncompressed string object pointer
 * Output:
-* - A compressed string
+* - A compressed string object pointer
 *******************************************************************************/
 String* compress(const String *input);
 
 
 /*******************************************************************************
-* Define: Function takes a compressed string object input, decompresses it and 
-* outputs the decompressed version of the input
+* Define: Function decompresses a string object input using run-length encoding
 * Input:
-* - Compressed String
+* - Compressed string object pointer
 * Output:
-* - A decompressed string
+* - A decompressed string object pointer
 *******************************************************************************/
 String* decompress(const String *input);
 

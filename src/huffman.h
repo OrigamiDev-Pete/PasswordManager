@@ -1,6 +1,6 @@
 /*******************************************************************************
 * Author: Joshua Gonzalez
-* Date Updated: 10/05/2021
+* Date Updated: 20/05/2021
 * 
 * The header file for the huffman compression algorithm
 *******************************************************************************/
@@ -21,30 +21,28 @@ typedef struct {
 
 
 /*******************************************************************************
-* Define: Function takes a string object input, compresses it and outputs the
-* compressed version of the input
+* Define: Function compresses a string object input using huffman encoding
 * Input:
-* - Uncompressed String
+* - Uncompressed string pointer
 * Output:
-* - A compressed string
-* - Huffman dictonary
+* - Result_t data type
+*   - compressed string
+*   - compressed huffman tree
+*   - length of full huffman code
 *******************************************************************************/
 result_t HuffmanCompression(const String *input);
 
 
 /*******************************************************************************
-* Define: Function takes a compressed string object input, decompresses it and 
-* outputs the decompressed version of the input
+* Define: Function decompresses a string object input using huffman encoding 
 * Input:
-* - Compressed String
-* - Huffman dictionary
+*  - compressed string pointer
+*  - compressed huffman tree
+*  - length of full huffman code
 * Output:
-* - A decompressed string
+* - A decompressed string object pointer
 *******************************************************************************/
 String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len);
-
-
-/* Combine all headers to compression.h */
 
 
 #endif /*HUFFMAN_H*/
