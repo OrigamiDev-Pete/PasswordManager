@@ -190,27 +190,20 @@ internal void stringToAccounts(const String_t *string, LinkedList_t *accounts)
         String_t *name, *url, *username, *password;
         name = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
-        {
             stringAppendChar(name, c);
-        }
 
         url = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
-        {
             stringAppendChar(url, c);
-        }
 
         username = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
-        {
             stringAppendChar(username, c);
-        }
 
         password = newString(NULL);
         while ((c = stringGetChar(string, i++)) != '\n' && c != '\0')
-        {
             stringAppendChar(password, c);
-        }
+
         Account_t *acc = newAccount(name, url, username, password);
         linkedListAppend(accounts, acc);
     }

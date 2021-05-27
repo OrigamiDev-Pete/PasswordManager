@@ -459,6 +459,8 @@ void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *))
 
     list->length = 0;
     list->head = malloc(sizeof(Node_t));
+    list->head->next = NULL;
+    list->head->data = NULL;
 }
 
 void printLinkedList(LinkedList_t *list, void (*func)(void *))
