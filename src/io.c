@@ -14,11 +14,6 @@ internal void stringToAccounts(const String *string, LinkedList *accounts);
 
 boolean saveData(const LinkedList *accounts, boolean encrypt, compressionType cmpType)
 {
-    /* Saving an empty list will effectively clear the data file. */
-    if (accounts->length == 0)
-    {
-        deleteData();
-    }
 
     /* Turn accounts into a String to be passed to encryption/compression, then saved */
     String *str = accountsToString(accounts);
@@ -167,18 +162,6 @@ boolean loadData(LinkedList *accounts)
                 break;
             }
         }
-        fclose(f);
-        return true;
-    }
-    else
-        return false;
-}
-
-boolean deleteData(void)
-{
-    FILE *f = fopen("accounts.pwm", "w");
-    if (f)
-    {
         fclose(f);
         return true;
     }

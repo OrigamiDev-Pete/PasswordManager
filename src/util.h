@@ -83,6 +83,15 @@ void stringSetChar(String *string, int index, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
+* Function: Checks if a String contains character c.
+* Input: string - A String.
+*             c - a character.
+* Output: Returns true if string contains c, otherwise returns false.
+*******************************************************************************/
+boolean stringContains(String *string, char c);
+
+/*******************************************************************************
+* Author: Peter de Vroom
 * Function: Compares string1 to string2 based on ASCII values. Shorter strings
 *           take lexicographic precedence. Capital letters are considered
 *           lesser than lower case letters.
@@ -101,7 +110,7 @@ int stringCompare(String *string1, String *string2);
 * Input: prompt - takes a c-string that is printed before input is taken.
 * Output: Returns a pointer to heap-allocated String struct.
 *******************************************************************************/
-String* readString(char *prompt);
+String* readString(const char *prompt);
 
 /*******************************************************************************
 * Author: Peter de Vroom

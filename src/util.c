@@ -150,6 +150,17 @@ void stringSetChar(String *string, int index, char val)
     }
 }
 
+boolean stringContains(String *string, char c)
+{
+    int i;
+    for (i = 0; i < string->length-1; i++)
+    {
+        if (stringGetChar(string, i) == c)
+            return true;
+    }
+    return false;
+}
+
 int stringCompare(String *string1, String *string2)
 {
     int i;
@@ -173,7 +184,7 @@ int stringCompare(String *string1, String *string2)
     return 0;
 }
 
-String* readString(char *prompt)
+String* readString(const char *prompt)
 {
     if (prompt)
     {
