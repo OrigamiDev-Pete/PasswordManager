@@ -188,7 +188,8 @@ int BuildHuffmanTree(character_t character_array[], int size,
             int j;
             for(j = 0; j < priorityQ_len - k - 1; ++j)
             {
-                if(priorityqueue[j]->frequency < priorityqueue[j + 1]->frequency)
+                if(priorityqueue[j]->frequency < 
+                   priorityqueue[j + 1]->frequency)
                 {
                     /* Swap elements in the array */
                     node_t* temp = priorityqueue[j];
@@ -607,7 +608,7 @@ String* HuffmanDecompression(String *huff_tree, String *huff_code, int code_len)
     /*Temp huffman tree for recursion purposes */
     node_t temp = *hufftree;
     
-    /* Traverse the huffman tree from the bits within the huff code characters */
+    /*Traverse the huffman tree from the bits within the huff code characters*/
     while(i < code_len)
     {
         if(bit_pos > 0) 
