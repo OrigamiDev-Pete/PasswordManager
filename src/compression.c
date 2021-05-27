@@ -2,7 +2,7 @@
 * Header files 
 *******************************************************************************/
 #include "compression.h"
-#include <stdio.h> /* sprintf */
+#include <stdio.h> /* sprintf, printf */
 #include <stdlib.h> /* atoi */
 
 /* #define DEBUG */
@@ -27,9 +27,12 @@ String* compress(const String *input)
     String* compressed_string = newString(NULL);
     
 
+    /* iterate through each word in an input string */
     while(i < input->length)
     {
         p = i;
+
+        /* skips spaces and append them straight to the compressed string*/
         if(input->text[i] != ' ')
         {
             while(p < input->length && input->text[p] == input->text[i])
@@ -56,6 +59,7 @@ String* compress(const String *input)
                 stringAppend(compressed_string, occ_str->text);
 
                 #ifdef DEBUG
+                printf("occ_str = ");
                 printString(occ_str);
                 #endif /* DEBUG */
 
@@ -84,7 +88,9 @@ String* compress(const String *input)
     }
 
     #ifdef DEBUG
+    printf("Before Compression: ");
     printString(input);
+    printf("After Compression: ");
     printString(compressed_string);
     #endif /* DEBUG */
 
@@ -99,7 +105,7 @@ String* decompress(const String *input)
 
     int i = 0, p;
 
-    /* Grab the first member of the string */
+    /* Grab the first member/word of the string */
     while(i < input->length)
     {
         String* member_str = newString(NULL);
@@ -110,6 +116,7 @@ String* decompress(const String *input)
         }
 
         #ifdef DEBUG
+        printf("member_str = ");
         printString(member_str);
         #endif /* DEBUG */
        
@@ -141,12 +148,12 @@ String* decompress(const String *input)
 
 /*******************************************************************************
 * Author: Joshua Gonzalez
-* Function: decompresses single word strings and passes the decompressed word
+* Function: decompresses single word string and passes the decompressed word
             back to the decompress function
 * Inputs: 
-* - string word 
+* - compressed string object pointer 
 * Outputs: 
-* - decompressed word
+* - decompressed string object pointer
 *******************************************************************************/
 String *member_decompress(const String *input)
 {
@@ -156,17 +163,19 @@ String *member_decompress(const String *input)
 
     String* decompressed_member = newString(NULL);
 
+    /* convert pairs of letter and occurence */
     while(i < input->length - 1)
     {
         char current_char = input->text[i];
 
+        /* ; signifies a more than 9 occurence */
         if(input->text[i + 3] == ';')
         {
             count = atoi(&input->text[i + 1]);
             i = (i + 2);
 
             #ifdef DEBUG
-            printf("count = %d", count);
+            printf("count = %d\n", count);
             #endif /* DEBUG */
         }
         else
@@ -178,10 +187,11 @@ String *member_decompress(const String *input)
             count = atoi(temp_array);
 
             #ifdef DEBUG
-            printf("count = %d", count);
+            printf("count = %d\n", count);
             #endif /* DEBUG */
         }
 
+        /* print as many letters as needed */
         for(p = 0; p < count; p++)
         {
             stringAppendChar(decompressed_member, current_char);
@@ -196,7 +206,9 @@ String *member_decompress(const String *input)
     }
 
     #ifdef DEBUG
+    printf("Before member decompression: ");
     printString(input);
+    printf("After member decompression: ");
     printString(decompressed_member);
     #endif /* DEBUG */
 
