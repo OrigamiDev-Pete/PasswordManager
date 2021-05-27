@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
         {
           if (loadData(accounts))
           {
-            puts("Loaded Successfully!");
+            puts("Loaded Successfully! Decrypted and Decompressed");
           }
           else
           {
@@ -180,7 +180,10 @@ int main(int argc, char *argv[])
         {
           if (saveData(accounts, encryption, compression))
           {
-            puts("Saved Successfully!");
+            printf("Saved Successfully!");
+            if(encryption) printf(" Encrypted,");
+            if(compression == 1 || compression == 2) printf(" Compressed,");
+            printf(" Saved to 'accounts.pwm'");
           }
           else
           {
