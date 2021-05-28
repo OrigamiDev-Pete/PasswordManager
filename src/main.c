@@ -8,7 +8,7 @@
  * 
  * How to Operate: 
  *  - Linux or ED - type 'make' to build the program, then ./bin/main.out to
- *    execute. Use 'make build debug' - for the debug mode.
+ *    execute. Use 'make debug build' - for the debug mode.
  *  - MinGW compiler - type 'mingw32-make win' to build the program.
  *       Note for Windows: the makefile is expecting a ‘bin’ directory,  
  *       a ‘src’ directory, and a ‘src/obj’ directory
