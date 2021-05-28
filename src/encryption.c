@@ -21,10 +21,12 @@ void encryptString(String_t* input) {
     FILE* keys_file = fopen(KEYFILE, "rb");
     /* If the file does not exist, proceed with new key generation */
     if(keys_file == NULL) { 
+        printf("Generating secure encryption keys, please wait...");
         createKey(key_p);
 
         /* Write the generated keys to the file */
         writeKeys(key_p);
+        printf(" complete!\n");
     }
     else {
         /* The keys exist, so read them from the file to continue encryption.
