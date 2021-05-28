@@ -26,7 +26,7 @@ debug: $(BIN_DIR) | $(OBJ_DIR)
 clean:
 	rm $(OBJ_DIR)/*.o
 
-# win command will build for Windows using GCC.
+# win command will build for Windows using MinGW.
 win: $(OBJ)
 	.\WindowsSetup.bat
 	$(CC) $(CFLAGS) $^ -o $(BIN_DIR)/main.exe
