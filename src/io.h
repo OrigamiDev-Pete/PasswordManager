@@ -36,14 +36,6 @@ boolean loadData(LinkedList_t *accounts);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Returns a String with the platform specific path
-* Input: accounts - A list to load the saved accounts into.
-* Output: Returns true if successful, false if an error occurs
-*******************************************************************************/
-/* String* platformPath(void); */
-
-/*******************************************************************************
-* Author: Peter de Vroom
 * Function: Safely read an integer from the stdin. Ignores bad input and flushes
 *           the buffer.
 * Output: Returns the integer found.

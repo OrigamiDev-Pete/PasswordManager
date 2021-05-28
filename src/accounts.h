@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Author: 
+* Author: Peter de Vroom, Sam Zammit
 * 
 * The header file exposes functionality for Account structs
 * Types: Account
@@ -8,7 +8,7 @@
 #ifndef ACCOUNTS_H
 #define ACCOUNTS_H
 
-#include "util.h" /* String, freeString */
+#include "util.h" /* String, freeString, stringCompare */
 
 /*******************************************************************************
 * Author: Peter de Vroom

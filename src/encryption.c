@@ -1,3 +1,6 @@
+/*******************************************************************************
+* Author: Luke Phillips
+*******************************************************************************/
 /* Library Inclusion and Defines*/
 #include "encryption.h"
 #include <stdlib.h> /* srand, rand */

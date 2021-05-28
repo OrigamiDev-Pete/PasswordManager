@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Author: Peter de Vroom, Joshua Gonzalez
+* Authors: Peter de Vroom, Joshua Gonzalez, Sam Zammit
 * 
 * The header file supports the functionality of various systems in the program.
 * Types: boolean, String, LinkedList, Bit Manipulation
@@ -8,7 +8,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <stdlib.h> /* size_t, malloc, realloc */
+#include <stdlib.h> /* size_t, malloc, realloc, free */
 
 /**********************************************************
 * * *                      BOOLEAN                    * * *
@@ -65,7 +65,7 @@ void stringAppendChar(String_t *string, char val);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Returns char at a given position. Bounds-checked.
+* Function: Gets a characater at a given position. Bounds-checked.
 * Input: string - A String.
 *           val - index of a character.
 * Output: Returns a char at the given position. Returns '\0' if out of bounds.
@@ -74,7 +74,7 @@ char stringGetChar(const String_t *string, int index);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Changes a char at a given position. Bounds-checked.
+* Function: Changes a character at a given position. Bounds-checked.
 * Input: string - A String.
 *         index - Index of a character in String.
 *           val - Character to set.
@@ -88,7 +88,7 @@ void stringSetChar(String_t *string, int index, char val);
 *             c - a character.
 * Output: Returns true if string contains c, otherwise returns false.
 *******************************************************************************/
-boolean stringContains(String_t *string, char c);
+boolean stringContains(const String_t *string, char c);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -102,7 +102,7 @@ boolean stringContains(String_t *string, char c);
 *         Returns 1 if string1 is greater than string2.
 *         Returns -1 if string1 is less than string2.
 *******************************************************************************/
-int stringCompare(String_t *string1, String_t *string2);
+int stringCompare(const String_t *string1, const String_t *string2);
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -122,7 +122,7 @@ void printString(const String_t *string);
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Frees a String and the data it contains
-* Input: string - A String (void pointer allows for compatability with other data structures)
+* Input: string - A String (void pointer allows for compatability with LinkedLists)
 *******************************************************************************/
 void freeString(void *string);
 
@@ -168,9 +168,11 @@ void linkedListAppend(LinkedList_t *list, void *data);
 
 /*******************************************************************************
 * Author: Peter de Vroom
-* Function: Gets a node at an index.
+* Function: Gets a node at an index. Bounds-checked. NOTE that list still retains
+*           ownership of the returned Node. This function needs to be used carefully
+*           to prevent unintentional aliasing.
 * Input: list - A LinkedList
-*       index - Index of a node (bounds-checked)
+*       index - Index of a node
 * Output: Returns a Node in the LinkedList. Returns NULL of out of bounds.
 *******************************************************************************/
 Node_t* linkedListGet(const LinkedList_t *list, int index);
@@ -178,11 +180,12 @@ Node_t* linkedListGet(const LinkedList_t *list, int index);
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Sets the data of a node at an index. Previously held data may need to be freed
-*           if it is heap-allocated.
+*           if it is heap-allocated. Bounds-checked.
 * Input: list - A LinkedList
-*       index - Index of a node (bounds-checked)
-*        data - Void pointer to data that will be replaced at index
-*        func - Function pointer to a free function if LinkedList contents need
+*       index - Index of a node
+*        data - Pointer to data that will be replaced at index. Must be the same
+*               type as other elements in the list.
+*    freeFunc - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListSet(LinkedList_t *list, int index, void *data, void (*freeFunc)(void *));
@@ -194,7 +197,7 @@ void linkedListSet(LinkedList_t *list, int index, void *data, void (*freeFunc)(v
 * Input: list - A LinkedList
 *       index - Index of a node (bounds-checked)
 *        data - Void pointer to data that will be replaced at index
-*        func - Function pointer to a free function if LinkedList contents need
+*    freeFunc - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListRemove(LinkedList_t *list, int index, void (*freeFunc)(void *));
@@ -204,7 +207,7 @@ void linkedListRemove(LinkedList_t *list, int index, void (*freeFunc)(void *));
 * Function: Removes all elements in the LinkedList. Previously held data may need to be freed
 *           if it is heap-allocated. An empty head Node is recreated.
 * Input: list - A LinkedList
-*        func - Function pointer to a free function if LinkedList contents need
+*    freeFunc - Function pointer to a free function if LinkedList contents need
 *               freed. Can be NULL if data is not heap-allocated.
 *******************************************************************************/
 void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *));
@@ -213,10 +216,10 @@ void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *));
 * Author: Peter de Vroom
 * Function: Prints all the data contained in a LinkedList.
 * Input: list - A LinkedList
-*        func - A pointer to a print function. This should match the type that
+*   printFunc - A pointer to a print function. This should match the type that
 *               needs to be printed. func must take a void pointer for flexibility.
 *******************************************************************************/
-void printLinkedList(LinkedList_t *list, void (*func)(void *));
+void printLinkedList(LinkedList_t *list, void (*printFunc)(void *));
 
 /** Sample print functions **/
 void printInt(void *num);
@@ -227,10 +230,10 @@ void printDouble(void *flt);
 * Author: Peter de Vroom
 * Function: Frees a linked list and all contained data.
 * Input: list - A LinkedList
-*        func - A pointer to a free function. Can be NULL if data is not
-*               heap-allocated. func must take a void pointer for flexibility.
+*    freeFunc - A pointer to a free function. Can be NULL if data is not
+*               heap-allocated. freeFunc must take a void pointer for flexibility.
 *******************************************************************************/
-void freeLinkedList(LinkedList_t *list, void (*func)(void *));
+void freeLinkedList(LinkedList_t *list, void (*freeFunc)(void *));
 
 /*******************************************************************************
 * Author: Sam Zammit
@@ -245,10 +248,15 @@ void linkedListSortAlphabetically(LinkedList_t *list, boolean (*compareFunction)
 
 
 
+
 /**********************************************************
 * * *                 BIT MANIPULATION                * * *
 ***********************************************************/
 typedef char byte;
+
+/* Bit Manipulation code was inspired by aniliitb10 and Collin Peterson's 
+* stackoverflow post.
+* https://stackoverflow.com/questions/2525310/how-to-define-and-work-with-an-array-of-bits-in-c */
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -257,7 +265,6 @@ typedef char byte;
 *        bitToSet - bit to set in byte
 *******************************************************************************/
 #define setBit(byte, bitToSet) byte |= 1 << (bitToSet-1)
-/*void setBit(byte *byte, int bitToSet); */
 
 /*******************************************************************************
 * Author: Peter de Vroom
@@ -266,11 +273,10 @@ typedef char byte;
 *        bitToSet - bit to set in byte
 *******************************************************************************/
 #define clearBit(byte, bitToSet) byte &= ~(1 << (bitToSet-1))
-/*void clearBit(byte *byte, int bitToSet); */
 
 /*******************************************************************************
 * Author: Joshua Gonzalez
-* Macro: Checks status of bit (Goes from 8 - 1)
+* Function: Checks status of bit (Goes from 8 - 1)
 * Input: byte - byte to have bit checked
 *        pos - position of bit to check
 *******************************************************************************/

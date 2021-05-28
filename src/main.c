@@ -25,14 +25,14 @@
 #define internal static /* static is a vague keyword, internal is more clear */
 
 /* Function Prototypes */
-void printMenu(void);
-void printSearch(void);
-void printSettings(void);
+internal void printMenu(void);
+internal void printSearch(void);
+internal void printSettings(void);
 internal String_t* readAndValidateString(const char *prompt);
 internal void parseCommandLineArgs(int argc, char *argv[]);
 internal void printHelp();
 internal void printAdmin();
-int searchAccounts(LinkedList_t *list, String_t *searchWord);
+internal int searchAccounts(LinkedList_t *list, String_t *searchWord);
 
 /*  Global Variables */
 internal boolean encryption = true;
@@ -43,9 +43,12 @@ internal compressionType compression = HUFFMAN;
 * Function: The main function handles all of the program's user interace.
 *           When command-line args are passed the main function will exit early.
 *******************************************************************************/
-
 int main(int argc, char *argv[])
 {
+  #ifdef DEBUG
+  puts("\n<< Debug mode is active >>");
+  #endif /* DEBUG */
+
   if (argc > 1)
   {
     parseCommandLineArgs(argc, argv);
@@ -120,7 +123,7 @@ int main(int argc, char *argv[])
                   
                   Account_t* inputAccount = newAccount(name, url, username, password);
                   linkedListSet(accounts, entry, inputAccount, freeAccount); /* Set an account for selection */
-                  linkedListSortAlphabetically(accounts, compareAccounts); /*sort everytime an account is added*/
+                  linkedListSortAlphabetically(accounts, compareAccounts); /* sort everytime an account is added */
                 }
                 else
                 {
@@ -149,10 +152,13 @@ int main(int argc, char *argv[])
                   }
                 }
                 else
-                  puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
+                  puts("No Accounts. Select \"Add New Account\" in the main \
+                        menu to create a new account.\n");
 
                 break;
               }
+              case 4:
+                break;
               default:
               {
                 puts("Invalid option");
@@ -191,7 +197,8 @@ int main(int argc, char *argv[])
           }
           else
           {
-            puts("Error reading 'accounts.pwm'. Make sure accounts data has been created before reading.");
+            puts("Error reading 'accounts.pwm'. Make sure accounts data has \
+                  been created before reading.");
           }
           break;
         }
@@ -202,15 +209,19 @@ int main(int argc, char *argv[])
             if (saveData(accounts, encryption, compression))
             {
               printf("Saved Successfully!");
-              if(encryption) printf(" Encrypted,");
-              if(compression == HUFFMAN || compression == RUN_LENGTH) printf(" Compressed,");
+              if(encryption)
+                printf(" Encrypted,");
+              if(compression == HUFFMAN || compression == RUN_LENGTH) 
+                printf(" Compressed,");
               printf(" Saved to 'accounts.pwm'");
             }
             else
-              puts("There was an problem with saving the file. Accounts were not saved.");
+              puts("There was an problem with saving the file. Accounts \
+                    were not saved.");
           }
           else
-            puts("No Accounts. Select \"Add New Account\" in the main menu to create a new account.\n");
+            puts("No Accounts. Select \"Add New Account\" in the main menu \
+                  to create a new account.\n");
 
           break;
         }
@@ -267,7 +278,10 @@ int main(int argc, char *argv[])
                 }
                 break;
               }
+              case 3:
+                break;
               default:
+                puts("Invalid option");
                 break;
             }
           }
@@ -294,7 +308,7 @@ return 0;
 * Author: Giovanni Tjandra
 * Function: Main Menu
 *******************************************************************************/
-void printMenu(void)
+internal void printMenu(void)
 {
   printf("\n\n"
   "*************************************\n"
@@ -313,7 +327,7 @@ void printMenu(void)
 * Author: Giovanni Tjandra
 * Function: Edit Menu
 *******************************************************************************/
-void printSearch(void)
+internal void printSearch(void)
 {
   printf("\n\n"
   "*************************************\n"
@@ -329,7 +343,7 @@ void printSearch(void)
 * Author: Giovanni Tjandra
 * Function: Settings menu
 *******************************************************************************/
-void printSettings(void)
+internal void printSettings(void)
 {
   printf("\n\n"
   "*************************************\n"
@@ -411,7 +425,8 @@ internal void parseCommandLineArgs(int argc, char *argv[])
             }
             else
             {
-              puts("Error reading 'accounts.pwm'. Make sure accounts data has been created before reading.");
+              puts("Error reading 'accounts.pwm'. Make sure accounts data has \
+                    been created before reading.");
             }
             freeLinkedList(list, freeAccount);
           }
@@ -534,7 +549,6 @@ internal void parseCommandLineArgs(int argc, char *argv[])
 * Output: Returns the integer index of the most accurate account that the user
           is trying to look for. 
 *******************************************************************************/
-
 int searchAccounts(LinkedList_t *list, String_t *searchWord){
     int i, j, accurate, mostAccurate, MAindex;
     int size = list->length;
@@ -544,20 +558,20 @@ int searchAccounts(LinkedList_t *list, String_t *searchWord){
     MAindex = 0;
 
 
-    for(i = 0; i < size; i++){
+  for(i = 0; i < size; i++){
 
-        accName = ((Account_t*)linkedListGet(list, i)->data)->name;
+      accName = ((Account_t*)linkedListGet(list, i)->data)->name;
 
-        for(j = 0; j < searchWord->length && j < accName->length; j++){
-            if(stringGetChar(searchWord, j) == stringGetChar(accName, j)){
-              accurate++;
-            }
-        }
-        if(accurate > mostAccurate){
-          MAindex = i;
-          mostAccurate = accurate;
-        }
-    }
+      for(j = 0; j < searchWord->length && j < accName->length; j++){
+          if(stringGetChar(searchWord, j) == stringGetChar(accName, j)){
+            accurate++;
+          }
+      }
+      if(accurate > mostAccurate){
+        MAindex = i;
+        mostAccurate = accurate;
+      }
+  }
   return MAindex;
 }
 
@@ -566,7 +580,7 @@ int searchAccounts(LinkedList_t *list, String_t *searchWord){
 * Author: Peter de Vroom
 * Function: Prints help text for command-line arguments.
 *******************************************************************************/
-static void printHelp(void)
+internal void printHelp(void)
 {
   puts("Password Manager\n");
   puts("Usage: main [COMMAND] <arguments>\n");
@@ -582,7 +596,7 @@ static void printHelp(void)
 * Author: Luke Phillips
 * Function: Prints options for administrator menu.
 *******************************************************************************/
-static void printAdmin(void) 
+internal void printAdmin(void) 
 {
   puts("*************************************");
   puts("*        Administrator Menu         *");

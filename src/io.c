@@ -1,10 +1,13 @@
+/*******************************************************************************
+* Author: Peter de Vroom
+*******************************************************************************/
 #include "io.h"
 
 #include <stdio.h> /* fopen, fclose, scanf, getchar, fscanf, fprintf, getc */
 
 #include "accounts.h" /* Account, newAccount, freeAccount */
 #include "compression.h" /* encryptString, decryptString */
-#include "encryption.h" /* compress, HuffmanCompression,  */
+#include "encryption.h" /* compress, HuffmanCompression, decompress, HuffmanDecompression */
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
@@ -14,7 +17,6 @@ internal void stringToAccounts(const String_t *string, LinkedList_t *accounts);
 
 boolean saveData(const LinkedList_t *accounts, boolean encrypt, compressionType cmpType)
 {
-
     /* Turn accounts into a String to be passed to encryption/compression, then saved */
     String_t *str = accountsToString(accounts);
     result_t cmpResult;

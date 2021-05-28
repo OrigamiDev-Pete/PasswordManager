@@ -1,6 +1,10 @@
+/*******************************************************************************
+* Authors: Peter de Vroom, Sam Zammit
+*******************************************************************************/
 #include "accounts.h"
 
-#include <stdio.h> /* malloc, free */
+#include <stdio.h> /* malloc, free, sprintf, printf, putchar */
+#include <stdlib.h> /* malloc, free */
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
@@ -110,7 +114,8 @@ void freeAccount(void *account)
     free(account);
 }
 
-boolean compareAccounts(void* acc1, void* acc2){
+boolean compareAccounts(void* acc1, void* acc2)
+{
     Account_t* a1 = (Account_t*)acc1;
     Account_t* a2 = (Account_t*)acc2;
 

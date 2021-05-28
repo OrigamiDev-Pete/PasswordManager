@@ -1,6 +1,9 @@
+/*******************************************************************************
+* Authors: Peter de Vroom, Joshua Gonzalez, Sam Zammit
+*******************************************************************************/
 #include "util.h"
 
-#include <stdio.h> /* printf, puts, putchar, getchar */
+#include <stdio.h> /* printf, puts, putchar, getchar, fprintf */
 
 #define internal static /* static is a vague keyword, internal is more clear */
 
@@ -43,7 +46,7 @@ internal void initString(String_t *string, const char *val)
     else
     {
         string->length = stringLength(val);
-        /* Find the nearest power of 2 capacity that can hold the new length */
+        /* Find the nearest power of 2 capacity that can hold the length of val */
         int cap = STRING_START_SIZE;
         while (cap <= string->length)
             cap *= 2;
@@ -128,12 +131,14 @@ char stringGetChar(const String_t *string, int index)
     {
         return string->text[index];
     }
+    else
+    {
+        #ifdef DEBUG
+        puts("stringGetChar: Out of Bounds");
+        #endif /* DEBUG */
 
-    #ifdef DEBUG
-    puts("stringGetChar: Out of Bounds");
-    #endif /* DEBUG */
-
-    return '\0';
+        return '\0';
+    }
 }
 
 void stringSetChar(String_t *string, int index, char val)
@@ -151,7 +156,7 @@ void stringSetChar(String_t *string, int index, char val)
     }
 }
 
-boolean stringContains(String_t *string, char c)
+boolean stringContains(const String_t *string, char c)
 {
     int i;
     for (i = 0; i < string->length-1; i++)
@@ -162,7 +167,7 @@ boolean stringContains(String_t *string, char c)
     return false;
 }
 
-int stringCompare(String_t *string1, String_t *string2)
+int stringCompare(const String_t *string1, const String_t *string2)
 {
     int i;
     for (i = 0; i < string1->length-1 && i < string2->length-1; i++)
@@ -188,9 +193,7 @@ int stringCompare(String_t *string1, String_t *string2)
 String_t* readString(const char *prompt)
 {
     if (prompt)
-    {
         printf("%s", prompt);
-    }
 
     String_t *string = newString(NULL);
     char c;
@@ -234,7 +237,7 @@ void freeString(void *string)
 * Author: Peter de Vroom
 * Function: Checks if a String has reached capacity and needs resizing. Resizes
 *           if it's required. Capacity expands by a factor of 2 to minimise 
-*           many realloc calls.
+*           realloc calls.
 * Input: string - A String.
 *     newLength - index of character in String.
 *******************************************************************************/
@@ -300,6 +303,7 @@ internal void nullTerminate(String_t *string)
     string->text[string->length++] = '\0'; 
 }
 
+
 /**********************************************************
 * * *                   LINKED LIST                   * * *
 ***********************************************************/
@@ -315,6 +319,8 @@ LinkedList_t* newLinkedList(void *data)
     head->next = NULL;
     list->head = head;
 
+    /* If no data is passed to the new list we can regard the list
+     * as having effectively no length. */
     if (data)
         list->length = 1;
     else
@@ -436,6 +442,7 @@ void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *))
     if (list->length == 0)
         return;
     
+    /* If a free function is provided data must be heap-allocated */
     if (freeFunc)
     {
         Node_t *node = list->head;
@@ -448,6 +455,7 @@ void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *))
             prevNode = NULL;
         }
     }
+    /* free pass for stack-allocated data */
     else
     {
         Node_t *node = list->head;
@@ -466,7 +474,7 @@ void linkedListClear(LinkedList_t *list, void (*freeFunc)(void *))
     list->head->data = NULL;
 }
 
-void printLinkedList(LinkedList_t *list, void (*func)(void *))
+void printLinkedList(LinkedList_t *list, void (*printFunc)(void *))
 {   
     #ifndef DEBUG
     /* Outside of debug mode LinkedList does not impose any formatting */
@@ -480,7 +488,7 @@ void printLinkedList(LinkedList_t *list, void (*func)(void *))
         Node_t *node = list->head;
         while (node != NULL)
         {
-            (*func)(node->data);
+            (*printFunc)(node->data);
             node = node->next;
         }
     }
@@ -500,7 +508,7 @@ void printLinkedList(LinkedList_t *list, void (*func)(void *))
         putchar('[');
         while (node != NULL)
         {
-            (*func)(node->data);
+            (*printFunc)(node->data);
             node = node->next;
             if (node) {
                 putchar(',');
@@ -523,23 +531,25 @@ void printDouble(void *dbl)
     printf("%lf", *(double *)dbl);
 }
 
-void freeLinkedList(LinkedList_t *list, void (*func)(void *))
+void freeLinkedList(LinkedList_t *list, void (*freeFunc)(void *))
 {
     if (list->length == 0)
         return;
 
-    if (func)
+    /* If a free function is provided data must be heap-allocated */
+    if (freeFunc)
     {
         Node_t *node = list->head;
         while (node != NULL)
         {
             Node_t *prevNode = node;
             node = node->next;
-            (*func)(prevNode->data);
+            (*freeFunc)(prevNode->data);
             free(prevNode);
             prevNode = NULL;
         }
     }
+    /* free pass for stack-allocated data */
     else
     {
         Node_t *node = list->head;
@@ -592,7 +602,6 @@ void swapNodes(Node_t *a, Node_t *b){
     b->data = a->data;
     a->data = temp;
 }
-
 
 int checkBit(byte byte, int pos)
 {
