@@ -1,3 +1,21 @@
+/*******************************************************************************
+ * Fundamentals of C - Autumn 2021 - Group Assessment
+ * Password Manager Tool "Ccret Keeper" 
+ * 
+ * Students: Luke Phillips - 13591476, Sam Zammit - 99201838
+ *           Peter de Vroom - 13294196, Giovanni Tjandra - 13752454
+ *           Joshua Gonzalez - 13915158
+ * 
+ * How to Operate: 
+ *  - Linux or ED - type make to build the program, then ./bin/main.out to
+ *    execute. Use make build debug - for the debug mode.
+ *  - MinGW compiler - type mingw32-make win to build the program.
+ *       Note: the makefile is expecting a ‘bin’ directory, a ‘src’ directory, 
+ *       and a ‘src/obj’ directory
+ * Follow the on screen menu prompts to navigate and use the program.
+ * Use ./bin/main.out -p to enter administrator mode and reset data.
+*******************************************************************************/
+
 #include <stdio.h> /* printf, puts, remove */
 
 #include "accounts.h"
