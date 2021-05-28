@@ -234,20 +234,16 @@ void freeLinkedList(LinkedList_t *list, void (*func)(void *));
 
 /*******************************************************************************
 * Author: Sam Zammit
-* Function: Uses a bubble sort to sort the names of the accounts in alphabetical
-            order
-* Input: list - A LinkedList
+* Function: A function that uses a bubble sort to sort the accounts linked list
+            in alphabetical order.
+* Input: Takes the linked list of accounts, aswell as a compare function that 
+         will compare two account names to check which one comes first 
+         alphabetically. 
 *******************************************************************************/
 
 void linkedListSortAlphabetically(LinkedList_t *list, boolean (*compareFunction)(void *, void *)); 
 
-/*******************************************************************************
-* Author: Sam Zammit
-* Function: A small function that will swap two nodes in a linked list. 
-* Input: 2 nodes from the strcuture Node. These are the two nodes that will be
-        swapped.
-*******************************************************************************/
-void swapNodes(Node_t *a, Node_t *b);
+
 
 /**********************************************************
 * * *                 BIT MANIPULATION                * * *

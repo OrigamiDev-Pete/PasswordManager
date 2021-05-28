@@ -507,6 +507,16 @@ internal void parseCommandLineArgs(int argc, char *argv[])
   }
 }
 
+/*******************************************************************************
+* Author: Sam Zammit
+* Function: A function that returns the location of a word that the user is 
+            searching for. 
+* Input: Takes in the linked list of accounts aswell as the string of the word
+        that the user wishes to search.
+* Output: Returns the integer index of the most accurate account that the user
+          is trying to look for. 
+*******************************************************************************/
+
 int searchAccounts(LinkedList_t *list, String_t *searchWord){
     int i, j, accurate, mostAccurate, MAindex;
     int size = list->length;

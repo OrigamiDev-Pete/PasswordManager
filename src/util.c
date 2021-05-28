@@ -15,6 +15,7 @@ internal void checkAndResizeString(String_t *string, int newLength);
 internal int stringLength(const char *str);
 internal void nullTerminate(String_t *string);
 
+
 /*******************************************************************************
 * Author: Peter de Vroom
 * Function: Initialises a new String.
@@ -303,6 +304,8 @@ internal void nullTerminate(String_t *string)
 * * *                   LINKED LIST                   * * *
 ***********************************************************/
 
+void swapNodes(Node_t *a, Node_t *b); /*   Prototype for swapNodes     */
+
 LinkedList_t* newLinkedList(void *data)
 {
     LinkedList_t *list = malloc(sizeof(LinkedList_t));
@@ -550,6 +553,7 @@ void freeLinkedList(LinkedList_t *list, void (*func)(void *))
     }
     free(list);
 }
+
 void linkedListSortAlphabetically(LinkedList_t *list, boolean (*compareFunction)(void *, void *)){
     int swapped, i;
     int size = list->length;
@@ -576,6 +580,12 @@ void linkedListSortAlphabetically(LinkedList_t *list, boolean (*compareFunction)
         }
     } 
 }
+
+/*******************************************************************************
+* Author: Sam Zammit
+* Function: A function that operates the swapping inside of the bubble sort.
+* Input: Takes two separate nodes to be swapped. 
+*******************************************************************************/
 
 void swapNodes(Node_t *a, Node_t *b){
     void *temp = b->data;

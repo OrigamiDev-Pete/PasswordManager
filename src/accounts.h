@@ -62,11 +62,10 @@ void freeAccount(void *account);
 
 /*******************************************************************************
 * Author: Sam Zammit
-* Function: Compares the names of 2 accounts to see which one comes first 
-            alphabetically.
-* Input: list - A LinkedList
-* Output: Returns 1 if the two accounts are already in alphabetical order, 0 if
-          not.
+* Function: A function that compares the names of two accounts and returns a 
+            boolean based on the outcome. 
+* Input: Takes in two accounts to be compared.
+* Output: Returns either true or false based on the outcome of the comparison.
 *******************************************************************************/
 
 boolean compareAccounts(void* acc1, void* acc2);
