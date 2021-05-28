@@ -7,11 +7,11 @@
  *           Joshua Gonzalez - 13915158
  * 
  * How to Operate: 
- *  - Linux or ED - type make to build the program, then ./bin/main.out to
- *    execute. Use make build debug - for the debug mode.
- *  - MinGW compiler - type mingw32-make win to build the program.
- *       Note: the makefile is expecting a ‘bin’ directory, a ‘src’ directory, 
- *       and a ‘src/obj’ directory
+ *  - Linux or ED - type 'make' to build the program, then ./bin/main.out to
+ *    execute. Use 'make build debug' - for the debug mode.
+ *  - MinGW compiler - type 'mingw32-make win' to build the program.
+ *       Note for Windows: the makefile is expecting a ‘bin’ directory,  
+ *       a ‘src’ directory, and a ‘src/obj’ directory
  * Follow the on screen menu prompts to navigate and use the program.
  * Use ./bin/main.out -p to enter administrator mode and reset data.
 *******************************************************************************/
